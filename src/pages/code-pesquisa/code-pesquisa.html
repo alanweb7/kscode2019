@@ -1,0 +1,37 @@
+<ion-header>
+
+    <ion-navbar color="primary">
+      <ion-title>{{page}}</ion-title>
+      <ion-buttons end>
+          <button ion-button icon-only (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+       </button>
+      </ion-buttons>
+    </ion-navbar>
+  
+  </ion-header>
+
+<ion-content>
+    <ion-searchbar 
+   [(ngModel)]="searchTerm"
+    [formControl]="searchControl"
+    (keyup)="onSearchInput()"
+    placeholder="{{campo}}"
+  ></ion-searchbar>
+
+<div *ngIf="searching" class="spinner-container">
+    <ion-spinner name="bubbles"></ion-spinner>
+  </div>
+   <ion-list class="list-cidade" *ngFor="let item of codes | slice:0:9">
+    <ion-item (click)="pushPage(item.code)">
+        <ion-col col-3>
+            <img src="{{item.card}}">
+         </ion-col>
+         <ion-col col-9>
+            {{ item.code }}-{{item.titulo}}
+            <p>{{item.descricao}}</p>
+         </ion-col>
+    </ion-item> 
+     
+  </ion-list>
+</ion-content>
