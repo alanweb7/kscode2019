@@ -36,7 +36,7 @@ page-login {
     .scroll-content {
         padding: 80px 0 0 0;
         margin-top: 0 !important;
-        background: rgba(255, 255, 255, 0.4); 
+        background: rgba(255, 255, 255, 0.4);
         text-align: center;
         > h2 {
             padding: 0 20px;
@@ -57,7 +57,7 @@ page-login {
         }
     }
     .button{
-        margin-top: 15px; 
+        margin-top: 15px;
         &.facebook {
             background: rgb(5, 32, 73) !important;
             background: -moz-linear-gradient(-45deg, rgba(5, 32, 73,1) 0%, rgb(0, 0, 0) 100%) !important;
@@ -79,15 +79,15 @@ page-login {
             margin-top: 0;
                 height: 4rem;
         }
-        
+
     }
     ion-content.pg-login.content {
         background: url(../assets/imgs/fundo.png);
         background-size: cover;
-        
-       
+
+
     }
-    
+
     .div-ou {
         width: 100%;
         height: 1px;
@@ -120,22 +120,22 @@ page-login {
                     color: rgb(5, 32, 73) ;
                 }
             }
-            
+
             .button{
-               
+
                     background: rgb(5, 32, 73) !important;
                     .icon-md  {
-                        margin: 5px; 
+                        margin: 5px;
                        width: 20px;
                        text-align: center;
                        color: #fff;
                        font-size: 2.5em;
                    }
             }
-            
+
             .text-input {
                 color: #555;
-                font-size: 12px;
+                font-size: 22px;
                 text-align: left;
                 &::placeholder {
                     color: #555;
@@ -145,5 +145,5 @@ page-login {
 
         }
     }
-  
+
 }

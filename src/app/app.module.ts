@@ -1,3 +1,7 @@
+import { CallNumber } from '@ionic-native/call-number';
+import { ModalDetailPage } from './../pages/modal-detail/modal-detail';
+import { Camera } from '@ionic-native/camera';
+import { MediaCapture } from '@ionic-native/media-capture';
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule,CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpModule, } from '@angular/http';
@@ -32,18 +36,24 @@ import { UtilService } from '../providers/util/util.service';
 import { Autosize} from '../directives/autosize/autosize';
 import { ProgressBarComponent } from '../components/progress-bar/progress-bar';
 import { GeolocationProvider } from '../providers/geolocation/geolocation';
-
+import { FileUploadModule } from 'ng2-file-upload';
+import { HTTP } from '@ionic-native/http';
+import { FTP } from '@ionic-native/ftp';
+import { Media } from '@ionic-native/media';
+import { NativeAudio } from '@ionic-native/native-audio';
 
 @NgModule({
   declarations: [
     MyApp,
+    ModalDetailPage,
     Autosize,
     ProgressBarComponent
-   
+
   ],
   imports: [
     BrowserModule,
     HttpModule,
+    FileUploadModule,
     HttpClientModule,
       TranslateModule.forRoot({
           loader: {
@@ -51,18 +61,26 @@ import { GeolocationProvider } from '../providers/geolocation/geolocation';
               useFactory: (HttpLoaderFactory),
               deps: [HttpClient]
           }
-      }),  
+      }),
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     IonicStorageModule.forRoot()    ,
-    
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-  
+    ModalDetailPage,
+
   ],
   providers: [
+    CallNumber,
+    NativeAudio,
+    Media,
+    HTTP,
+    FTP,
+    MediaCapture,
+    Camera,
     SQLite,
     NativeStorage,
     SqliteHelperService,
@@ -82,8 +100,8 @@ import { GeolocationProvider } from '../providers/geolocation/geolocation';
     Diagnostic,
     GeolocationProvider,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-  
-    
+
+
   ]
   ,
 

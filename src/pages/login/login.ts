@@ -33,7 +33,7 @@ export class LoginPage {
   word             =/[^0-9]+/g;
   public type      = 'password';
   public showPass  = false;
- 
+
   data = {
      id_serv     :Number,
      name        :String,
@@ -89,8 +89,8 @@ export class LoginPage {
   texto_1: any;
   texto_2: any;
   email: string;
-  constructor(public navCtrl        : NavController, 
-      
+  constructor(public navCtrl        : NavController,
+
             private translate 	  : TranslateService,
             public navParams        : NavParams,
             public menu             : MenuController,
@@ -110,7 +110,7 @@ export class LoginPage {
             this.loginForm = formBuilder.group({
               email    : ['', Validators.required],
               password : ['', Validators.required]});
-             
+
   }
 
   ionViewDidLoad() {
@@ -129,11 +129,11 @@ export class LoginPage {
 
         this.data.photo    = movies[0].photo;
         this.data.usuario  = movies[0].usuario;
-        
+
         this.events.publish('dados',this.data);
    }else{
-       
-       
+
+
         this.events.publish('dados',this.data);
    }
     });
@@ -143,16 +143,16 @@ export class LoginPage {
   ionViewDidEnter() {
     //disabilita menu lateral
     this.menu.enable(false);
-  
+
   }
   ionViewWillLeave() {
     // to enable menu.
     this.menu.enable(true);
    }
   login() {
-    
+
     let { email, password } = this.loginForm.controls;
-    
+
     if (!this.loginForm.valid) {
               if (!email.valid) {
                 this.errorEmail = true;
@@ -160,7 +160,7 @@ export class LoginPage {
               } else {
                 this.messageEmail = "";
               }
-          
+
               if (!password.valid) {
                 this.errorPassword = true;
                 this.messagePassword =this.campo_obrigatorio;
@@ -169,7 +169,7 @@ export class LoginPage {
               }
     }
     else {
-       if(this.net.ckeckNetwork()){
+
                   let contextCliente: Usuario;
                   this.util.showLoading(this.load_enviando);
                   this.cli_Provider.login(this.model.email,this.model.password,this.lang)
@@ -177,17 +177,17 @@ export class LoginPage {
                         (result: any) =>{
                           console.log(result);
                           if(result.code == 403.001){
-                                 this.util.loading.dismiss(); 
+                                 this.util.loading.dismissAll();
                                  this.toast.create({ message: result.message, position: 'top', duration: 10000,showCloseButton: true,closeButtonText: 'Ok!',cssClass: 'error' }).present();
-                          
+
                             }else if(result.code == 403.002){
-                                 this.util.loading.dismiss(); 
-                                 this.toast.create({ message: result.message, position: 'top', duration: 10000,showCloseButton: true,closeButtonText: 'Ok!',cssClass: 'error' }).present();                              
+                                 this.util.loading.dismissAll();
+                                 this.toast.create({ message: result.message, position: 'top', duration: 10000,showCloseButton: true,closeButtonText: 'Ok!',cssClass: 'error' }).present();
                             }else{
-                                     this.util.loading.dismiss(); 
+                                     this.util.loading.dismissAll();
                                      this.usuario.getById(result.data_user.id)
                                      .then((existe: Number) => {
-                                 
+
                                        if (existe < 0) {
                                          contextCliente = new Usuario(result.data_user.id,result.data_user.first_name,result.data_user.last_name,result.user_email,result.data_user.avatar,"","","","","","","","","","","","","","1",result.token);
                                          this.usuario.create(contextCliente)
@@ -200,12 +200,12 @@ export class LoginPage {
                                                this.data.id_serv  = result.data_user.id;
                                                this.data.photo    = result.data_user.avatar;
                                                this.events.publish('dados',this.data);
-                                               this.navCtrl.setRoot('HomePage'); 
-                                               
+                                               this.navCtrl.setRoot('HomePage');
+
                                          });
-                                         
+
                                        }else{
-                                         
+
                                          this.usuario.update(result.data_user.first_name,result.data_user.last_name,result.user_email,result.data_user.avatar,"","","1",result.token,result.data_user.id)
                                          .then((data: any) => {
                                                 this.data.name      = result.data_user.first_name;
@@ -216,40 +216,30 @@ export class LoginPage {
                                                 this.data.id_serv   = result.data_user.id;
                                                 this.data.photo     = result.data_user.avatar;
                                                 this.events.publish('dados',this.data);
-                                                this.navCtrl.setRoot('HomePage');  
-                                                
+                                                this.navCtrl.setRoot('HomePage');
+
                                          });
                                          this.usuario.update_cupom(result.dados_cliente.cupom_code,result.dados_cliente.cupom_id,result.data_user.id).then((data: any) => {
                                                   console.log("update cupom",data);
                                          })
-                               
-                                     } 
-                                  
-                                     
-                                    }); 
+
+                                     }
+
+
+                                    });
 
                            }
-                          
+
                      },(error:any) => {
                       this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                      this.util.loading.dismiss(); 
+                      this.util.loading.dismissAll();
                       this.navCtrl.setRoot('HomePage');
 
                      });
-                  
-                    
-                    
-                          
-                         
-        }else{
-          
-            this.navCtrl.setRoot('NotNetworkPage');
-              
-        }
 
-         
+
       }
-    
+
 }
 recuperarsenhaModal() {
   let myModal = this.modalCtrl.create('RecuperasenhaPage',{lang:this.lang,campo_obrigatorio:this.campo_obrigatorio,page:this.page_senha,texto_1:this.texto_1,texto_2:this.texto_2,email:this.email});
@@ -257,7 +247,7 @@ recuperarsenhaModal() {
 }
 voltar(){
   this.navCtrl.setRoot('HomePage');
-              
+
 }
 showPassword() {
   this.showPass = !this.showPass;
@@ -268,16 +258,16 @@ showPassword() {
     this.type = 'password';
   }
 }
-  
-//adquira seu code  
+
+//adquira seu code
 shopcode() {
     var url = 'https://kscode.com.br/pacotes/';
     this.browserTab.isAvailable()
     .then(isAvailable => {
       if (isAvailable) {
         this.browserTab.openUrl(url);
-      } 
-    }); 
+      }
+    });
   }
   trogle_idiome(){
     console.log("lang",this.lang);
@@ -286,85 +276,85 @@ shopcode() {
         this.page_login             = "Entrar";
         this.load_enviando          = "Enviando...";
         this.campo_obrigatorio      = "Dieses Feld ist erforderlich.";
-        this.frase                  = "Tudo se conecta aqui.";  
-        this.email                  = "Seu usuário"; 
-        this.senha                  = "Sua senha";  
-        this.esqueceu               = "Esqueceu sua senha ?";  
-        this.ou                     = "ou";  
-        this.conta                  = "CRIAR MINHA CONTA";  
-        this.page_senha             = "RECUPERAR SENHA";  
-        this.texto_1                = "Digite seu email e depois vá em";  
-        this.texto_2                = "siga os passos enviados ao seu email para criar uma nova senha.";  
+        this.frase                  = "Tudo se conecta aqui.";
+        this.email                  = "Seu usuário";
+        this.senha                  = "Sua senha";
+        this.esqueceu               = "Esqueceu sua senha ?";
+        this.ou                     = "ou";
+        this.conta                  = "CRIAR MINHA CONTA";
+        this.page_senha             = "RECUPERAR SENHA";
+        this.texto_1                = "Digite seu email e depois vá em";
+        this.texto_2                = "siga os passos enviados ao seu email para criar uma nova senha.";
 
       }else if(this.lang=='de'){
           this.msg_servidor           =  "Verbindung zum Server konnte nicht hergestellt werden!";
           this.page_login             = "Eintreten";
           this.load_enviando          = "Senden ...";
           this.campo_obrigatorio      = "Dieses Feld ist erforderlich.";
-          this.frase                  = "Hier verbindet sich alles";  
-          this.email                  = "Benutzer"; 
-          this.senha                  = "Passwort";  
-          this.esqueceu               = "Passwort vergessen?";  
-          this.ou                     = "oder";  
-          this.conta                  = "Ein konto erstellen";  
-          this.page_senha             = "PASSWORT ERHALTEN";  
-          this.texto_1                = "Geben Sie Ihre E-Mail-Adresse ein und gehen Sie zu";  
-          this.texto_2                = "Folgen Sie den an Ihre E-Mail gesendeten Schritten, um ein neues Passwort zu erstellen.";  
+          this.frase                  = "Hier verbindet sich alles";
+          this.email                  = "Benutzer";
+          this.senha                  = "Passwort";
+          this.esqueceu               = "Passwort vergessen?";
+          this.ou                     = "oder";
+          this.conta                  = "Ein konto erstellen";
+          this.page_senha             = "PASSWORT ERHALTEN";
+          this.texto_1                = "Geben Sie Ihre E-Mail-Adresse ein und gehen Sie zu";
+          this.texto_2                = "Folgen Sie den an Ihre E-Mail gesendeten Schritten, um ein neues Passwort zu erstellen.";
         }else if(this.lang=='en'){
           this.msg_servidor           =  "Could not connect to server!";
           this.page_login             = "Log in";
           this.load_enviando          = "Sending ...";
           this.campo_obrigatorio      = "Dieses Feld ist erforderlich.";
-          this.frase                  = "Everything connects here";  
-          this.email                  = "user"; 
-          this.senha                  = "password";  
-          this.esqueceu               = "Forgot password?";  
-          this.ou                     = "or";  
-          this.conta                  = "Create an account";  
-          this.page_senha             = "RECOVER PASSWORD";  
-          this.texto_1                = "Enter your email and then go to";  
-          this.texto_2                = "follow the steps sent to your email to create a new password.";  
+          this.frase                  = "Everything connects here";
+          this.email                  = "user";
+          this.senha                  = "password";
+          this.esqueceu               = "Forgot password?";
+          this.ou                     = "or";
+          this.conta                  = "Create an account";
+          this.page_senha             = "RECOVER PASSWORD";
+          this.texto_1                = "Enter your email and then go to";
+          this.texto_2                = "follow the steps sent to your email to create a new password.";
       }else if(this.lang=='it'){
         this.msg_servidor           =  "Impossibile connettersi al server!";
         this.page_login             = "Per entrare";
         this.load_enviando          = "invio...";
         this.campo_obrigatorio      = "Dieses Feld ist erforderlich.";
-        this.frase                  = "Tutto si collega qui";  
-        this.email                  = "utente"; 
-        this.senha                  = "password";  
-        this.esqueceu               = "Hai dimenticato la password?";  
-        this.ou                     = "o";  
-        this.conta                  = "Crea un account";  
-        this.page_senha             = "RECUPERA PASSWORD";  
-        this.texto_1                = "Inserisci la tua email e poi vai a";  
-        this.texto_2                = "segui i passaggi inviati alla tua email per creare una nuova password.";  
+        this.frase                  = "Tutto si collega qui";
+        this.email                  = "utente";
+        this.senha                  = "password";
+        this.esqueceu               = "Hai dimenticato la password?";
+        this.ou                     = "o";
+        this.conta                  = "Crea un account";
+        this.page_senha             = "RECUPERA PASSWORD";
+        this.texto_1                = "Inserisci la tua email e poi vai a";
+        this.texto_2                = "segui i passaggi inviati alla tua email per creare una nuova password.";
       }else if(this.lang=='fr'){
- 
+
         this.page_login             = "Entrer";
         this.campo_obrigatorio      = "Ce champ est obligatoire.";
-        this.frase                  = "Tout se connecte ici";  
-        this.email                  = "utilisateur"; 
-        this.senha                  = "Mot de passe";  
-        this.esqueceu               = "Mot de passe oublié?";  
-        this.ou                     = "ou";  
-        this.conta                  = "Créer un compte";  
-        this.page_senha             = "RECUPERER MOT DE PASSE";  
-        this.texto_1                = "Entrez votre email puis allez à";  
-        this.texto_2                = "suivez les étapes envoyées à votre email pour créer un nouveau mot de passe.";  
+        this.frase                  = "Tout se connecte ici";
+        this.email                  = "utilisateur";
+        this.senha                  = "Mot de passe";
+        this.esqueceu               = "Mot de passe oublié?";
+        this.ou                     = "ou";
+        this.conta                  = "Créer un compte";
+        this.page_senha             = "RECUPERER MOT DE PASSE";
+        this.texto_1                = "Entrez votre email puis allez à";
+        this.texto_2                = "suivez les étapes envoyées à votre email pour créer un nouveau mot de passe.";
         this.msg_servidor           =  "Impossible de se connecter au serveur!";
         this.load_enviando          = "Envoi...";
       }else if(this.lang=='es'){
         this.page_login             = "Eintreten";
         this.campo_obrigatorio      = "Este campo es obligatorio.";
-        this.frase                  = "Todo se conecta aquí";  
-        this.email                  = "usuario"; 
-        this.senha                  = "contraseña";  
-        this.esqueceu               = "¿olvido la contraseña?";  
-        this.ou                     = "o";  
-        this.conta                  = "Crear una cuenta";  
-        this.page_senha             = "RECUPERAR CONTRASEÑA";  
-        this.texto_1                = "Introduzca su dirección de correo electrónico y, a continuación,";  
-        this.texto_2                = "siga los pasos enviados a su correo electrónico para crear una nueva contraseña.";  
+        this.frase                  = "Todo se conecta aquí";
+        this.email                  = "usuario";
+        this.senha                  = "contraseña";
+        this.esqueceu               = "¿olvido la contraseña?";
+        this.ou                     = "o";
+        this.conta                  = "Crear una cuenta";
+        this.page_senha             = "RECUPERAR CONTRASEÑA";
+        this.texto_1                = "Introduzca su dirección de correo electrónico y, a continuación,";
+        this.texto_2                = "siga los pasos enviados a su correo electrónico para crear una nueva contraseña.";
         this.msg_servidor           =  "No se pudo conectar al servidor!";
         this.load_enviando          = "Envío...";
       }

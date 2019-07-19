@@ -43,7 +43,7 @@ export class VideoCodePage {
   package_videos :Number;
   public progress: number = 0;
   isAdicionado  :number =  0;
- 
+
   utmADD : String;
   constructor(
                @Inject(FirebaseApp) fb: any,
@@ -52,7 +52,7 @@ export class VideoCodePage {
                private codeProvider   : CodeProvider,
                public  net            : NetworkProvider,
                public toast           : ToastController,
-               public camera          : Camera, 
+               public camera          : Camera,
                private alertCtrl      : AlertController,
                public file            : File,
                public platform        : Platform,
@@ -66,7 +66,7 @@ export class VideoCodePage {
                private fTP            : FTP,
                private ng_zone: NgZone,
                public events: Events,
-              
+
 
               ) {
                 this.events.subscribe('updateScreen', () => {
@@ -117,7 +117,7 @@ onActionSheet(): void {
       {
         text: 'Link de vídeo externo',
         handler: () => {
-          
+
             this.showPrompt();
         }
       },
@@ -132,8 +132,8 @@ onActionSheet(): void {
         handler: () => {
           this.VideoCapture();
         }
-      },  
-      
+      },
+
       {
         text: 'Cancelar'
       }
@@ -170,12 +170,12 @@ showPrompt() {
 }
 public insertVideoLinkArray(link){
   this.util.showLoading("Enviando...");
-    if(this.net.ckeckNetwork()){
-      
-          this.codeProvider.video_link_create(this.id_code,this.token,link,"","") 
+
+
+          this.codeProvider.video_link_create(this.id_code,this.token,link,"","")
            .subscribe(
-              (result: any) =>{    
-                this.util.loading.dismiss(); 
+              (result: any) =>{
+                this.util.loading.dismissAll();
                 if(result.status == 200){
                   console.log("result delete code",result);
                   this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
@@ -191,15 +191,12 @@ public insertVideoLinkArray(link){
 
            } ,(error:any) => {
             this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-            this.util.loading.dismiss(); 
+            this.util.loading.dismissAll();
             this.navCtrl.setRoot('HomePage');
            });
 
-    }else{
-      this.util.loading.dismiss(); 
-        this.navCtrl.setRoot('NotNetworkPage');
-    } 
- 
+
+
 }
  //gravar video pela camera
 VideoCapture(){
@@ -219,12 +216,12 @@ VideoCapture(){
        let fileName = capturedFile.name;
        let dir = capturedFile['localURL'].split('/');
        dir.pop();
-       let fromDirectory = dir.join('/');    
+       let fromDirectory = dir.join('/');
        var toDirectory = this.file.externalCacheDirectory;
        this.correctPath(fromDirectory , fileName ,toDirectory , fileName);
      },
     (err: CaptureError) => console.error(err));
-       
+
   }
 private takePicture(): void {
 
@@ -235,7 +232,7 @@ private takePicture(): void {
       mediaType: this.camera.MediaType.VIDEO,
       saveToPhotoAlbum: true
     }
-    
+
       this.camera.getPicture(options).then((imageData) => {
          //testa se o arquivo selecionado é um video
          this.extension   = this.util.getExtension(imageData);
@@ -248,7 +245,7 @@ private takePicture(): void {
             });
             alert.present();
           }else{
-            //inclui na array da tela 
+            //inclui na array da tela
             this.caminho   = [];
             this.videos    = [];
             this.isConvertido =3;
@@ -261,7 +258,7 @@ private takePicture(): void {
                    this.inicia();
                   console.log("entrei no 1 if");
              }
-            
+
              else{
                 //converter base64
                 this.videos = this.videos_serve;
@@ -276,23 +273,23 @@ private takePicture(): void {
                   this.caminho=[];
                   this.caminho[0]= {files:base64,file_name:imageData};
                   this.isConvertido = 1;
-                  this.videos.push({id: "",video_link:imageData,file_name:imageData,post_status:1}); 
+                  this.videos.push({id: "",video_link:imageData,file_name:imageData,post_status:1});
                   /* this.utmADD
                   if(this.isAdicionado == 1 || this.isAdicionado == 2){
                         this.removeItemArray(imageData);
                         this.isAdicionado = 0;
                   }  */
                 });
-                
-              
-              } 
+
+
+              }
     }
 
     }, (err) => {
      // Handle error
     });
-  
-    
+
+
 
 }
 uploadVideo(){
@@ -313,18 +310,18 @@ inicia(){
             });
             alert.present();
           }
-          
+
     });
 }
 showAlert(){
     this.alerte= this.alertCtrl.create({
       title: 'Convertendo vídeo!',
       subTitle: 'Aguarde até o fim da conversão.<br><br><div class="circle"></div><br><br>',
-      enableBackdropDismiss: false 
+      enableBackdropDismiss: false
     });
     this.alerte.present();
   }
-selectUpload(){ 
+selectUpload(){
    if(this.caminho.length > 0 ){
       this.enviar();
    }else{
@@ -332,7 +329,7 @@ selectUpload(){
    }
 }
 handleIFrameLoadEvent(): void {
- 
+
 }
 removeItemArray(item){
   console.log("item para remover",item);
@@ -341,12 +338,12 @@ removeItemArray(item){
   console.log( this.videos );
 }
 video_delete(id_code){
-    if(this.net.ckeckNetwork()){
+
           this.util.showLoading("Aguarde..");
           this.codeProvider.video_delete(this.token,id_code,"")
           .subscribe(
                 (result: any) =>{
-                  this.util.loading.dismiss(); 
+                  this.util.loading.dismissAll();
                   if(result.status == 200){
                     console.log("result delete code",result);
                     this.toast.create({ message: 'Excluído com sucesso !', position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
@@ -356,9 +353,9 @@ video_delete(id_code){
                       this.getVideoServe();
                     }else{
                       this.videos = [];
-                     
+
                     }
-                   
+
                   }else if(result.status == 402){
                     this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'alerta'  }).present();
                     this.navCtrl.push('LoginPage');
@@ -369,43 +366,39 @@ video_delete(id_code){
 
           } ,(error:any) => {
             this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-            this.util.loading.dismiss(); 
+            this.util.loading.dismissAll();
             this.navCtrl.setRoot('HomePage');
           });
-        
-   }else{
-    this.navCtrl.setRoot('NotNetworkPage');
-   } 
+
+
 }
 getShowCode(){
-  if(this.net.ckeckNetwork()){
+
         this.util.showLoading("Aguarde...");
         this.codeProvider.getShowCode(this.id_code)
         .subscribe(
               (result: any) =>{
-                this.util.loading.dismiss(); 
+                this.util.loading.dismissAll();
                 console.log("result",result);
-                if(result.status == 200){  
+                if(result.status == 200){
                   this.vidbase64              = result.data[0]['album_vimeo'];
                   console.log(this.vidbase64);
                   this.getVideoServe();
-                     
-       
+
+
                 }else{
                   this.toast.create({ message: 'Ocorreu um erro inesperado !', position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                  
+
                 }
 
         } ,(error:any) => {
           this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-          this.util.loading.dismiss(); 
+          this.util.loading.dismissAll();
           this.navCtrl.setRoot('HomePage');
         });
-      
-  }else{
-        this.navCtrl.setRoot('NotNetworkPage');
-  } 
-  
+
+
+
 }
 showConfirm_ItemArray(id_img) {
   const confirm = this.alertCtrl.create({
@@ -415,7 +408,7 @@ showConfirm_ItemArray(id_img) {
      {
        text: 'Cancelar',
        handler: () => {
-        
+
        }
      },
      {
@@ -427,7 +420,7 @@ showConfirm_ItemArray(id_img) {
    ]
  });
  confirm.present();
-} 
+}
 //chamada alerta de confirmação antes de excluir
 showConfirm(id_img) {
   const confirm = this.alertCtrl.create({
@@ -449,7 +442,7 @@ showConfirm(id_img) {
    ]
  });
  confirm.present();
-} 
+}
 showConfirm2(id_img) {
   const confirm = this.alertCtrl.create({
    title: 'Tem certeza que deseja excluir este item ?',
@@ -471,7 +464,7 @@ showConfirm2(id_img) {
    ]
  });
  confirm.present();
-} 
+}
 deleteArqui(video){
   const images = firebase.storage().ref().child('pasta');
   const image = images.child(video);
@@ -499,19 +492,19 @@ transcodeVideo():Promise<string>{
         console.log('transcodeVideo progress callback, info: ' + info);
         console.log('transcodeVideo progress callback, info: ' + info*100);
         this.info = 3000;
-    } 
+    }
   })
-  .then((fileUri: string) =>{ 
+  .then((fileUri: string) =>{
        this.isConvertido = 1;
        this.videos       = this.videos_serve;
        this.fullPath     = fileUri;
        this.videos       = [];
        this.videos       = this.videos_serve;
-       this.videos.push({id: "",video_link: this.fullPath,file_name:this.fullPath,post_status:1}); 
+       this.videos.push({id: "",video_link: this.fullPath,file_name:this.fullPath,post_status:1});
        this.isAdicionado = 1;
        this.toast.create({ message:"Vídeo convertido com sucesso!", position: 'top', duration: 4000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
        return fileUri;
-       
+
   }, (err) => {
         this.isConvertido = 2;
         this.toast.create({ message:"Não foi possível converter o vídeo selecionado!", position: 'top', duration: 4000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
@@ -521,19 +514,19 @@ transcodeVideo():Promise<string>{
         this.isConvertido = 2;
         this.alerte.dismiss();
         this.toast.create({ message:"Não foi possível converter o vídeo selecionado!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-  });  
+  });
 
 }
 ///envio base64
 enviar(){
   if(this.caminho.length >0){
-   
-      if(this.net.ckeckNetwork()){
+
+
         this.util.showLoading("Enviando...");
-      this.codeProvider.video_create(this.id_code,this.token,this.caminho,"") 
+      this.codeProvider.video_create(this.id_code,this.token,this.caminho,"")
                   .subscribe(
                        (result: any) =>{
-                        this.util.loading.dismiss(); 
+                        this.util.loading.dismissAll();
                           if(result.status == 200){
                               //limpa array
                               this.extension ="";
@@ -544,7 +537,7 @@ enviar(){
                               this.vidbase64 = result.midias;
                               this.getVideoServe();
                               this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-                       
+
                           } else if(result.status == 402){
                             this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                             this.navCtrl.push('LoginPage');
@@ -555,15 +548,12 @@ enviar(){
                         },(error:any) => {
                           console.log('erro',error);
                           this.toast.create({ message:error, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                          this.util.loading.dismiss(); 
-                       
-                        }); 
-                  } else{
-                    this.util.loading.dismiss();
-                    this.navCtrl.setRoot('NotNetworkPage');
-               }   
+                          this.util.loading.dismissAll();
+
+                        });
+
    }else{
-          this.util.loading.dismiss();
+          this.util.loading.dismissAll();
                   let alert = this.alertCtrl.create({
                     title: 'AVISO!',
                     subTitle: 'Selecione uma vídeo antes de enviar',
@@ -589,19 +579,19 @@ validaPacote(){
   }else {
     this.uploadVideo();
      //this.viewCtrl.dismiss();
- } 
+ }
 
 }
 //envio pelo FTP
 onUploadFTP():void{
   if(this.isConvertido == 1){
-    if(this.net.ckeckNetwork()){
+
          this.util.showLoading("Enviando...");
             this.fTP.connect('ftp.kscode.com.br', 'carolx54@kscode.com.br', 'carolx2018')
-            .then((res: any) =>{ 
+            .then((res: any) =>{
               console.log("conexão iniciada");
-              //let 
-             
+              //let
+
               this.name = this.createNewFileName(this.fullPath);
               console.log("name",name);
               let url = "/"+this.id_code+"/"+this.name;
@@ -612,10 +602,10 @@ onUploadFTP():void{
                   let up=result*100;
                   this.on_progress;
                   if(up== 100){
-                    this.codeProvider.video_create_ftp(this.id_code,this.token,this.name) 
+                    this.codeProvider.video_create_ftp(this.id_code,this.token,this.name)
                     .subscribe(
                          (result: any) =>{
-                          this.util.loading.dismiss(); 
+                          this.util.loading.dismissAll();
                             if(result.status == 200){
                                 //limpa array
                                 this.vidbase64="";
@@ -626,7 +616,7 @@ onUploadFTP():void{
                                 this.vidbase64 = result.midias;
                                 this.getVideoServe();
                                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-                         
+
                             } else if(result.status == 402){
                               this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                               this.navCtrl.push('LoginPage');
@@ -637,28 +627,25 @@ onUploadFTP():void{
                           },(error:any) => {
                             console.log('erro',error);
                             this.toast.create({ message:error, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                            this.util.loading.dismiss(); 
-                         
-                          }); 
+                            this.util.loading.dismissAll();
+
+                          });
                   }
               })
             })
             .catch((error: any) => {
               console.error(error);
               this.toast.create({ message:error, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-              this.util.loading.dismiss(); 
-                         
+              this.util.loading.dismissAll();
+
             });
 
-          } else{
-          
-            this.navCtrl.setRoot('NotNetworkPage');
-       }  
-  
-  
+
+
+
   }else{
-            
-            this.util.loading.dismiss();
+
+            this.util.loading.dismissAll();
                   let alert = this.alertCtrl.create({
                     title: 'AVISO!',
                     subTitle: 'Selecione uma vídeo antes de enviar',
@@ -711,9 +698,9 @@ correctPath(fromDirectory , fileN ,toDirectory , fileName){
             this.fullPath=res.nativeURL;
             this.inicia();
     },err => {
-        
+
     });
-     
+
     }else{
             this.inicia();
     }
@@ -726,31 +713,31 @@ checkDir(url,past):Boolean{
     return check;
 }
 searchString(str1):Number{
-    var index = str1.indexOf( "WhatsApp" ); 
-    
+    var index = str1.indexOf( "WhatsApp" );
+
     return index;
 }
 searchString2(str1):Number{
-    var index = str1.indexOf( "fb" ); 
-    
+    var index = str1.indexOf( "fb" );
+
     return index;
 }
 searchString3(str1):Number{
-    var index = str1.indexOf( "video" ); 
-    
+    var index = str1.indexOf( "video" );
+
     return index;
 }
 searchString4(str1):Number{
-    var index = str1.indexOf( "downloader" ); 
-    
+    var index = str1.indexOf( "downloader" );
+
     return index;
 }
 createDir(url,past){
 
   if(this.checkDir(url,past)){
    }else{
-      this.file.createDir(url,past,false).then(res=>{});  
+      this.file.createDir(url,past,false).then(res=>{});
   }
 }
- 
+
 }

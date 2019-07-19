@@ -28,7 +28,7 @@ class ="";
   lang: any;
 
   constructor(
-                public navCtrl         : NavController, 
+                public navCtrl         : NavController,
                 public navParams       : NavParams,
                 formBuilder            : FormBuilder ,
                 public toast           : ToastController,
@@ -62,20 +62,20 @@ class ="";
                   } else {
                     this.messageEmail = "";
                   }
-              
-                 
+
+
         }
         else {
-              if(this.net.ckeckNetwork()){
+
                     this.codeProvider.forgotpass(this.email,this.lang)
                         .subscribe(
                                 (result: any) =>{
                                   if(result.status == 200){
                                     this.toast.create({ message: result.message, position: 'botton', duration: 4000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-                                    this.navCtrl.push('LoginPage',{lang:this.lang});  
+                                    this.navCtrl.push('LoginPage',{lang:this.lang});
                                   }if(result.status == 403){
                                     this.toast.create({ message: result.message, position: 'botton', duration: 4000 ,closeButtonText: 'Ok!',cssClass: 'erro'  }).present();
-                                
+
                                   }
                         },(error:any) => {
                               if(error.status){
@@ -85,17 +85,14 @@ class ="";
                                     this.message      ='Email não encontrado';
                                     this.messageEmail = "";
                                     this.class        = "danger";
-                                  
+
                               }
-                
+
                       });
 
-                  }else{
-                      this.navCtrl.setRoot('NotNetworkPage');
-                  
-                  }
-            
-               
+
+
+
         }
   }
 }

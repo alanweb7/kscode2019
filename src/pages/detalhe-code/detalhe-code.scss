@@ -1,12 +1,12 @@
 page-detalhe-code {
-  
+
         .slide-galery {
             width:100%;
            height: 250px;
-        
-        
+
+
         }
-         
+
     ion-badge {
         padding: 3px 8px;
         text-align: center;
@@ -19,7 +19,7 @@ page-detalhe-code {
         vertical-align: baseline;
         color: #001e5b !important;
         background: #fff !important;
-    } 
+    }
         .toolbar-title {
             color: #fff;
             text-transform: uppercase;
@@ -27,8 +27,8 @@ page-detalhe-code {
         .swiper-slide img {
             width: auto !important;
             height: 100% !important;
-           
-        } 
+
+        }
         .bt-busca {
             position: absolute;
             background: #fff;
@@ -47,7 +47,7 @@ page-detalhe-code {
             .grid {
                 padding: 0;
                 .row {
-    
+
                     .col {
                         padding: 0;
                         .icon {
@@ -73,7 +73,7 @@ page-detalhe-code {
             //padding-top: 30px;
             background: #ededed;
             .box-menu-categorias { padding: 5px 5px 5px 5px;
-               
+
                 overflow-x: scroll;
                 overflow-y: hidden;
                 white-space: nowrap;
@@ -124,13 +124,13 @@ page-detalhe-code {
                             }
                         }
                     }
-    
+
                 }
             }
         }
 ion-content.pg-login.content.content {
-  
-   
+
+
         .fab{
             padding: 0;
             margin: 0;
@@ -191,7 +191,7 @@ ion-content.pg-login.content.content {
                 [col-4] {
                     padding: 0;
                     height: 50px;
-                   
+
                 }
                 h2 {
                     margin: 0;
@@ -253,8 +253,22 @@ ion-content.pg-login.content.content {
                         margin-right: 0px;
                         font-size: 23px;
                     }
-    
+
                 }
             }
         }
+
+      // estilos do editor
+      .mce-content-body [contentEditable=false][data-mce-selected] {
+        cursor: default !important;
+        outline: none;
+      }
+      editor.second-editor {
+        z-index: 0 !important;
+        pointer-events: none;
+      }
+      div.full-audio-div{
+        width: 100% !important;
+        text-align: center;
+      }
 }

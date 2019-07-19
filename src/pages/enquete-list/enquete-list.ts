@@ -28,8 +28,8 @@ export class EnqueteListPage {
                public viewCtrl       : ViewController,
                public modalCtrl      : ModalController,
                public alertCtrl      : AlertController,
-               
-             ) 
+
+             )
   {
   }
 
@@ -40,19 +40,15 @@ export class EnqueteListPage {
     this.enq_serve        = [];
     this.minhas_enq       = [];
     console.log('ionViewDidLoad EnqueteListPage',this.ask_id);
-  
+
   }
   //fazer o start do slide
   private ionViewDidEnter() {
-     if(this.net.ckeckNetwork()){
+
         this.util.showLoading("Aguarde...");
         this.getAllEnq(this.token,this.code_id);
         this.setFilteredItems();
-      }else{
-      
-        this.util.loading.dismiss();
-        this.navCtrl.setRoot('NotNetworkPage');
-      } 
+
    }
   setFilteredItems() {
     if(this.searchTerm == ""){
@@ -61,13 +57,13 @@ export class EnqueteListPage {
     }else{
      this.minhas_enq = this.filterItems(this.searchTerm);
     }
-  
- 
+
+
  }
  filterItems(searchTerm){
   return this.minhas_enq.filter((item) => {
       return item.question.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-  });     
+  });
 
 }
  onCancel(){
@@ -84,14 +80,14 @@ export class EnqueteListPage {
     this.navCtrl.push('EnqueteAddPage', {token:this.token,code:this.code_id,ask_id:ask_id,ask_active:this.ask_id });
   }
   getAllEnq(token,code_id){
-    
-    if(this.net.ckeckNetwork()){
+
+
     this.codeProvider.getEnqALL(token,code_id)
     .subscribe(
           (result: any) =>{
-              this.util.loading.dismiss(); 
+              this.util.loading.dismissAll();
               if(result.status == 200){
-               
+
                 this.minhas_enq = result.data;
                 this.enq_serve  = result.data;
                 this.ask_id           = result.ask_active;
@@ -104,16 +100,13 @@ export class EnqueteListPage {
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                 this.navCtrl.push('HomePage');
               }
-      
+
             } ,(error:any) => {
               this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                this.util.loading.dismiss(); 
-               
+                this.util.loading.dismissAll();
+
             });
-    }else{
-      this.util.loading.dismiss();
-      this.navCtrl.setRoot('NotNetworkPage');
-     }
+
   }
    //chamada alerta de confirmação antes de excluir
  showConfirm(ask_id) {
@@ -138,18 +131,18 @@ export class EnqueteListPage {
  confirm.present();
 
 
-} 
+}
   deleteEnq(ask_id){
     this.util.showLoading("Aguarde...");
       this.codeProvider.deleteEnq(this.code_id,ask_id,this.token).subscribe(
         (result: any) =>{
-            this.util.loading.dismiss(); 
-           
+            this.util.loading.dismissAll();
+
               if(result.status == 200){
                  this.removeItemArray(ask_id);
                 console.log("oi",this.ask_id);
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-               
+
               }else if(result.status == 402){
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                 this.navCtrl.push('LoginPage');
@@ -158,11 +151,11 @@ export class EnqueteListPage {
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                 this.navCtrl.push('HomePage');
               }
-      
+
             } ,(error:any) => {
               this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                this.util.loading.dismiss(); 
-               
+                this.util.loading.dismissAll();
+
             });
   }
   removeItemArray(item){

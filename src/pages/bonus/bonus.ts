@@ -29,7 +29,7 @@ export class BonusPage {
   total_receber :String;
   selectedSegment      : string;
   //charts
- 
+
   option1   : Number;
   option2   : Number;
   label1    : String;
@@ -98,10 +98,10 @@ export class BonusPage {
   pesquisa: pesquisa;
   resultado: any;
     constructor(
-                public navCtrl       : NavController, 
-                public navParams     : NavParams, 
+                public navCtrl       : NavController,
+                public navParams     : NavParams,
                 private cli_Provider : ClienteProvider ,
-                private toast        : ToastController, 
+                private toast        : ToastController,
                 formBuilder          : FormBuilder,
                 public  util         : UtilService,
                 public  net          : NetworkProvider,
@@ -120,14 +120,14 @@ export class BonusPage {
                  conta        : ['', Validators.required],
                  titular      : ['', Validators.required],
                  cpf      : ['', Validators.required]
-                
+
                });
   }
-  
+
   ionViewDidLoad() {
     console.log('ionViewDidLoad BonusPage');
     this.id_serv      ="";
-   
+
     this.cupom        = this.navParams.get('cupom');
     this.token        = this.navParams.get('token');
     this.id_serv      = this.navParams.get('id');
@@ -153,10 +153,10 @@ export class BonusPage {
     this._translateLanguage();
     this.getCupom();
     this.getConta();
-    
+
   }
 
- 
+
   calcbar(){
     ///monta o gráfico
     console.log(this.history);
@@ -208,7 +208,7 @@ export class BonusPage {
       }else if(currentSlide == 2){
         this.selectedSegment = '2';
       }
-     
+
     }
     private _translateLanguage() : void
     {
@@ -242,7 +242,7 @@ export class BonusPage {
         this.load_aguarde     = this.translate.instant("default.load_aguarde");
         this.btn_salvar       = this.translate.instant("default.btn_salvar");
         this.resultado        = this.translate.instant("default.pesquisa");
-         
+
         console.log(this.texto1,this.texto2);
        }, 250);
     }
@@ -262,7 +262,7 @@ getCupom(){
               console.log(this.cliente);
               this.calcbar();
         });
-    
+
 }
 compareFn(e1: String, e2: String): boolean {
   return e1 && e2 ? e1 === e2 : e1 === e2;
@@ -271,14 +271,14 @@ compareFn(e1: String, e2: String): boolean {
 change_tipo($event) {
   this.model.tipo =$event;
   console.log($event);
-  
+
 }
 change_banco($event) {
   this.model.banco =$event;
   console.log($event);
 }
 doRefresh(refresher) {
-    
+
       setTimeout(() => {
         this.cliente=[];
         this.label=[];
@@ -288,19 +288,19 @@ doRefresh(refresher) {
       // this.getAllEstabelecimentoBonus();
       this.getCupom();
       this.getConta();
-      
+
         refresher.complete();
-    
+
       }, 2000);
 }
 getConta(){
   this.util.showLoading(this.load_enviando);
-  if(this.net.ckeckNetwork()){
+
     this.cli_Provider.setConta(this.lang,this.token,"get_conta",this.model.banco,this.model.tipo,this.model.agencia,this.model.conta,this.model.titular,this.model.cpf)
     .subscribe(
           (result: any) =>{
             console.log(result);
-            this.util.loading.dismiss(); 
+            this.util.loading.dismissAll();
               if(result.status == 200){
                 this.model.banco = result.info_conta.banco;
                 this.model.tipo = result.info_conta.tp_conta;
@@ -309,10 +309,10 @@ getConta(){
                 this.titular = result.info_conta.titular;
                 this.conta = result.info_conta.n_conta;
               //  this.toast.create({ message: result.messagem, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-                 
+
               }
       })
-  }
+
 
 
 }
@@ -334,7 +334,7 @@ setConta(){
               this.messagetipo = "";
               console.log("entrei aqui 2");
             }
-        
+
 
             if (!agencia.valid) {
               this.erroragencia = true;
@@ -343,7 +343,7 @@ setConta(){
               this.messageagencia = "";
               console.log("entrei aqui 3");
             }
-        
+
             if (!conta.valid) {
               this.errorconta = true;
               this.messageconta =this.campo_obrigatorio;
@@ -369,27 +369,27 @@ setConta(){
   else {
     console.log("entrei aqui 2321312");
         this.util.showLoading(this.load_enviando);
-        if(this.net.ckeckNetwork()){
+
           this.cli_Provider.setConta(this.lang,this.token,"set_conta",this.model.banco,this.model.tipo,this.model.agencia,this.model.conta,this.model.titular,this.model.cpf)
           .subscribe(
                 (result: any) =>{
                   console.log(result);
-                  this.util.loading.dismiss(); 
+                  this.util.loading.dismissAll();
                     if(result.status == 200){
 
                       this.toast.create({ message: result.messagem, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-                       
+
                     }
             })
-        }
 
-      }   
+
+      }
   }
 searchList(){
- 
+
     /* for (let index = 0; index < this.history.length; index++) {
       const element = this.history[index];
-     
+
      // element.date = this.replace(element.date);
      let dt1;
     //  dt1 = element.date.replace("/",".");
@@ -406,7 +406,7 @@ searchList(){
     this.cli_Provider.getCupom_Date(this.token,this.pesquisa.data_init,this.pesquisa.data_fim).subscribe(
       (result: any) =>{
             console.log("result",result);
-            this.util.loading.dismiss();
+            this.util.loading.dismissAll();
             this.history=[];
             this.label = [];
             this.backColor =[];
@@ -417,16 +417,16 @@ searchList(){
             console.log(this.dadosFiltro);
             if(result.history.length == 0){
               this.toast.create({ message: this.resultado, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'alerta'  }).present();
-                 
+
             }
-    
+
       });
   }
    formatDate (input) {
     var datePart = input.match(/\d+/g),
     year = datePart[0], // get only two digits
     month = datePart[2], day = datePart[1];
-  
+
   //  console.log(day+month+year);
     return(day+"."+month+"."+year);
   }
@@ -440,8 +440,8 @@ export class Cliente_Edit {
   public digito     : String;
   public titular    : String;
   public cpf        : String;
-  
- 
+
+
 }
 export class pesquisa
  {

@@ -9,11 +9,14 @@ import { OneSignal } from '@ionic-native/onesignal';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {HttpClient} from "@angular/common/http";
+import { EditorModule } from '@tinymce/tinymce-angular';
+
 @NgModule({
   declarations: [
     DetalheCodePage,
   ],
   imports: [
+    EditorModule,
     IonicPageModule.forChild(DetalheCodePage),
     TranslateModule.forChild({
       loader: {
@@ -23,8 +26,8 @@ import {HttpClient} from "@angular/common/http";
       }
     }),
   ],
-  
-  
+
+
   providers: [
     HistoricoService,
     PhotoViewer,

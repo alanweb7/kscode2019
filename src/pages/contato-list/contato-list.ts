@@ -18,17 +18,17 @@ import { TranslateService } from '@ngx-translate/core';
 export class ContatoListPage {
   @ViewChild('mySlider') slider: Slides;
   selectedSegment      : string;
-  slides               : any; 
+  slides               : any;
   token        : String;
-  code_id      : String; 
+  code_id      : String;
   facebook     : any[];
   instagram    : any[];
   whatsapp     : any[];
   fone         : any[];
   email        : any[];
   linkedin     : any[];
-  site         : any[];  
-  selectTipo   : String;         
+  site         : any[];
+  selectTipo   : String;
   page;
   btn_publicar;
   btn_cancelar;
@@ -45,7 +45,7 @@ export class ContatoListPage {
     msg_exlcuir;
     texto;
     page_contato;
-  constructor( public navCtrl         : NavController, 
+  constructor( public navCtrl         : NavController,
                public navParams       : NavParams,
                public alertCtrl       : AlertController,
                private codeProvider   : CodeProvider,
@@ -57,7 +57,7 @@ export class ContatoListPage {
                private translate 	  : TranslateService
                ) {
     this.selectedSegment = '0';
-  
+
   }
 
   ionViewDidLoad() {
@@ -72,13 +72,13 @@ export class ContatoListPage {
     this.fone          = [];
     this.email         = [];
     this.linkedin      = [];
-    this.site          = [];   
+    this.site          = [];
     this.selectTipo    = "whatsapp";
     this._translateLanguage();
-  
+
     }
     private ionViewDidEnter() {
-        
+
       this.getList();
     }
     private _translateLanguage() : void
@@ -107,8 +107,8 @@ export class ContatoListPage {
           this.email_campo      = this.translate.instant("meus_contatos.email");
           this.campo_link       = this.translate.instant("meus_contatos.campo_link");
           this.page_contato       = this.translate.instant("meus_contatos.page");
-        
-        
+
+
        }, 250);
     }
 //trocar o slide de acordo com o segment
@@ -151,10 +151,10 @@ voltar(){
 }
  getList(){
   this.util.showLoading(this.load_aguarde);
-  if(this.net.ckeckNetwork()){
+
      this.codeProvider.contato(this.code_id,this.token,"true","","","","","","get","",this.lang).subscribe(
-      (result: any) =>{    
-      this.util.loading.dismiss(); 
+      (result: any) =>{
+      this.util.loading.dismissAll();
             if(result.status == 200){
                   this.whatsapp  = result.code_sectors.whatsapp;
                   this.facebook  = result.code_sectors.facebook;
@@ -173,13 +173,10 @@ voltar(){
             }
         } ,(error:any) => {
           this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-          this.util.loading.dismiss(); 
+          this.util.loading.dismissAll();
           this.navCtrl.setRoot('HomePage');
          });
-  }else{
-          this.util.loading.dismiss(); 
-          this.navCtrl.setRoot('NotNetworkPage');
-  }
+
 
  }
  newSetor(id){
@@ -212,15 +209,15 @@ voltar(){
      ]
    });
    confirm.present();
-  
-  
-  } 
+
+
+  }
  deleteSetor(id,tipo){
   this.util.showLoading(this.load_aguarde);
-      if(this.net.ckeckNetwork()){
+
         this.codeProvider.contato(this.code_id,this.token,"true","","","","","","delete",id,this.lang).subscribe(
-        (result: any) =>{    
-        this.util.loading.dismiss(); 
+        (result: any) =>{
+        this.util.loading.dismissAll();
               if(result.status == 200){
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                 this.removeItemArray(id,tipo);
@@ -233,17 +230,14 @@ voltar(){
               }
           } ,(error:any) => {
             this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-            this.util.loading.dismiss(); 
+            this.util.loading.dismissAll();
             this.navCtrl.setRoot('HomePage');
             });
-    }else{
-            this.util.loading.dismiss(); 
-            this.navCtrl.setRoot('NotNetworkPage');
-    }
+
  }
  removeItemArray(item,tipo){
   console.log("item para remover",item,tipo);
-   
+
   if(tipo == 0){
      const index = this.whatsapp.indexOf(item);
       this.whatsapp.splice(index, 1);

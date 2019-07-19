@@ -1,0 +1,71 @@
+<!--
+  Generated template for the VideoNg2Page page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>video-ng2</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+    <ion-grid>
+        <ion-row>
+            <ion-col width-40 [ngStyle]="{'background-color': 'Bisque'}">
+              <h3>Seleccionar Imagenes</h3>
+              <div width="200px">Indique Carpeta:<br><input class="cajaTexto" type="text" id="carpeta" [(ngModel)]="carpeta" /></div>
+                <input type="file" class="invisible" id="seleccion" ng2FileSelect [uploader]="uploader" multiple />
+                <button ion-button small icon-right [ngStyle]="{'background-color': '#D2691E'}" (click)="openFileDialog1()">Seleccione Imagenes</button>
+            </ion-col>
+            <ion-col width-60 *ngIf="uploader?.queue?.length >0">
+                <div *ngIf="uploader?.queue?.length >1">
+                  <h3>Lista de Archivos</h3>
+                  <p>Archivos Listados: {{ uploader?.queue?.length }}</p>
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr *ngFor="let item of uploader.queue">
+                            <td><strong>{{ item?.file?.name }}</strong></td>
+                            <td *ngIf="uploader.isHTML5" nowrap>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</td>
+                            <td *ngIf="uploader.isHTML5">
+                                <progress id="progressbar" max="100" value="{{ item.progress }}"> </progress>
+                                <div id="progressbarlabel">{{ item.progress }} %</div>
+                            </td>
+                            <td class="text-center">
+                                <span *ngIf="item.isCancel"><ion-icon class="iconorojo" name="close-circle"></ion-icon></span>
+                                <span *ngIf="item.isError"><ion-icon class="iconorojo" name="close-circle"></ion-icon></span>
+                            </td>
+                            <td nowrap>
+                                <button ion-button small icon-right *ngIf="!item.isSuccess" (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">Subir<ion-icon name="cloud-upload"></ion-icon></button>
+                                <!-- <button ion-button icon-right *ngIf="!item.isSuccess" (click)="item.remove()" [ngStyle]="{'background-color': '#D2691E'}">Cancel<ion-icon name="close-circle"></ion-icon></button> -->
+                                <button ion-button small icon-right *ngIf="!item.isSuccess" (click)="item.remove()" color="danger">Limpiar<ion-icon name="trash"></ion-icon></button>
+                                <span *ngIf="item.isSuccess"><ion-icon class="iconoverde" name="checkmark-circle-outline"></ion-icon></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div>
+                    <div>
+                        Progreso Global: {{ uploader.progress }} %
+                        <progress id="progressbar" class="progreso" max="100" value="{{ uploader.progress }}"> </progress>
+
+                    </div>
+                    <div *ngIf="uploader?.queue?.length >1">
+                      <button ion-button small icon-right (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">Subir Todo<ion-icon name="cloud-upload"></ion-icon></button>
+                      <!-- <button ion-button icon-right (click)="uploader.cancelAll()" [ngStyle]="{'background-color': '#D2691E'}" [disabled]="!uploader.isUploading">Cancel all<ion-icon name="close-circle"></ion-icon></button> -->
+                      <button ion-button small icon-right color="danger" (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">Limpiar Todo<ion-icon name="trash"></ion-icon></button>
+                      <!-- <button type="button" class="btn btn-warning small " (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading"></button>
+                      <button type="button" class="btn btn-danger small " (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length"></button>-->
+                    </div>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-content>

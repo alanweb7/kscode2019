@@ -51,8 +51,8 @@ export class ImageCodePage {
   arq_selecione: any;
 
   constructor(
-    public navCtrl         : NavController, 
-    public navParams       : NavParams, 
+    public navCtrl         : NavController,
+    public navParams       : NavParams,
     public platform        : Platform,
     public viewCtrl        : ViewController,
     public appCtrl         : App,
@@ -92,7 +92,7 @@ export class ImageCodePage {
   //fazer o start do slide
  ionViewDidEnter() {
   this.getShowCode();
- 
+
  }
  private _translateLanguage() : void
  {
@@ -126,7 +126,7 @@ export class ImageCodePage {
        this.aviso            = this.translate.instant("default.aviso");
        this.selecione        = this.translate.instant("videos.selecione");
        this.arq_selecione    = this.translate.instant("image.arq_selecione");
-   
+
     }, 250);
  }
   ShowCam(){
@@ -162,7 +162,7 @@ export class ImageCodePage {
     });
    // myModal.present();
    // this.viewCtrl.dismiss();
-    
+
   }
  getImagenServe(){
    if(this.imagesbase64 != "" && this.imagesbase64 != null){
@@ -175,33 +175,30 @@ export class ImageCodePage {
  }
 
  getShowCode(){
-  if(this.net.ckeckNetwork()){
+
         this.util.showLoading(this.load_aguarde);
         this.codeProvider.getShowCode(this.id_code)
         .subscribe(
               (result: any) =>{
-                this.util.loading.dismiss(); 
+                this.util.loading.dismissAll();
                 console.log("result",result);
-                if(result.status == 200){  
+                if(result.status == 200){
                   this.images              = result.data[0]['galeria'];
                   this.getImagenServe();
-                     
-       
+
+
                 }else{
                   this.toast.create({ message: this.msg_erro, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                  
+
                 }
 
         } ,(error:any) => {
           this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-          this.util.loading.dismiss(); 
+          this.util.loading.dismissAll();
           this.navCtrl.setRoot('HomePage');
         });
-      
-  }else{
-        this.navCtrl.setRoot('NotNetworkPage');
-  } 
-  
+
+
 }
  //chamada alerta de confirmação antes de excluir
  showConfirm(id_img) {
@@ -212,7 +209,7 @@ export class ImageCodePage {
      {
        text: this.btn_cancelar,
        handler: () => {
-        
+
        }
      },
      {
@@ -224,20 +221,20 @@ export class ImageCodePage {
    ]
  });
  confirm.present();
-} 
+}
 //visualizar foto tamnho maior
 viewPhoto(img){
   this.photoViewer.show(img);
 }
 imagen_delete(id_img){
-  if(this.net.ckeckNetwork()){
+
         this.util.showLoading(this.load_aguarde);
         this.codeProvider.imagen_delete(this.token,id_img,this.lang)
         .subscribe(
               (result: any) =>{
-               this.util.loading.dismiss(); 
+               this.util.loading.dismissAll();
                 if(result.status == 200){
-                
+
                   this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                   this.imagesbase64="";
                   if(result.midias.length > 0){
@@ -245,7 +242,7 @@ imagen_delete(id_img){
                     this.getImagenServe();
                   }else{
                     this.images = [];
-                   
+
                   }
                   }else if(result.status == 402){
                     this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
@@ -257,13 +254,11 @@ imagen_delete(id_img){
 
         } ,(error:any) => {
           this.toast.create({ message: this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-              
+
         });
-      
-  }else{
-    this.navCtrl.setRoot('NotNetworkPage');
-  } 
+
+
 }
 
-  
+
 }

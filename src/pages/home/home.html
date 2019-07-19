@@ -1,27 +1,27 @@
 <ion-header>
- 
+
         <ion-navbar color="primary">
             <button ion-button menuToggle>
                 <ion-icon name="menu"></ion-icon>
             </button>
-           
+
             <ion-title>
                 <ion-icon name="icone-logo"></ion-icon>
             </ion-title>
             <ion-buttons end>
                 <button ion-button icon-only (click)="showCheckbox()">
                     <ion-icon name="flag"></ion-icon>
-                   
+
                 </button>
-             
+
             </ion-buttons>
         </ion-navbar>
-      
+
       </ion-header>
-      
-      
+
+
       <ion-content class="fundo">
-       
+
           <div >
             <ion-card class="fundo">
                 <img src="assets/imgs/0YCNfH79RwanY6W3GTye_Logo_white.png"/>
@@ -29,22 +29,22 @@
                   <ion-card-title>
                       {{title}}
                     </ion-card-title>
-                 
+
                 </ion-card-content>
               </ion-card>
-              <form id="home-form1">
+              <form id="home-form1" [formGroup]="signupform">
                   <ion-card-content>
                       <ion-grid>
                           <ion-row>
                               <ion-col col-12>
                                   <ion-item id="home-input1" ng-model="movie.name" class="search_code">
                                       <ion-label></ion-label>
-                                      <ion-input type="text" placeholder="CODE"  [(ngModel)]="codeNumber" name="code"></ion-input>
+                                      <ion-input type="text" placeholder="CODE"  [(ngModel)]="codeNumber" formControlName="codeNumber" name="code"></ion-input>
                                   </ion-item>
                               </ion-col>
                               <ion-col col-12 class="info-servico">
-                                  <button id="home-button1" ion-button color="positive" block icon-left (click)="pushPage()" >
-                                      <ion-icon name="navigate"></ion-icon> 
+                                  <button id="home-button1" ion-button color="positive" block icon-left (click)="pushPage()" [disabled]="signupform.invalid" >
+                                      <ion-icon name="navigate"></ion-icon>
                                       {{button}}
                                     </button>
                               </ion-col>
@@ -52,7 +52,7 @@
                       </ion-grid>
                   </ion-card-content>
               </form>
-            
+
          </div>
       </ion-content>
       <!-- CONTENT -->
@@ -62,24 +62,24 @@
         <ion-grid>
             <ion-row>
                 <ion-col col-3>
-                   
+
                       <div class="adquire-code" (click)="pushPagePesquisa()">
                             <span class="title-share">{{pesquisa}}</span>
                       </div>
                 </ion-col>
                 <ion-col col-1>
                         |
-                  
+
                 </ion-col>
                 <ion-col col-4>
                         <div class="adquire-code" (click)="shopcode()">
                                 <span class="title-share">{{adquira}}</span>
                         </div>
-                  
+
                 </ion-col>
                 <ion-col col-1>
                         |
-                  
+
                 </ion-col>
                 <ion-col col-3>
                     <div class="adquire-code" (click)="pushPageCode()">
@@ -87,9 +87,8 @@
                     </div>
                 </ion-col>
             </ion-row>
-         
+
         </ion-grid>
     </ion-toolbar>
 </ion-footer>
 <!-- FOOTER -->
-      

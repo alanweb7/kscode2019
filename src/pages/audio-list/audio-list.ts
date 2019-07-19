@@ -1,3 +1,5 @@
+import { HTTP } from '@ionic-native/http';
+import { File } from '@ionic-native/file';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Alert, ToastController, AlertController, Platform, ModalController, LoadingController, ActionSheetController, ViewController } from 'ionic-angular';
 //import Provider
@@ -7,7 +9,15 @@ import { UtilService } from '../../providers/util/util.service';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
- * Generated class for the VideoListPage page.
+ * funcoes de gravacao de audio
+ */
+import { Media, MediaObject } from '@ionic-native/media';
+import { FTP } from '@ionic-native/ftp';
+import {NgZone} from '@angular/core';
+import { NativeAudio } from '@ionic-native/native-audio';
+
+/**
+ * Generated class for the AudioListPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -15,10 +25,10 @@ import { TranslateService } from '@ngx-translate/core';
 
 @IonicPage()
 @Component({
-  selector: 'page-video-list',
-  templateUrl: 'video-list.html',
+  selector: 'page-audio-list',
+  templateUrl: 'audio-list.html',
 })
-export class VideoListPage {
+export class AudioListPage {
   token        : any;
   id_code      : any;
   videos       : any[];
@@ -69,6 +79,40 @@ export class VideoListPage {
   link: any;
   galeria: string;
   fontCapture: string;
+
+  uploadedVideo: boolean;
+  fileUpload: any;
+  inUpload: boolean;
+  isEnviando: boolean;
+  inCanceled: boolean;
+  inProgress: boolean;
+  isSelecionado: boolean = false;
+  recording: boolean = false;
+  filePath: string;
+  fileName: string;
+  audio: MediaObject;
+  audioList: any[] = [];
+
+  public isPlayed: boolean;
+
+  alertSuccess: boolean;
+  porcentagem;
+  public secTimer: number = 0;
+  public minTimer: number = 0;
+  public hourTimer: number = 0;
+  public progressTimer: number = 0;
+  maxTime: number = 7200;
+  timeFinal: any;
+  hidevalue: boolean;
+  countUp: any;
+
+  public uploadPercent: number = 0;
+  public ftp_remote_path: string;
+  public FTPnewName: string;
+  public ftp_host: string;
+  public ftp_user: string;
+  public ftp_password: string;
+
   constructor(
             public navCtrl: NavController,
              public navParams: NavParams,
@@ -82,12 +126,19 @@ export class VideoListPage {
              public actionSheetCtrl : ActionSheetController,
              public util            : UtilService,
              public viewCtrl        : ViewController,
-             private translate 	  : TranslateService
+             private translate 	  : TranslateService,
+             private media: Media,
+             public file            : File,
+             private http: HTTP,
+             private fTP: FTP,
+             public _zone: NgZone,
+             private nativeAudio: NativeAudio
              ) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad VideoListPage');
+    console.log('ionViewDidLoad AudioListPage');
+
     this.token         = String;
     this.id_code       = String;
     this.id_code       = "";
@@ -178,6 +229,14 @@ export class VideoListPage {
           handler: () => {
             // this.VideoCapture();
             this.fontCapture = 'camera';
+            this.uploadVideo();
+          }
+        },
+         {
+          text: 'Gravador de Voz',
+          handler: () => {
+            // this.VideoCapture();
+            this.fontCapture = 'gravador';
             this.uploadVideo();
           }
         },
@@ -278,7 +337,7 @@ public insertVideoLinkArray(link){
               (result: any) =>{
                 this.util.loading.dismissAll();
                 if(result.status == 200){
-                  console.log("result delete code",result);
+                  console.log("result insert code",result);
                   this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                   //this.vidbase64 = result.midias;
                  // this.getVideoServe();
@@ -323,38 +382,28 @@ validaPacote(){
 }
 getShow(){
   this.util.showLoading(this.load_aguarde);
-
        // this.util.showLoading("Aguarde...");
         this.codeProvider.getShowCode(this.id_code)
         .subscribe(
               (result: any) =>{
-
                 console.log("result",result);
                 if(result.status == 200){
                   this.util.loading.dismissAll();
-                  this.videos              = result.data[0]['album_vimeo'];
+                  this.videos              = result.data[0]['audio_colection'];
                   console.log(this.videos);
                  // this.getVideoServe();
-
-
                 }else{
                   this.toast.create({ message: this.msg_erro, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-
                 }
-
-        } ,(error:any) => {
+        },(error:any) => {
           this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
           this.util.loading.dismissAll();
           this.navCtrl.setRoot('HomePage');
         });
-
-
-
 }
 video_delete(id_code){
-
         this.util.showLoading(this.load_aguarde);
-        this.codeProvider.video_delete(this.token,id_code,this.lang)
+        this.codeProvider.audio_delete(this.token,id_code,this.lang)
         .subscribe(
               (result: any) =>{
                 this.util.loading.dismissAll();
@@ -387,4 +436,308 @@ video_delete(id_code){
         });
 
 }
+
+  ///funcoes de gravacao de audio
+  getAudioList() {
+    if(localStorage.getItem("audiolist")) {
+      this.audioList = JSON.parse(localStorage.getItem("audiolist"));
+      console.log(this.audioList);
+    }
+  }
+ startRecord() {
+   this.progressTimer = 0;
+    this.StartTimer('init');
+
+    if (this.platform.is('ios')) {
+      this.fileName = 'record'+new Date().getDate()+new Date().getMonth()+new Date().getFullYear()+new Date().getHours()+new Date().getMinutes()+new Date().getSeconds()+'.3gp';
+      this.filePath = this.file.documentsDirectory.replace(/file:\/\//g, '') + this.fileName;
+      this.audio = this.media.create(this.filePath);
+    } else if (this.platform.is('android')) {
+      this.fileName = 'record'+new Date().getDate()+new Date().getMonth()+new Date().getFullYear()+new Date().getHours()+new Date().getMinutes()+new Date().getSeconds()+'.3gp';
+      this.filePath = this.file.externalDataDirectory.replace(/file:\/\//g, '') + this.fileName;
+      this.audio = this.media.create(this.filePath);
+    }
+
+    this.audio.startRecord();
+    this.recording = true;
+
+  }
+  stopRecord() {
+    this.StartTimer('stop');
+    this.isSelecionado = true;
+    this.audio.stopRecord();
+    let data = { filename: this.fileName };
+    //acionar botao de envio
+    this.isSelecionado = true;
+    this.uploadedVideo = false;
+
+    this.fileUpload = 'file://' + this.filePath;
+    console.log('Data do audio em stopRecord: ',data);
+    this.audioList.push(data);
+    localStorage.setItem("audiolist", JSON.stringify(this.audioList));
+    this.getAudioList();
+  }
+  playAudio(file,idx) {
+    if (this.platform.is('ios')) {
+      this.filePath = this.file.documentsDirectory.replace(/file:\/\//g, '') + file;
+      this.audio = this.media.create(this.filePath);
+    } else if (this.platform.is('android')) {
+      this.filePath = this.file.externalDataDirectory.replace(/file:\/\//g, '') + file;
+      this.audio = this.media.create(this.filePath);
+    }
+
+    if(this.isPlayed){
+      console.log('Pausar áudio');
+      this.audio.pause();
+      this.isPlayed = false;
+    }else{
+      console.log('Player áudio');
+      this.isPlayed = true;
+      this.audio.play();
+      this.audio.setVolume(0.8);
+    }
+
+  }
+
+  playerAudioNative(url){
+    // this.nativeAudio.preloadSimple('uniqueId1', url).then(onSuccess, onError);
+  }
+  eraseAudio(){
+        //acionar botao de envio
+        this.audioList = [];
+        this.isSelecionado = false;
+        this.recording = false;
+  }
+
+  ///metodo de envio via FTP
+  async getAccess(){
+    let url = 'https://kscode.com.br/ksc_2020/wp-json/admin/v1/users/codes';
+
+    let getData = {
+      id: this.id_code,
+      bloco: 14,
+      token: this.token,
+      action: 'access',
+    };
+
+   let accessData = await this.http.post(url, getData, {})
+    .then(data => {
+      let resp = {
+        data: JSON.parse(data.data),
+        status: data.status
+      };
+      return resp;
+    })
+    .catch(error => {
+
+      console.log(error.status);
+      console.log(error.error); // error message as string
+      // console.log(error.headers);
+
+    });
+
+    return accessData;
+  }
+  async sendVideoFTP(){
+    this.inCanceled = false;
+    this.isEnviando = true;
+    this.inUpload = true;
+    this.alertSuccess = false;
+    await this.getAccess()
+    .then(async (res:any)=>{
+      console.log('Retorno do getAccess: ',res);
+
+        let data = res.data;
+        this.ftp_host = data.dominion;
+        let ftp_path = data.file_path;
+        this.ftp_user = data.user;
+        this.ftp_password = data.password;
+        this.ftp_remote_path = ftp_path + this.id_code +'/';
+
+          await this.createNewFileName(this.fileUpload).then((name)=>{
+            console.log('Nome gerado: ', name);
+            this.FTPnewName = name;
+
+          });
+
+    });
+
+
+    await this.fTP.connect('108.161.131.35', this.ftp_user, this.ftp_password)
+    .then((res: any) => {
+      this.inProgress = true;
+
+        console.log('Conectado: ', res);
+    })
+    .catch((error: any) => console.error(error)), (err)=>{
+      console.log('Erro na conexao: ', err);
+    };
+
+    console.log('Verificando este folder: ',this.ftp_remote_path);
+
+          let checkFolderFunc = await this.checkFolderRemote().then((checkFolder)=>{
+            console.log('Verificando folder: ',checkFolder);
+
+          });
+         await console.log('Verificando folder fora : ',checkFolderFunc);
+
+    ///upload FTP
+    console.log('estou no meio');
+   await this.fTP.upload(this.fileUpload, this.ftp_remote_path + this.FTPnewName).subscribe((progress)=>{
+      // console.log(progress);
+      if(progress == 1){
+        console.log('progress 1::');
+      }
+
+        this._zone.run(() =>{
+            var perc = Math.round(progress * 100);
+            // console.log(progressEvent,'%',perc);
+            this.uploadPercent = perc;
+            if(perc == 100 && this.alertSuccess == false){
+              this.alertSuccess = true;
+              console.log('perc  100::');
+              this.video_create_ftp(this.FTPnewName);
+
+              this.inUpload = false;
+              this.isSelecionado = false;
+
+            }
+        });
+
+      }), (err) => {
+        console.log('Erro no upload: ', err);
+      };
+      console.log('estou no final');
+
+  }
+
+  uploadCancelFTP(){
+    this.inCanceled = true;
+    this.fTP.cancel().then((res)=>{
+      this.recording = false;
+      this.isEnviando = false;
+
+      this.isSelecionado = false;
+
+
+      this.audioList = null;
+      this.fileUpload = null;
+      this.inUpload = false;
+
+      this.inProgress = false;
+      this.porcentagem = 0;
+
+    }), (err)=> console.log('erro ao camcelar: ', err);
+  }
+
+  async checkFolderRemote(){
+    let checkFolder = await this.fTP.ls(this.ftp_remote_path)
+    .then(()=>{
+      return 'Folder existe';
+    }).catch(()=>{
+        this.fTP.mkdir(this.ftp_remote_path).then(()=>{
+          return 'Folder criado.';
+        });
+    });
+
+    return checkFolder;
+  }
+  video_create_ftp(files:String){
+    this.util.showLoading('Aguarde...');
+    this.recording = false;
+    this.isSelecionado = false;
+    this.isEnviando = false;
+
+    var data = {
+      id : this.id_code,
+      bloco :8,
+      token :this.token,
+      files:files
+    }
+    console.log('dados enviados em video_create_ftp: ', data);
+    let url = 'https://kscode.com.br/ksc_2020/wp-json/admin/v1/users/codes';
+this.http.post(url, data, {})
+.then(data => {
+  this.util.loading.dismissAll();
+  // this.viewCtrl.dismiss();
+  console.log('status: ',data.status);
+  let response = JSON.parse(data.data);
+  console.log('Dados recebidos do servidor: ',response); // data received by server
+  this.videos = response.midias;
+
+})
+.catch(error => {
+
+  console.log(error.status);
+  console.log(error.error); // error message as string
+  console.log(error.headers);
+
+});
+  }
+    //criar novo nome de arquivo
+    async createNewFileName(oldFileName: string){
+      let extension: string = await oldFileName.substr(oldFileName.lastIndexOf('.')); // .png, .jpg
+      return new Date().getTime() + extension; // 1264546456.jpg
+    }
+
+
+  StartTimer(action){
+    let timeout = 1000;
+    if(action == 'init'){
+      this.secTimer = 0;
+      this.minTimer = 0;
+      this.hourTimer = 0;
+      this.progressTimer = 0;
+    }
+
+     if(action == 'stop'){
+
+        console.log('pausar tempo');
+        clearTimeout(this.countUp);
+
+      }
+      else if(this.progressTimer < this.maxTime){
+
+        this.countUp = setTimeout(() => {
+          let secZero: any = 0;
+          let minZero: any = 0;
+          let hourZero: any = 0;
+
+          if(this.secTimer >= 9){ secZero = ''}
+          if(this.minTimer >= 9){ minZero = ''}
+          if(this.hourTimer >= 9){ hourZero = ''}
+
+          if(this.secTimer == 60){
+
+            this.secTimer = 0;
+            this.minTimer = this.minTimer + 1;
+
+          }
+          if(this.minTimer == 60){
+
+            this.minTimer = 0;
+            this.hourTimer = this.hourTimer + 1;
+
+          }
+
+
+          this.progressTimer = this.progressTimer + 1;
+          this.secTimer = this.secTimer + 1;
+          this.timeFinal = hourZero + this.hourTimer + ':' + minZero + this.minTimer + ':' + secZero + this.secTimer;
+          this.StartTimer(null);
+
+      }, timeout);
+
+      }else if(this.progressTimer  >= this.maxTime){
+
+        console.log('Tempo máximo de gravação excedido');
+        console.log('pausar tempo');
+        clearTimeout(this.countUp);
+        this.stopRecord();
+
+      }
+
+  }
+
+
 }///final export page

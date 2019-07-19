@@ -51,9 +51,9 @@ export class ContatoAddPage {
     texto;
     page_contato;
     btn_publicar;
-  
+
   constructor(
-                public navCtrl        : NavController, 
+                public navCtrl        : NavController,
                 public navParams      : NavParams,
                 formBuilder           : FormBuilder,
                 private codeProvider  : CodeProvider,
@@ -61,7 +61,7 @@ export class ContatoAddPage {
                 public loadingCtrl    : LoadingController,
                 public toast          : ToastController,
                 public util           : UtilService
-                
+
                 ) {
                   this.model = new contato();
                   this.cadastroForm = formBuilder.group({
@@ -69,8 +69,8 @@ export class ContatoAddPage {
                    titulo      : ['', Validators.required],
                    conteudo    : ['', Validators.required],
                    tipo        : ['', Validators.required],
-                
-                  }); 
+
+                  });
   }
 
   ionViewDidLoad() {
@@ -101,7 +101,7 @@ export class ContatoAddPage {
     this.isEmail          = "";
     this.getPais();
     this.getListTipo();
-  
+
     if(this.sector_id != ""){
         this.getSetor();
         this.util.showLoading(this.load_aguarde);
@@ -121,20 +121,20 @@ export class ContatoAddPage {
         this.isMostraNumber = "";
       }
     }
-  
+
   }
   getPais(){
-    if(this.net.ckeckNetwork()){
-    this.util.getPaisALL().subscribe((result: any) =>{  
+
+    this.util.getPaisALL().subscribe((result: any) =>{
       this.pais = result.data;
-        
+
       } ,(error:any) => {});
-    }
+
   }
   change_segmento($event) {
     this.setFilteredItems();
     console.log(this.model.pais,this.model.calling_code);
-    
+
   }
   change_segmento_tipo($event) {
    // $event.replace("+",'');
@@ -155,10 +155,10 @@ export class ContatoAddPage {
     return e1 && e2 ? e1 === e2 : e1 === e2;
   }
   getSetor(){
-    if(this.net.ckeckNetwork()){
+
         this.codeProvider.contato(this.id_code,this.token,"true","","","","","","get",this.sector_id,this.lang).subscribe(
-          (result: any) =>{    
-          this.util.loading.dismiss(); 
+          (result: any) =>{
+          this.util.loading.dismissAll();
                 if(result.status == 200){
                       this.model.tipo              = result.code_sector.tipo;
                       this.model.titulo            = result.code_sector.titulo;
@@ -182,33 +182,27 @@ export class ContatoAddPage {
                 }
             } ,(error:any) => {
               this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-              this.util.loading.dismiss(); 
+              this.util.loading.dismissAll();
               this.navCtrl.setRoot('HomePage');
             });
-    }else{
-            this.util.loading.dismiss(); 
-            this.navCtrl.setRoot('NotNetworkPage');
-    }
+
   }
   getListTipo(){
-    if(this.net.ckeckNetwork()){
+
     this.codeProvider.contato(this.id_code,this.token,"list","","","","","","get",this.sector_id,this.lang).subscribe(
-      (result: any) =>{    
-      //this.util.loading.dismiss(); 
+      (result: any) =>{
+      //this.util.loading.dismissAll();
              this.tipo = result;
              console.log(result);
         } ,(error:any) => {
           this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-         // this.util.loading.dismiss(); 
+         // this.util.loading.dismissAll();
          // this.navCtrl.setRoot('HomePage');
         });
-      }else{
-       // this.util.loading.dismiss(); 
-        this.navCtrl.setRoot('NotNetworkPage');
-    }
+
 }
- create(){ 
-  if(this.net.ckeckNetwork()){
+ create(){
+
     this.util.showLoading(this.load_enviando);
           let action;
           if(this.sector_id == ""){
@@ -221,8 +215,8 @@ export class ContatoAddPage {
             action ="update";
           }
           this.codeProvider.contato(this.id_code,this.token,"true",this.model.tipo,this.model.calling_code,this.model.pais,this.model.conteudo,this.model.titulo,action,this.sector_id,this.lang).subscribe(
-            (result: any) =>{    
-                  this.util.loading.dismiss(); 
+            (result: any) =>{
+                  this.util.loading.dismissAll();
                   if(result.status == 200){
                     this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                     this.closeModal();
@@ -237,20 +231,16 @@ export class ContatoAddPage {
                   }
               } ,(error:any) => {
                 this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                this.util.loading.dismiss(); 
+                this.util.loading.dismissAll();
                 this.navCtrl.setRoot('HomePage');
               });
-          
-      }else{
-        this.util.loading.dismiss(); 
-        this.navCtrl.setRoot('NotNetworkPage');
-     }
+
  }
- 
+
  filterItems(searchTerm){
   return this.pais.filter((item) => {
       return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-  });     
+  });
 
 }
 setFilteredItems() {
@@ -269,5 +259,5 @@ export class contato{
   conteudo    : String;
   setor_id    : String;
   tipo        : String;
- 
+
 }

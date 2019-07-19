@@ -6,6 +6,8 @@ import { NetworkProvider } from '../../providers/network/network';
 import { CodeProvider } from './../../providers/code/code';
 import { UtilService } from '../../providers/util/util.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EditorModule } from '@tinymce/tinymce-angular';
+
 @IonicPage({
   priority : 'low',
   segment  : 'MenuCode/:token/:code/:qtd/:pacote',
@@ -62,22 +64,80 @@ export class MenuCodePage {
   button ;
   lang;
   msg_erro: any;
+  editorInit: any;
+  initEditor3: any;
   constructor(
-              public navCtrl        : NavController, 
-              public modalCtrl      : ModalController , 
-              public navParams      : NavParams, 
+              public navCtrl        : NavController,
+              public modalCtrl      : ModalController ,
+              public navParams      : NavParams,
               public formBuilder    : FormBuilder,
               public toast          : ToastController,
               private codeProvider  : CodeProvider,
               public loadingCtrl    : LoadingController,
               public  net           : NetworkProvider,
               public util           : UtilService,
-              public  viewCtrl      : ViewController, 
+              public  viewCtrl      : ViewController,
               public alertCtrl      : AlertController,
               private socialSharing : SocialSharing,
-           
+
               private translate 	  : TranslateService
             ) {
+              this.initEditor3 = {
+                // selector: 'textarea',  // change this value according to your HTML
+                height: 300,
+                skin: "oxide",
+                plugins: [
+                  'advlist autolink lists link image charmap print preview anchor',
+                  'searchreplace visualblocks code fullscreen',
+                  'insertdatetime media table paste code help wordcount'
+                ],
+                toolbar: [ 'styleselect removeformat','fontsizeselect forecolor sizeselect', 'bold', 'italic', 'underline', 'link', 'bullist numlist' ],
+                fontsize_formats: "8pt 10pt 12pt 14pt 18pt 24pt 36pt",
+                formats: {
+                  // Changes the default format for the bold button to produce a strong with data-style attribute
+                  bold: { inline: 'strong', attributes: { 'data-style': 'bold' } }
+                },
+                style_formats: [
+                  { title: 'Cabeçalho', items: [
+                    { title: 'h1', block: 'h1'},
+                    { title: 'h2', block: 'h2'},
+                    { title: 'h3', block: 'h3'},
+                    { title: 'h4', block: 'h4'},
+                  ]},
+                  { title: 'Parágrafos', items: [
+                      { title: 'Esqueda', block: 'div', styles:{'text-align':'left'}},
+                      { title: 'Centralizado', block: 'div', styles:{'text-align':'center'} },
+                      { title: 'Direita', block: 'div', styles:{'text-align':'right'}},
+                      { title: 'Justificado', block: 'div', styles:{'text-align':'justify'}},
+                  ]},
+                  { title: 'Alinhamentos & Formatos', items: [
+
+                      { title: 'Esqueda', block: 'div', styles:{'text-align':'left'}},
+                      { title: 'Centralizado', block: 'div', styles:{'text-align':'center'} },
+                      { title: 'Direita', block: 'div', styles:{'text-align':'right'}},
+                      { title: 'Justificado', block: 'div', styles:{'text-align':'justify'}},
+                    { title: 'Negrito', inline: 'strong' },
+                    { title: 'Texto Vermelho', inline: 'span', styles: { color: '#ff0000' } },
+                    { title: 'Cabeçalho Vermelho', block: 'h1', styles: { color: '#ff0000' } },
+
+                    ]}
+                  // { title: 'Extras', items: [
+                  //   { title: 'section', block: 'section', wrapper: true, merge_siblings: false },
+                  //   { title: 'article', block: 'article', wrapper: true, merge_siblings: false },
+                  //   { title: 'blockquote', block: 'blockquote', wrapper: true },
+                  //   { title: 'hgroup', block: 'hgroup', wrapper: true },
+                  //   { title: 'aside', block: 'aside', wrapper: true },
+                  //   { title: 'Max', block: 'span', wrapper: true, classes: 'tablerow1'}
+                  // ]}
+                ],
+                content_css: [
+                  // '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+                  // '//www.tiny.cloud/css/codepen.min.css'
+                ],
+                visualblocks_default_state: true,
+                end_container_on_empty_block: true
+             }; ///final editor
+
                   this.selectedSegment = '0';
                   //instanica do model login
                   this.model = new Link();
@@ -85,12 +145,12 @@ export class MenuCodePage {
                    this.loginForm = formBuilder.group({
                       link        : ['', Validators.required],
                       islink      : ['', Validators.required]
-                    
+
                     });
                     this.modelC       = new Code();
                     this.cadastroCode = formBuilder.group({
                         name    : ['', Validators.required],
-                      
+
                       });
                     //instanica do model login
                     this.modelG = new geral();
@@ -100,7 +160,12 @@ export class MenuCodePage {
                       descricao    : ['', Validators.required],
                       password     : ['', Validators.required],
                       isprivate    : ['', Validators.required]
-                    }); 
+                    });
+                    this.editorInit= {
+                      plugins: 'print preview fullpage powerpaste searchreplace autolink directionality advcode visualblocks visualchars fullscreen image link media mediaembed template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount tinymcespellchecker a11ychecker imagetools textpattern help formatpainter permanentpen pageembed tinycomments mentions linkchecker',
+                      toolbar: 'formatselect | bold italic strikethrough forecolor backcolor permanentpen formatpainter | link image media pageembed | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent | removeformat ',
+                      image_advtab: true,
+                    };
   }
   modelG            : geral;
   //validação de formulario
@@ -112,7 +177,7 @@ export class MenuCodePage {
   public loginForm     : any;
   messageEmail         = "";
   selectedSegment      : string;
-  slides               : any;  
+  slides               : any;
   page;
   btn_publicar;
   btn_cancelar;
@@ -254,25 +319,25 @@ private _initialiseTranslation() : void
     }else if(currentSlide == 2){
       this.selectedSegment = '2';
     }
-   
+
   }
 
   getShowCode(){
-        if(this.net.ckeckNetwork()){
-              this.util.showLoading(this.load_aguarde);
+
+              // this.util.showLoading(this.load_aguarde);
               this.codeProvider.getShowCode(this.id_code)
               .subscribe(
                     (result: any) =>{
-                      this.util.loading.dismiss(); 
+                      this.util.loading.dismissAll();
                       console.log("result",result);
-                      if(result.status == 200){  
-                            //popula todas a variaveis                       
+                      if(result.status == 200){
+                            //popula todas a variaveis
                             this.titulo               = result.data[0]['titulo'];
                             this.modelG.titulo        = this.titulo;
                             this.code                 = result.data[0]['code'];
                             this.modelC.name          = this.code;
                             this.link                 = result.data[0]['link'];
-                            
+
                             if(result.data[0]['t_conteudo'] == "2"){
                               this.model.isLink = "true";
                                this.meu_link ="2";
@@ -281,7 +346,7 @@ private _initialiseTranslation() : void
                               this.meu_link ="1";
                             }
                             this.model.link           = this.link;
-                            this.descricao            = result.data[0]['descricao']; 
+                            this.descricao            = result.data[0]['descricao'];
                             this.modelG.descricao     = this.descricao;
                             this.contato.pais         = result.data[0]['pais'];
                             this.contato.email        = result.data[0]['email'];
@@ -306,33 +371,29 @@ private _initialiseTranslation() : void
                               }
                             //retirando a máscara do telefone
                             if(result.data[0]['tel_whatsapp']!= ""){
-                                var newstr                = result.data[0]['tel_whatsapp']; 
+                                var newstr                = result.data[0]['tel_whatsapp'];
                                 this.contato.whatsapp     = newstr.replace(this.word,'');
-   
+
                             }else{
                               this.contato.whatsapp  = null;
                             }
-             
+
                       }else{
                         this.toast.create({ message:this.msg_erro, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                        
+
                       }
 
               } ,(error:any) => {
                 this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                this.util.loading.dismiss(); 
+                this.util.loading.dismissAll();
                 this.navCtrl.setRoot('HomePage');
               });
-            
-        }else{
-             
-              this.navCtrl.setRoot('NotNetworkPage');
-        } 
-        
+
+
   }
   showPromptPush(codeNumber) {
     this.navCtrl.push('NotificacaoPushPage',{codeNumber:codeNumber,lang:this.lang,token:this.token,texto_push:this.texto_push,campo_1:this.campo_1,campo_2:this.campo_2,btn_enviar:this.btn_enviar,btn_cancelar:this.btn_cancelar,msg_servidor:this.msg_servidor,load_aguarde:this.load_aguarde,campo_obrigatorio:this.campo_obrigatorio});
-   
+
 }
 
   ShowContato(){
@@ -346,58 +407,66 @@ private _initialiseTranslation() : void
 
   ShowCam(){
     this.navCtrl.push('ImageCodePage',{imagens:this.imagens,token:this.token,code:this.id_code,package_imagens:this.package_imagens,package_name:this.package_name,lang:this.lang});
-    
+
   }
   ShowDoc(){
     this.navCtrl.push('DocumentoCodePage',{docs:this.docs,token:this.token,code:this.id_code,load_aguarde:this.load_aguarde,btn_cancelar:this.btn_cancelar,btn_excluir:this.btn_excluir,btn_publicar:this.btn_publicar,page:this.page_doc,msg_exlcuir:this.msg_exlcuir,load_enviando:this.load_enviando,msg_servidor:this.msg_servidor,aviso:this.aviso,arq_msg:this.arq_msg,arq_invalido:this.arq_invalido,lang:this.lang});
-    
+
   }
-  ShowVideo(){
-    this.navCtrl.push('VideoListPage',{videos:this.vid_aux,token:this.token,code:this.id_code,package_videos:this.package_videos,package_name:this.package_name,package_imagens:this.package_imagens,lang:this.lang});
-    
+  ShowVideo(action){
+    ///escolhe pra onde direcionar
+    let page: string;
+    if(action == 'video'){
+      page = 'VideoListPage';
+    }else{
+      page = 'AudioListPage';
+    }
+
+    this.navCtrl.push(page,{videos:this.vid_aux,token:this.token,code:this.id_code,package_videos:this.package_videos,package_name:this.package_name,package_imagens:this.package_imagens,lang:this.lang});
+
   }
   // "Edição do code,titulo,descrição,link,t_conteudo",
   editCode(){
-    if(this.net.ckeckNetwork()){
+
       this.util.showLoading(this.load_aguarde);
       this.codeProvider.code_Edit(this.token,this.id_code,this.modelC.name,this.modelG.titulo,this.modelG.descricao,this.model.link,this.meu_link,this.modelG.password,this.modelG.isprivate)
       .subscribe(
             (result: any) =>{
-              this.util.loading.dismiss(); 
-              if(result.status == 200){  
+              this.util.loading.dismissAll();
+              if(result.status == 200){
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-             
+
               }else if(result.status == 403){
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                 this.navCtrl.setRoot('LoginPage',{lang:this.lang});
               }
-              
+
             }
               ,(error:any) => {
                 this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                this.util.loading.dismiss(); 
+                this.util.loading.dismissAll();
                 this.navCtrl.setRoot('HomePage');
         });
-      
-     }else{this.navCtrl.setRoot('NotNetworkPage');} 
+
+
   }
   change_segmento(item) {
-    
+
     this.model.isLink =item;
     if(this.model.isLink){
-    
+
        this.meu_link ="2";
     }else{
-    
+
       this.meu_link ="1";
     }
-  
-    
+
+
   }
   change_senha(item) {
-    
+
     this.modelG.isprivate =item;
-       
+
   }
   // compartilhar social share
 shareSheetShare() {

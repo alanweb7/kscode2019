@@ -4,11 +4,13 @@ import { MenuCodePage } from './menu-code';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import {HttpClient} from "@angular/common/http";
+import { EditorModule } from '@tinymce/tinymce-angular';
 @NgModule({
   declarations: [
     MenuCodePage,
   ],
   imports: [
+    EditorModule,
     IonicPageModule.forChild(MenuCodePage),
     TranslateModule.forChild({
       loader: {
@@ -18,7 +20,7 @@ import {HttpClient} from "@angular/common/http";
       }
     }),
   ]
-  
+
 })
 export class MenuCodePageModule {}
 export function createTranslateLoader(http: HttpClient) {

@@ -23,9 +23,9 @@ export class EnqueteGraphPage {
   label2    : String;
   code_id   :String;
   ask_id    : String;
-    constructor(public navCtrl  : NavController, 
+    constructor(public navCtrl  : NavController,
               public navParams  : NavParams,
-              public  viewCtrl  : ViewController, 
+              public  viewCtrl  : ViewController,
               private codeProvider   : CodeProvider,
               public  net            : NetworkProvider,
               public util            : UtilService,
@@ -39,24 +39,24 @@ export class EnqueteGraphPage {
     this.option2          = this.navParams.get('option2');
     this.code_id          = this.navParams.get('code_id');
     this.ask_id           = this.navParams.get('ask_id');
-    
+
     this.getEnq();
     console.log(this.option1,this.option2,this.label1,this.label2);
-   
+
     }
     fecharAvaliacao(){
- 
-      
+
+
        this.viewCtrl.dismiss();
     }
     getEnq(){
-      if(this.net.ckeckNetwork()){
+
         this.codeProvider.getEnq(this.code_id,this.ask_id)
         .subscribe(
               (result: any) =>{
-                  this.util.loading.dismiss(); 
+                  this.util.loading.dismissAll();
                   if(result.status == 200){
-                 
+
                     this.question   = result.question;
                     this.label1     = result.option1;
                     this.label2     = result.option2;
@@ -67,7 +67,7 @@ export class EnqueteGraphPage {
                       this.option2 = 0;
                   }
                     this.doughnutChart    = new Chart(this.doughnutCanvas.nativeElement, {
-  
+
                       type: 'doughnut',
                       data: {
                           labels: [this.label1,this.label2],
@@ -77,16 +77,16 @@ export class EnqueteGraphPage {
                               backgroundColor: [
                                   'rgba(0, 173, 12, 1)',
                                   'rgba(173, 0, 38, 1)'
-                                 
+
                               ],
                               hoverBackgroundColor: [
                                   "#00ad0c",
                                   "#ad0026"
-                                 
+
                               ]
                           }]
                       }
-                  
+
                       });
                   }else if(result.status == 402){
                     this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
@@ -97,16 +97,13 @@ export class EnqueteGraphPage {
                     //this.navCtrl.push('HomePage');
                     this.viewCtrl.dismiss();
                   }
-          
+
                 } ,(error:any) => {
                   this.toast.create({ message:"Não foi possível conectar ao servidor!", position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                   
-                  this.util.loading.dismiss(); 
+
+                  this.util.loading.dismissAll();
                   this.viewCtrl.dismiss();
                 });
-              }else{
-                this.util.loading.dismiss();
-                this.navCtrl.setRoot('NotNetworkPage');
-               }
+
          }
 }

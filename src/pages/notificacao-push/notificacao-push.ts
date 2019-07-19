@@ -29,7 +29,7 @@ export class NotificacaoPushPage {
   btn_cancelar;
   load_aguarde;
   msg_servidor;
-  
+
   //validação de formulario
   public pushForm : any;
   lang: any;
@@ -71,7 +71,7 @@ export class NotificacaoPushPage {
     console.log(this.campo_1,this.campo_2);
   }
   createPusg(){
-           
+
     let { titulo, mensagem} = this.pushForm.controls;
     if (!this.pushForm.valid) {
               if (!titulo.valid) {
@@ -88,28 +88,26 @@ export class NotificacaoPushPage {
               }
     }
         else {
-          if(this.net.ckeckNetwork()){
+
             this.util.showLoading(this.load_aguarde);
             this.codeProvider.create_push(this.code,this.model.titulo,this.model.mensagem,this.token,this.lang)
             .subscribe(
                   (result: any) =>{
-                    this.util.loading.dismiss(); 
+                    this.util.loading.dismissAll();
                     if(result.status == 200){
                       this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                       this.viewCtrl.dismiss();
                     } else if(result.status == 402){
                       this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                       this.navCtrl.push('LoginPage',{lang:this.lang});
-        
+
                     }
                   },(error:any) => {
                     this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                      this.util.loading.dismiss(); 
+                      this.util.loading.dismissAll();
                       this.navCtrl.setRoot('HomePage');
                   });
-          }else{
-            this.navCtrl.setRoot('NotNetworkPage');
-           } 
+
       }
   }
   fecharAvaliacao(){

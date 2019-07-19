@@ -8,7 +8,7 @@ page-menu-code {
                font: bold;
                text-align: left;
                margin-top: -20px;
-               
+
                .col {
                    padding: 0;
                    margin-top: 0;
@@ -23,7 +23,7 @@ page-menu-code {
     .scroll-content {
        margin-bottom: 0 !important;
      }
-    
+
    .box-menu{
        height: 110px;
        background: #cccc;
@@ -45,7 +45,7 @@ page-menu-code {
            color: linear-gradient(135deg, rgba(5, 32, 73, 1) 0%, rgb(0, 0, 0) 100%) !important;
        }
    }
-  
+
      ion-slides.segment-slide {
        .card-list {
            box-shadow: 0px 0px 15px #ccc;
@@ -83,5 +83,25 @@ page-menu-code {
            text-align: center;
        }
      }
+     .icon-button {
+      float: left !important;
+      position: absolute;
+      left: 10px;
+      font-size: x-large;
+      margin-left: 10px;
+    }
+    button.round-button{
+      border-radius: 7px;
+
+    }
+    button.button-bar{
+      margin: 1%;
+    }
+    div.flex-div-button{
+      display: flex;
+    }
+    div.panel-buttons{
+      margin-top: 3%;
+    }
+
    }
-   

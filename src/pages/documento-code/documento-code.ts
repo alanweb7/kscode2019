@@ -41,20 +41,20 @@ export class DocumentoCodePage {
   arq_invalido;
 	arq_msg;
   lang: any;
-  
+
   constructor(
                public navCtrl        : NavController,
                public navParams      : NavParams,
                private codeProvider  : CodeProvider,
                public  net           : NetworkProvider,
-               public camera         : Camera, 
+               public camera         : Camera,
                private browserTab    : BrowserTab,
                public toast          : ToastController,
                public util           : UtilService,
-               private alertCtrl     : AlertController,  
+               private alertCtrl     : AlertController,
                private filePath: FilePath,
                private chooser: Chooser
-            
+
               ) {
   }
 
@@ -100,7 +100,7 @@ export class DocumentoCodePage {
        {
          text: this.btn_cancelar,
          handler: () => {
-          
+
          }
        },
        {
@@ -112,9 +112,9 @@ export class DocumentoCodePage {
      ]
    });
    confirm.present();
-  
-  
-  } 
+
+
+  }
   open_file(){
     this.chooser.getFile('application/pdf')
 .then(file => {
@@ -126,19 +126,19 @@ export class DocumentoCodePage {
     this.caminho.push({files:base64,file_name:file});
     this.docs.push({id: "",doc_link:file,file_name:file});
   })
- 
+
 })
 .catch((error: any) => console.error(error));
-  
+
 
   }
   doc_delete(id_code){
-    if(this.net.ckeckNetwork()){
+
           this.util.showLoading(this.load_aguarde);
           this.codeProvider.doc_delete(this.token,id_code,this.lang)
           .subscribe(
                 (result: any) =>{
-                  this.util.loading.dismiss(); 
+                  this.util.loading.dismissAll();
                   if(result.status == 200){
                     console.log("result delete code",result);
                     this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
@@ -153,11 +153,8 @@ export class DocumentoCodePage {
                   }
 
           } ,(error:any) => {});
-        
-   }else{
-    
-    this.navCtrl.setRoot('NotNetworkPage');
-   } 
+
+
   }
   getDocServe(){
     this.docs =[];
@@ -166,7 +163,7 @@ export class DocumentoCodePage {
             this.docs.push(this.docbase64[i]);
           }
          this.docbase64 ="";
-       
+
     }
   }
   private takePicture(): void {
@@ -179,7 +176,7 @@ export class DocumentoCodePage {
       mediaType: this.camera.MediaType.ALLMEDIA,
       saveToPhotoAlbum: true
     }
-  
+
      this.camera.getPicture(options).then((imageData) => {
           if(this.util.getExtension(imageData) != '.pdf'){
             let alert = this.alertCtrl.create({
@@ -195,31 +192,31 @@ export class DocumentoCodePage {
                 base64.replace('', '+');
                 this.caminho.push({files:base64,file_name:imageData});
             });
-              
-      
+
+
           }
 
     }, (err) => {
      // Handle error
     });
-  
-  
+
+
 
   }
  enviar(){
     this.util.showLoading(this.load_enviando);
     if(this.caminho.length >0){
-        if(this.net.ckeckNetwork()){
-              this.codeProvider.doc_create(this.id_code,this.token,this.caminho,this.lang) 
+
+              this.codeProvider.doc_create(this.id_code,this.token,this.caminho,this.lang)
               .subscribe(
                     (result: any) =>{
                       if(result.status == 200){
-                        this.util.loading.dismiss(); 
+                        this.util.loading.dismissAll();
                         this.docbase64    = "";
                         this.caminho      = [];
                         this.docbase64    = result.midias;
                         this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
-               
+
                         this.getDocServe();
                       }
                       else if(result.status == 402){
@@ -229,18 +226,15 @@ export class DocumentoCodePage {
                       else if(result.status == 403){
                         this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                       }
-                      
+
                   },(error:any) => {
-                      this.util.loading.dismiss();  
+                      this.util.loading.dismissAll();
                       this.toast.create({ message: this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'erro'  }).present();
-                  });   
-        } else{
-                this.util.loading.dismiss();
-                this.navCtrl.setRoot('NotNetworkPage');
-           }   
+                  });
+
     }else{
-        
-        this.util.loading.dismiss();
+
+        this.util.loading.dismissAll();
               let alert = this.alertCtrl.create({
                 title: this.aviso,
                 subTitle: this.msg_aviso,
@@ -255,9 +249,9 @@ export class DocumentoCodePage {
     .then(isAvailable => {
       if (isAvailable) {
         this.browserTab.openUrl('https://docs.google.com/viewer?url='+url);
-      } 
+      }
     });
 
   }
-  
+
 }

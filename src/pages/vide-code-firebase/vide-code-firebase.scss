@@ -2,7 +2,7 @@ page-vide-code-firebase {
     input[type='file'] {
         display: none
       }
-      
+
       .input-wrapper label {
         background-color:  rgb(5, 32, 73) !important;
         border-radius: 5px;
@@ -10,7 +10,7 @@ page-vide-code-firebase {
         margin: 10px;
         padding: 6px 20px
       }
-      
+
       .input-wrapper label:hover {
         background-color: #2980b9
       }
@@ -34,15 +34,19 @@ page-vide-code-firebase {
             background: #024416;
             color: #FFF;
             font-weight: normal;
-          
+
               //  height: 4rem;
         }
         &.bt-cancel {
             background: #cc0123;
             color: #FFF;
             font-weight: normal;
-            
+
               //  height: 4rem;
         }
     }
+    .icon-left{
+      border-right: #FFF 1px solid;
+      margin-right: 3px;
+        }
 }

@@ -31,8 +31,8 @@ export class ContatoCodePage {
   //validação de formulario
   public cadastroForm : any;
   constructor(
-              public navCtrl         : NavController, 
-               public navParams      : NavParams, 
+              public navCtrl         : NavController,
+               public navParams      : NavParams,
                formBuilder           : FormBuilder,
                private codeProvider  : CodeProvider,
                public  net           : NetworkProvider,
@@ -51,31 +51,28 @@ export class ContatoCodePage {
        instagram   : ['', Validators.required],
        linkedin    : ['', Validators.required],
 
-     }); 
+     });
   }
   contato_Edit(){
-    if(this.net.ckeckNetwork()){
+
       this.util.showLoading("Aguarde...");
       this.codeProvider.contato_Edit(this.id_code,this.token,this.model.pais,this.model.whatsapp,this.model.telefone,this.model.email,this.model.site,this.model.facebook,this.model.instagram,this.model.linkedin)
       .subscribe(
             (result: any) =>{
-              this.util.loading.dismiss(); 
+              this.util.loading.dismissAll();
               if(result.status == 200){
                this.toast.create({ message: 'Informações atualizadas com sucesso !', position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
               }
             } ,(error:any) => {
               this.toast.create({ message: 'Ocorreu um erro inesperado !', position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-           
-          });
-    
-      }else{
-            this.util.loading.dismiss(); 
-            this.navCtrl.setRoot('NotNetworkPage');
-      }
 
-  
+          });
+
+
+
+
 }
- 
+
 
   ionViewDidLoad() {
       this.ctt_pais              = "";
@@ -99,14 +96,14 @@ export class ContatoCodePage {
       this.ctt_linkedin     = this.contato.linkedin;
       this.ctt_pais         = this.contato.pais;
       console.log("pais",this.contato.pais);
-     
+
       this.model.pais       = "";
       this.model.email      = "";
       this.model.site       = "";
       this.model.facebook   = "";
       this.model.instagram  = "";
       this.model.linkedin   = "";
-    
+
       if(this.ctt_whatsapp ==  null){
           this.model.whatsapp = "";
       }else{
@@ -117,7 +114,7 @@ export class ContatoCodePage {
       }else{
         this.model.telefone   = this.ctt_telefone;
       }
-     
+
       this.model.email      = this.ctt_email;
       this.model.site       = this.ctt_site;
       this.model.facebook   = this.ctt_facebook;
@@ -132,12 +129,12 @@ export class ContatoCodePage {
       }
   }
   getPais(){
-    if(this.net.ckeckNetwork()){
-    this.util.getPaisALL().subscribe((result: any) =>{  
+
+    this.util.getPaisALL().subscribe((result: any) =>{
       this.pais = result.data;
-   
+
       } ,(error:any) => {});
-    }
+
   }
   change_segmento($event) {
     $event.replace("+",'');

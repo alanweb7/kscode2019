@@ -13,9 +13,9 @@ export class NotNetworkPage {
 
   isOrigem :any;
   lang: any;
-  constructor(  public  toast        : ToastController, 
+  constructor(  public  toast        : ToastController,
                 public net           : NetworkProvider,
-                public navCtrl       : NavController, 
+                public navCtrl       : NavController,
                 public navParams     : NavParams) {
   }
   ionViewDidLoad() {
@@ -27,18 +27,14 @@ export class NotNetworkPage {
   }
   check(){
     //VERIFICA SE TEM CONEXÃO COM A INTERNET
-                    if(this.net.ckeckNetwork()){
+
 
                           if(this.isOrigem == 1){
                               this.navCtrl.setRoot('LoginPage',{lang:this.lang});
                           }else{
                                 this.navCtrl.setRoot('HomePage');
                           }
-                    
-                      
-                    }else{
-                       this.toast.create({ message: 'Sem conexão com a internet no momento', position: 'botton', duration: 2000 }).present();
-                    }
+
   }
 
 }

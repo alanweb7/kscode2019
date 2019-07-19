@@ -1,14 +1,15 @@
+import { Network } from '@ionic-native/network';
+import { NetworkProvider } from '../../providers/network/network';
 import { Component } from '@angular/core';
-import { NavController,IonicPage, NavParams, Platform, LoadingController,Events, AlertController, ModalController } from 'ionic-angular';
+import { NavController, IonicPage, NavParams, Platform, Loading, LoadingController, Events, AlertController, ModalController, ToastController } from 'ionic-angular';
 //Import Native
-import { OneSignal } from '@ionic-native/onesignal'; 
+import { OneSignal } from '@ionic-native/onesignal';
 import { Deeplinks } from '@ionic-native/deeplinks';
 import { Geolocation } from '@ionic-native/geolocation';
 import { SocialSharing } from '@ionic-native/social-sharing';
 import { BrowserTab } from '@ionic-native/browser-tab';
 //import Provider
 import { CodeProvider } from '../../providers/code/code';
-import { NetworkProvider } from '../../providers/network/network';
 import { UsuarioService } from '../../providers/movie/usuario.service';
 import { Usuario } from '../../models/usuario.model';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -16,6 +17,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { GeolocationProvider } from '../../providers/geolocation/geolocation';
 import { SqliteHelperService } from '../../providers/sqlite-helper/sqlite-helper.service';
 import { ClienteProvider } from '../../providers/cliente/cliente';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { UtilService } from '../../providers/util/util.service';
 @IonicPage({
   priority : 'high'
 })@Component({
@@ -23,14 +26,14 @@ import { ClienteProvider } from '../../providers/cliente/cliente';
   templateUrl: 'home.html',
 })
 export class HomePage {
-  
+  public signupform: FormGroup;
   codeNumber         : any;
   endLat             : any;
   endLong            : any;
   myfone             : any;
   movies             : Usuario[] = [];
   token              : any;
-  id                 : any ; 
+  id                 : any ;
   id_serv            : Number;
   footerIsHidden     : Boolean = true;
   public myGlobalVar : string;
@@ -52,7 +55,7 @@ export class HomePage {
     lang        :String,
     cnpj        :String,
     tp_pessoa   :String
-   
+
 }
 trans={
   login 		: String,
@@ -121,6 +124,7 @@ trans={
   email ;
   texto: any;
   msg_code: any;
+  statusConn:any;
   constructor(
     public loadingCtrl     : LoadingController,
     public navCtrl         : NavController,
@@ -131,19 +135,41 @@ trans={
     private events         : Events,
     private socialSharing  : SocialSharing,
     private browserTab     : BrowserTab,
-    private oneSignal      : OneSignal, 
+    private oneSignal      : OneSignal,
     public alertCtrl       : AlertController,
     public  net            : NetworkProvider,
+    public network : Network,
     private deeplinks      : Deeplinks,
     private usuario        : UsuarioService,
     private cli_Provider    : ClienteProvider ,
     private keyboard       : Keyboard,
     public modalCtrl       : ModalController,
     public sqliteHelperService: SqliteHelperService,
-    private translate 	  : TranslateService
-    
+    private translate 	  : TranslateService,
+    private formBuilder: FormBuilder,
+    public util           : UtilService,
+    public toast          : ToastController,
+    public networkProvider : NetworkProvider,
+
   ) {
-     
+
+    // this.signupform = this.formBuilder.group({
+    //   title: ['', Validators.required],
+    //   codeNumber: [''],
+    // });
+    let error = this.navParams.get('error');
+    console.log('erro recebido na HOME:: ', error);
+    if( error && error.status == -3){
+
+      this.netFail();
+
+    }
+    this.signupform = new FormGroup({
+
+      codeNumber: new FormControl('', [Validators.required, Validators.minLength(1)]),
+
+    });
+
     if (this.platform.is('ios')){
       this.sqliteHelperService.getDb()
       .then((movies:any) => {
@@ -152,14 +178,16 @@ trans={
          // alert("deu errado"+erro);
       });
      }
-      
+
     }
-   
-  
+
+    ngOnInit() {
+
+    }
     ionViewDidLoad(){
-     
+
      // this._initialiseTranslation();
-      if(this.net.ckeckNetwork()){
+
         //CHAMDA DO BANCO DE DADOS
                   this.usuario.getAll()
                       .then((movies:any) => {
@@ -179,25 +207,25 @@ trans={
                               this.id_serv        = movies[0].id_serv;
                               this.data.cnpj      = movies[0].cnpj;
                               this.data.tp_pessoa = movies[0].tp_pessoa;
-                              
+
                               if(this.language ==  "" || this.language == undefined || this.language == null){
                                     this.language = "pt";
                               }
                               this.update_cupom();
                               this.trogle_idiome_onesignal();
-                            //  this.events.publish('trans',this.language);         
+                            //  this.events.publish('trans',this.language);
                               this.events.publish('dados',this.data);
-                              
+
                          }else{
                           this.language= "pt";
                           console.log("minha lang",this.language);
-                          
+
                            console.log("entrei no else");
-                           
+
                             /* this.usuario.update_lang(this.language,this.id_serv)
                            .then((data: any) => {
                                  console.log(data);
-                                 
+
                            });  */
                              this.isPT  =  true;
                              this.trogle_idiome_onesignal();
@@ -208,7 +236,7 @@ trans={
                          this.trogle_idiome(this.language);
                          this._translateLanguage();
                          this.oneSignalApp();
-                      
+
           }).catch((error)=>{
                 alert("sqlite Erro "+error);
                 this.language= "pt";
@@ -218,37 +246,32 @@ trans={
                 this._translateLanguage();
                 this.oneSignalApp();
           });
-        
-      }else{
-                           
-       
-        this.navCtrl.setRoot('NotNetworkPage');
-             
-      }
+
+
       this.keyboard.onKeyboardShow().subscribe(() => {
           this.footerIsHidden= false;
       });
       this.keyboard.onKeyboardHide().subscribe(() => {
           this.footerIsHidden= true;
       });
-      
-     
-    }  
+
+
+    }
     update_cupom(){
-      if(this.net.ckeckNetwork()){
+
         this.cli_Provider.getinfConta(this.token)
         .subscribe((result: any) =>{
-        
+
           if(result.status == 200){
             this.usuario.update_cupom("",result.cupom_id,result.user_id)
             .then((data: any) => {
                   console.log("atualizei o cupom",data);
-                   
-            }); 
+
+            });
           }
         });
-      }
-     
+
+
     }
   trogle_idiome(id){
     console.log("lang",id);
@@ -304,30 +327,47 @@ trans={
       }
   }
   pushPage(){
+    let latitude = this.endLat;
+        let longitude = this.endLong;
+        console.log('home codes com gps');
+        this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
+            code: this.codeNumber,
+            latitude: latitude, longitude: longitude,
+            telephone: this.global.myGlobalVar
+        });
 
-     
-     let latitude = this.endLat;
-    let longitude = this.endLong;
-    console.log('home codes com gps');
-    this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
-        code: this.codeNumber,
-        latitude: latitude, longitude: longitude,
-        telephone: this.global.myGlobalVar
-    });
 
+    // this.util.showLoading('Aguarde...');
+    // this.networkProvider.verifyConn().then((res)=>{
+    //   this.util.loading.dismissAll();
+    //   this.statusConn = res.status;
+    //   console.log('Return :::',res.status);
+    //   if(this.statusConn === -3){
+    //     this.netFail();
+    //   }else{
+    //     let latitude = this.endLat;
+    //     let longitude = this.endLong;
+    //     console.log('home codes com gps');
+    //     this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
+    //         code: this.codeNumber,
+    //         latitude: latitude, longitude: longitude,
+    //         telephone: this.global.myGlobalVar
+    //     });
+
+    //   }
+    // });
   }
-
 pushGeoinfo(){
   this.platform.ready().then(() => {
     this.geoProv.getGeolocation().then((resp:String[])=>{
       console.log('home',resp);
-    
+
         this.endLat = resp["latitude"];
         this.endLong = resp["longitude"];
         console.log('home',this.endLat,this.endLong );
      });
   });
-} 
+}
 pushPageCode(){
   this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,  code: 'KSCODE',
   latitude: this.endLat, longitude: this.endLong,
@@ -341,7 +381,7 @@ pushPagePesquisa(){
   myModal.present();
 }
 showCheckbox() {
- 
+
   let alert = this.alertCtrl.create();
   alert.setTitle(this.selecione);
  //ingles, espanhol, italiano, frances e alemão
@@ -390,12 +430,12 @@ showCheckbox() {
           this.usuario.update_lang(this.language,this.id_serv)
           .then((data: any) => {
                 console.log(data);
-                 
-          }); 
+
+          });
           this.trogle_idiome(this.language);
           this.changeLanguage();
-      
-    
+
+
      }
    });
    alert.present();
@@ -403,7 +443,7 @@ showCheckbox() {
 // compartilhar social share
 shareSheetShare() {
   this.socialSharing.share("KSCODE - Tudo se conecta aqui! ->", "Share subject", "", "https://play.google.com/store/apps/details?id=com.kcode360.kcode").then(() => {
-  
+
   }).catch(() => {});
 }
 
@@ -413,7 +453,7 @@ shopcode() {
     .then(isAvailable => {
       if (isAvailable) {
         this.browserTab.openUrl(url);
-      } 
+      }
     });
 }
 // push notification onesignal
@@ -434,7 +474,7 @@ shopcode() {
       {
         text: this.btn_fechar,
         handler: () => {
-         
+
         }
       },
       {
@@ -453,9 +493,9 @@ shopcode() {
     var notificationCode       = notificationAdditional.code;
     this.redirectPush(notificationCode);
   });
-  
+
   this.oneSignal.endInit();
-} 
+}
 public changeLanguage() : void
 {
    this._translateLanguage();
@@ -505,7 +545,7 @@ private _initialiseTranslation() : void
       this.code_existe            =this.translate.instant("home.code_existe");
       this.btn_ircode             =this.translate.instant("default.btn_ircode");
       this.btn_fechar             =this.translate.instant("default.btn_fechar");
-    
+
       console.log(this.btn_cancelar,this.btn_continuar,this.btn_fechar,this.btn_ircode);
       this.page_pesquisa          = this.translate.instant("default.page_pesquisa");
      // this.load_aguarde           = this.translate.instant("default.btn_fechar");
@@ -517,38 +557,38 @@ private _initialiseTranslation() : void
       this.trans.page_login             = this.translate.instant("login.page");
       this.trans.load_enviando          = this.translate.instant("default.load_enviando");
       this.trans.campo_obrigatorio      = this.translate.instant("default.campo_obrigatorio");
-      this.trans.frase                  = this.translate.instant("login.frase");   
-      this.trans.page                   = this.translate.instant("login.page");  
-      this.trans.usuario                = this.translate.instant("login.usuario");   
-      this.trans.senha                  = this.translate.instant("login.senha");  
-      this.trans.esqueceu               = this.translate.instant("login.esqueceu");  
-      this.trans.ou                     = this.translate.instant("login.ou");  
-      this.trans.conta                  = this.translate.instant("login.conta");  
-      this.trans.page_senha             = this.translate.instant("recupera_senha.page");  
-      this.trans.texto_1                = this.translate.instant("recupera_senha.texto_1");  
-      this.trans.texto_2                = this.translate.instant("recupera_senha.texto_2");  
-     // this.trans.email                  = this.translate.instant("recupera_senha.texto_2");  
+      this.trans.frase                  = this.translate.instant("login.frase");
+      this.trans.page                   = this.translate.instant("login.page");
+      this.trans.usuario                = this.translate.instant("login.usuario");
+      this.trans.senha                  = this.translate.instant("login.senha");
+      this.trans.esqueceu               = this.translate.instant("login.esqueceu");
+      this.trans.ou                     = this.translate.instant("login.ou");
+      this.trans.conta                  = this.translate.instant("login.conta");
+      this.trans.page_senha             = this.translate.instant("recupera_senha.page");
+      this.trans.texto_1                = this.translate.instant("recupera_senha.texto_1");
+      this.trans.texto_2                = this.translate.instant("recupera_senha.texto_2");
+     // this.trans.email                  = this.translate.instant("recupera_senha.texto_2");
       //this.trans.lang       = this.language;
-     
+
      //this.events.publish('dados',this.data);
       this.events.publish('trans',this.trans);
       this.events.publish('lang',this.language);
     // this.events.publish('dados',this.data);
    }, 250);
- 
+
 }
 // redirect push enter
 redirectPush(notificationCode){
   console.log(notificationCode);
-  
+
   this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
     code: notificationCode,
     latitude: this.endLat, longitude: this.endLong,
     telephone: this.global.myGlobalVar
-  
+
   });
   console.log('notifcaca codes com gps');
- 
+
  }
 
 // redirect links
@@ -558,36 +598,43 @@ openDeeplinks(){
     '/about-us': {'card':'DetalheCodePage'},
   }).subscribe((match) => {
     console.log(match);
-    var code = match.$link.queryString.substring(5,50); 
+    var code = match.$link.queryString.substring(5,50);
     if(code){
         this.redirectPush(code);
     }
-  
-  }, (nomatch) => {});
-  
-}
-trogle_idiome_onesignal(){
-  console.log("langsdfds",this.language);
-    if(this.language =='pt'){
-      this.btn_fechar           =  "Fechar";
-      this.btn_ircode             = "Ir para Code";
-      
-    }else if(this.language =='de'){
-          this.btn_fechar           =  "Schliessen";
-          this.btn_ircode             = "Gehe zu CODE";
-      }else if(this.language =='en'){
-        this.btn_fechar           =  "Close";
-        this.btn_ircode             = "Go to CODE"; 
-    }else if(this.language =='it'){
-      this.btn_fechar           =  "Vicino";
-      this.btn_ircode             = "Vai al  CODE";
-    }else if(this.language =='fr'){
 
-      this.btn_fechar           =  "Proche";
-      this.btn_ircode             = "Aller à CODE";
-    }else if(this.language =='es'){
-      this.btn_fechar           =  "Cerca";
-      this.btn_ircode             = "Ir a CODE";
-    }
+  }, (nomatch) => {});
+
 }
+    trogle_idiome_onesignal(){
+      console.log("langsdfds",this.language);
+        if(this.language =='pt'){
+          this.btn_fechar           =  "Fechar";
+          this.btn_ircode             = "Ir para Code";
+
+        }else if(this.language =='de'){
+              this.btn_fechar           =  "Schliessen";
+              this.btn_ircode             = "Gehe zu CODE";
+          }else if(this.language =='en'){
+            this.btn_fechar           =  "Close";
+            this.btn_ircode             = "Go to CODE";
+        }else if(this.language =='it'){
+          this.btn_fechar           =  "Vicino";
+          this.btn_ircode             = "Vai al  CODE";
+        }else if(this.language =='fr'){
+
+          this.btn_fechar           =  "Proche";
+          this.btn_ircode             = "Aller à CODE";
+        }else if(this.language =='es'){
+          this.btn_fechar           =  "Cerca";
+          this.btn_ircode             = "Ir a CODE";
+        }
+    }
+
+    netFail(){
+      let result:any = [];
+      result.message = "Sem conexão com a internet."
+      this.toast.create({ message: result.message, position: 'botton', duration: 14400 ,closeButtonText: 'Ok!', cssClass: 'error' }).present();
+    }
+
 }

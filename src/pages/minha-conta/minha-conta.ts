@@ -48,7 +48,7 @@ export class MinhaContaPage {
   user_email               : String;
   nome_empresa             : String;
   segmento_empresa         : String;
-  cidade_empresa           : String; 
+  cidade_empresa           : String;
   user_cep                 : String;
   estado_empresa           : String;
   avatar                   : String;
@@ -63,7 +63,7 @@ export class MinhaContaPage {
     cep:String;
     cidade:String;
     estado:String;
-    page:String   ;   
+    page:String   ;
     msg_servidor;
     load_aguarde;
   data = {
@@ -87,11 +87,11 @@ export class MinhaContaPage {
     usuario             :String,
     logado              :String,
     token               :String,
-   
+
 }
 searchTerm$ = new Subject<string>();
   constructor(
-              public navCtrl          : NavController, 
+              public navCtrl          : NavController,
               public navParams        : NavParams,
               formBuilder             : FormBuilder,
               public  net             : NetworkProvider,
@@ -119,8 +119,8 @@ searchTerm$ = new Subject<string>();
               });
               this.data.logado = String;
               this.selectedSegment = '0';
-      
-              
+
+
   }
 
 
@@ -144,13 +144,13 @@ searchTerm$ = new Subject<string>();
     this.getInfoConta();
     this.navBar.backButtonClick = (e:UIEvent)=>{
       this.navCtrl.setRoot('HomePage');
-     
-     }  
+
+     }
   }
   change_segmento($event) {
-    
+
     this.model.segmento_empresa =$event;
-      
+
   }
   onCancel(){
     return this.model.user_cep ="";
@@ -173,7 +173,7 @@ searchTerm$ = new Subject<string>();
     }else if(currentSlide == 2){
       this.selectedSegment = '2';
     }
-   
+
   }
 //chama pra escolher a opção da foto
 onActionSheet(): void {
@@ -207,7 +207,7 @@ onSearchByKeyword() {
                   this.model.cidade_empresa = results.cidade;
                   this.estado_empresa       =  results.estado;
                 }
-                
+
               });
  console.log(this.searchTerm$);
 }
@@ -235,20 +235,20 @@ private takePicture(sourceType: number): void {
 
 }
  getInfoConta(){
-  if(this.net.ckeckNetwork()){
+
     this.util.showLoading(this.load_aguarde);
     this.cli_Provider.getinfConta(this.token)
     .subscribe((result: any) =>{
-      this.util.loading.dismiss(); 
+      this.util.loading.dismissAll();
       if(result.status == 200){
-              this.cli_Provider.getSegmento().subscribe((result: any) =>{  
+              this.cli_Provider.getSegmento().subscribe((result: any) =>{
               this.segmentos = result;
-             
+
           } ,(error:any) => {});
             this.first_name             = result.first_name;
             this.last_name              = result.last_name;
-            this.user_email             = result.user_email;  
-            this.nome_empresa           = result.nome_empresa; 
+            this.user_email             = result.user_email;
+            this.nome_empresa           = result.nome_empresa;
             this.segmento_empresa       = result.segmento_empresa;
             this.cidade_empresa         = result.cidade_empresa;
             this.user_cep               = result.user_cep;
@@ -257,8 +257,8 @@ private takePicture(sourceType: number): void {
             ///model
             this.model.first_name       = this.first_name;
             this.model.last_name        = this.last_name;
-            this.model.user_email       = this.user_email;  
-            this.model.nome_empresa     = this.nome_empresa; 
+            this.model.user_email       = this.user_email;
+            this.model.nome_empresa     = this.nome_empresa;
             this.model.segmento_empresa = this.segmento_empresa;
             this.model.cidade_empresa   = this.cidade_empresa;
             this.model.user_cep         = this.user_cep;
@@ -271,25 +271,23 @@ private takePicture(sourceType: number): void {
 
           }else{
             this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-            
+
           }
     } ,(error:any) => {
       this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-      this.util.loading.dismiss(); 
+      this.util.loading.dismissAll();
       this.navCtrl.setRoot('HomePage');
         });
-      
-    }else{
-    this.navCtrl.setRoot('NotNetworkPage');
-       } 
+
+
   }
   updateConta(){
 
-    if(this.net.ckeckNetwork()){
+
           this.util.showLoading(this.load_aguarde);
       this.cli_Provider.UpdateAccount(this.model.first_name,this.model.last_name,this.model.avatar,this.model.user_email,this.model.nome_empresa,this.model.segmento_empresa,this.model.user_cep,this.model.estado_empresa,this.model.cidade_empresa,this.token,this.lang)
       .subscribe((result: any) =>{
-            this.util.loading.dismiss();
+            this.util.loading.dismissAll();
             if(result.status == 200){
                   this.toast.create({ message: result.message, position: 'botton', duration: 10000 ,showCloseButton: true,closeButtonText: 'Ok!',cssClass: 'sucesso'}).present();
                   this.usuario.update(result.user_data.first_name,result.user_data.last_name,result.user_data.user_email,result.user_data.avatar,"","","1",this.token,result.user_data.user_id)
@@ -306,28 +304,25 @@ private takePicture(sourceType: number): void {
                         this.last_name  =  result.user_data.last_name;
                         this.user_email = result.user_data.user_email;
                         this.events.publish('dados',dados);
-                       
-                  });   
-                  this.usuario.update_Endereco(result.user_data.nome_empresa,result.user_data.segmento_empresa,result.user_data.user_cep,result.user_data.cidade_empresa,result.user_data.estado_empresa,result.user_data.user_id).then((data: any) => { 
-                  });   
-             
+
+                  });
+                  this.usuario.update_Endereco(result.user_data.nome_empresa,result.user_data.segmento_empresa,result.user_data.user_cep,result.user_data.cidade_empresa,result.user_data.estado_empresa,result.user_data.user_id).then((data: any) => {
+                  });
+
                 }else if(result.status == 402){
                   this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
                   this.navCtrl.push('LoginPage',{lang:this.lang});
 
                 }else{
                   this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                  
+
                 }
           } ,(error:any) => {
             this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-            this.util.loading.dismiss(); 
+            this.util.loading.dismissAll();
             this.navCtrl.setRoot('HomePage');
           });
 
-        }else{
-        this.navCtrl.setRoot('NotNetworkPage');
-        } 
 
   }
 }

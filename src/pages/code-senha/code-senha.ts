@@ -10,7 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
   priority : 'off',
   segment  : 'CodeSenha/:info/:id_code/:link/:origem/:token/:lang',
   defaultHistory:['HomePage'],
-  
+
 })
 @Component({
   selector: 'page-code-senha',
@@ -58,7 +58,7 @@ export class CodeSenhaPage {
            this.model = new Login();
            //instancia do formulario builder para validar os campos
            this.loginForm = formBuilder.group({
-          
+
              password : ['', Validators.required]});
   }
 
@@ -69,7 +69,7 @@ export class CodeSenhaPage {
     this.origem       = this.navParams.get('origem');
     this.lang         = this.navParams.get('lang');
     this.code        = this.navParams.get('code');
-   
+
     this.telephone        = this.navParams.get('telephone');
     this.latitude        = this.navParams.get('latitude');
     this.longitude        = this.navParams.get('longitude');
@@ -78,12 +78,12 @@ export class CodeSenhaPage {
     this.token       = this.navParams.get('token');
     this.lang        = this.navParams.get('lang');
     this._translateLanguage();
-    
-    
+
+
   }
   ionViewWillUnload() {
     this.navCtrl.setRoot('HomePage');
-  } 
+  }
   private _translateLanguage() : void
   {
      this.translate.use(this.lang);
@@ -102,12 +102,12 @@ export class CodeSenhaPage {
         this.btn_cancelar     = this.translate.instant("default.btn_cancelar");
         this.btn_cancelar     = this.translate.instant("default.btn_cancelar");
         this.load_enviando = this.translate.instant("default.load_enviando");
-      
+
      }, 250);
   }
   showPassword() {
     this.showPass = !this.showPass;
-  
+
     if(this.showPass){
       this.type = 'text';
     } else {
@@ -115,9 +115,9 @@ export class CodeSenhaPage {
     }
   }
   login() {
-    
+
     let {  password } = this.loginForm.controls;
-    
+
     if (!this.loginForm.valid) {
               if (!password.valid) {
                 this.errorPassword = true;
@@ -129,47 +129,44 @@ export class CodeSenhaPage {
     else {
 
         this.util.showLoading(this.load_enviando);
-          if(this.net.ckeckNetwork()){
-            
-                this.codeProvider.getCodePassword(this.model.password,this.id_code,this.lang) 
+
+
+                this.codeProvider.getCodePassword(this.model.password,this.id_code,this.lang)
                  .subscribe(
-                    (result: any) =>{    
-                      this.util.loading.dismiss(); 
+                    (result: any) =>{
+                      this.util.loading.dismissAll();
                       if(result.status == 200){
                         if(this.link == null){
                           this.toast.create({ message: result.messagem, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                          // this.viewCtrl.dismiss();
                           this.navCtrl.push('DetalheCodePage', {origem:1,lang:this.lang,
                            liberado:true, code: this.code,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
-                             
+
                           });
-                        
+
                         }else{
                           this.toast.create({ message: result.messagem, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
                         //  this.viewCtrl.dismiss();
                           this.navCtrl.push('DetalheCodePage', {origem:1,lang:this.lang,
                            liberado:true, code: this.code,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
                           });
-                         
+
                         }
-                       
+
                       }
                       else if(result.status == 403){
                         this.toast.create({ message:result.messagem, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                        
+
                       }
-      
+
                  } ,(error:any) => {
                   this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                  this.util.loading.dismiss(); 
+                  this.util.loading.dismissAll();
                   this.navCtrl.setRoot('HomePage');
                  });
-      
-          }else{
-            this.util.loading.dismiss(); 
-              this.navCtrl.setRoot('NotNetworkPage',{lang:this.lang});
-          } 
-       
+
+
+
         }
   }
   voltar(){
@@ -182,15 +179,15 @@ export class CodeSenhaPage {
     }else{
       this.navCtrl.setRoot('HomePage');
     }
-  
-    
+
+
   }
   openWithInAppBrowser(url){
     this.browserTab.isAvailable()
     .then(isAvailable => {
       if (isAvailable) {
         this.browserTab.openUrl(url);
-      } 
+      }
     });
   }
 

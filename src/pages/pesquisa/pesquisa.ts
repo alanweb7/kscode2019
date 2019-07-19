@@ -22,7 +22,7 @@ page_pesquisa;
   load_aguarde: any;
   msg_servidor: any;
   constructor(
-    public navCtrl        : NavController, 
+    public navCtrl        : NavController,
     public navParams      : NavParams,
     private codeProvider  : CodeProvider,
     public loadingCtrl    : LoadingController,
@@ -38,12 +38,12 @@ page_pesquisa;
     this.util.showLoading(this.load_aguarde);
     this.navBar.backButtonClick = (e:UIEvent)=>{
       this.navCtrl.setRoot('HomePage');
-    }  
+    }
   }
   ionViewDidEnter() {
-   
+
     this.page = this.navParams.get('info');
-   
+
     this.getAllinks(this.page);
   }
 
@@ -51,14 +51,15 @@ getAllinks(page: any) {
   this.codeProvider.getLinks(page)
   .subscribe(
     (result: any) =>{
-        var user = result.data[0]; 
-        this.util.loading.dismiss(); 
+      console.log('result na pagina pesquisa!::',result);
+        var user = result.data[0];
+        this.util.loading.dismissAll();
         this.links = user;
-  
+
     })
      ,(error:any) => {
       this.toast.create({ message:this.msg_servidor, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-      this.util.loading.dismiss(); 
+      this.util.loading.dismissAll();
       this.navCtrl.setRoot('HomePage');
     };
 }
