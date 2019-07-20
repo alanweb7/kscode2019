@@ -73,8 +73,8 @@ export class MyApp {
     ou: any;
     conta: any;
     email_login:any;
-   
-    
+
+
   pages      : Array<{ color:string,icon: string, title: String, component: any}>;
   constructor(private usuarioService : UsuarioService,
               public platform        : Platform,
@@ -86,15 +86,15 @@ export class MyApp {
               public sqliteHelperService: SqliteHelperService,
               deeplinks              : Deeplinks,
             //  public navCtrl: NavController,
-             
+
               ) {
-   
+
                 this.initializeApp();
     deeplinks.routeWithNavController(this.nav, {
       '/card': {'card':'DetalheCodePage',},
       '/about-us': {'card':'DetalheCodePage'},
     }).subscribe((match) => {
-      var code = match.$link.queryString.substring(5,50); 
+      var code = match.$link.queryString.substring(5,50);
       console.log("mene",match);
       if(code != "" && code != undefined ){
           this.redirectPush(code);
@@ -135,14 +135,14 @@ export class MyApp {
       this.ou      =trans.ou;
       this.conta      =trans.conta;
       this.email_login      =trans.usuario;
-     
+
     })
     this.event.subscribe("lang",(lang:any)=>{
       console.log("lang",lang);
       this.language =lang;
     });
     //capturar do evento da home
-    this.event.subscribe("dados", (data:any) => { 
+    this.event.subscribe("dados", (data:any) => {
       console.log(data);
           if(data.logado == "1"){
               this.name    = data.name;
@@ -157,9 +157,9 @@ export class MyApp {
               console.log(data.cnpj);
               this.tp_pessoa = data.tp_pessoa;
               //this.language = data.lang;
-             
-              
-                     
+
+
+
          }else{
                this.mostra    = false;
                this.photo     = "";
@@ -172,9 +172,9 @@ export class MyApp {
                this.cnpj      = "";
                this.tp_pessoa = "";
                //this.language = "pt";
-            
+
          }
-        
+
     });
     // aqui eu seto o meu menu
     this.pages = [
@@ -183,15 +183,15 @@ export class MyApp {
       { color:'primary',  icon: 'star',               title: String(this.favoritos),      component: 'HistoricoPage'},
       { color:'primary',  icon: 'search',             title: String(this.pesquisa),            component: 'PesquisaPage' },
     // { color:'primary',  icon: 'search',             title: 'Pesquisa',            component: 'EnqueteVotarPage' },
-      /*  { color:'primary',  icon: 'search',             title: 'Enquete',             component: 'EnqueteVotarPage' } 
+      /*  { color:'primary',  icon: 'search',             title: 'Enquete',             component: 'EnqueteVotarPage' }
       */
     ];
      console.log(this.pages);
   }
- 
+
   initializeApp() {
     this.platform.ready().then(() => {
-     
+
       this.statusBar.styleDefault();
       this.splashScreen.hide();
        //CHAMDA DO BANCO DE DADOS
@@ -210,9 +210,9 @@ export class MyApp {
        if (this.platform.is('ios')){
         this.sqliteHelperService.getDb()
         .then((movies:any) => {
-            alert("alert deu certo");
+            // alert("alert deu certo");
         }).catch((erro)=>{
-            alert("deu errado"+erro);
+            // alert("deu errado"+erro);
         });
        }
       /*  if (this.platform.is('android')){
@@ -222,26 +222,26 @@ export class MyApp {
     this.sobrenome= "";
     this.photo = "";
     this.email = "";
-   
-  
+
+
   }
-  
-  
+
+
 
 // redirect push enter
 redirectPush(notificationCode){
-  
+
    this.nav.push('DetalheCodePage', {liberado :false,
         code: notificationCode,
         latitude: "", longitude: "",
         telephone: ""
-  
+
   });
  }
   openPage(page) {
     if(page == 2){
           if(this.token == undefined){
-            
+
             this.nav.push('LoginPage',{lang:this.language});
           }else{
             this.nav.push("MeusCodesPage",{token:this.token,lang:this.language});
@@ -249,7 +249,7 @@ redirectPush(notificationCode){
     }else if(page == 1){
       this.nav.setRoot("HomePage",{token:this.token});
     }
-    else if(page == 3 ){ 
+    else if(page == 3 ){
            this.nav.push("HistoricoPage",{token:this.token,lang:this.language});
     }else if(page == 4){
       this.nav.push("PesquisaPage",{token:this.token,page_pesquisa:this.page_pesquisa, load_aguarde: this.load_aguarde,
@@ -263,9 +263,9 @@ redirectPush(notificationCode){
       this.nav.push("CupomPage",{token:this.token,page_pesquisa:this.page_pesquisa, load_aguarde: this.load_aguarde,
         msg_servidor:this.msg_servidor,cupom:this.cnpj});
     }
-  
+
   }
- 
+
   minhaConta(){
     console.log("token",this.token);
     if(this.token == undefined){
@@ -285,11 +285,11 @@ redirectPush(notificationCode){
           ,btn_salvar : this.btn_salvar,
           msg_servidor : this.msg_servidor,
           load_aguarde :this.load_aguarde
-        
+
         });
         myModal.present();
     }
-    
+
   }
   loginIN(){
     this.nav.setRoot('LoginPage',{lang:this.language});
