@@ -128,6 +128,8 @@ trans={
   constructor(
     public loadingCtrl     : LoadingController,
     public navCtrl         : NavController,
+    public alertCtrl       : AlertController,
+
     public navParams       : NavParams,
     private global         : CodeProvider,
     private geoProv        : GeolocationProvider,
@@ -136,7 +138,7 @@ trans={
     private socialSharing  : SocialSharing,
     private browserTab     : BrowserTab,
     private oneSignal      : OneSignal,
-    public alertCtrl       : AlertController,
+
     public  net            : NetworkProvider,
     public network : Network,
     private deeplinks      : Deeplinks,

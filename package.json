@@ -61,6 +61,7 @@
     "com-badrit-base64": "^0.2.0",
     "com-sarriaroman-photoviewer": "^1.1.18",
     "cordova-android": "8.0.0",
+    "cordova-ios": "^5.0.1",
     "cordova-plugin-add-swift-support": "^2.0.1",
     "cordova-plugin-advanced-http": "2.1.1",
     "cordova-plugin-browsertab": "^0.2.0",
@@ -102,6 +103,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "3.2.1",
+    "@ionic/lab": "2.0.6",
     "typescript": "~2.6.2"
   },
   "description": "An Ionic project",
@@ -152,7 +154,8 @@
       "call-number": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
