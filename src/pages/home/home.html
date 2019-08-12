@@ -22,14 +22,13 @@
 
       <ion-content class="fundo">
 
-          <div >
-            <ion-card class="fundo">
-                <img src="assets/imgs/0YCNfH79RwanY6W3GTye_Logo_white.png"/>
+          <div>
+            <ion-card class="fundo" style="text-align: center" *ngIf="footerIsHidden">
+                <img src="assets/imgs/logo_home_blanc.svg" style="height: 90px"/>
                 <ion-card-content>
                   <ion-card-title>
                       {{title}}
-                    </ion-card-title>
-
+                  </ion-card-title>
                 </ion-card-content>
               </ion-card>
               <form id="home-form1" [formGroup]="signupform">
@@ -39,7 +38,7 @@
                               <ion-col col-12>
                                   <ion-item id="home-input1" ng-model="movie.name" class="search_code">
                                       <ion-label></ion-label>
-                                      <ion-input type="text" placeholder="CODE"  [(ngModel)]="codeNumber" formControlName="codeNumber" name="code"></ion-input>
+                                      <ion-input type="text" placeholder="CONNECT AQUI"  [(ngModel)]="codeNumber" formControlName="codeNumber" name="code"></ion-input>
                                   </ion-item>
                               </ion-col>
                               <ion-col col-12 class="info-servico">

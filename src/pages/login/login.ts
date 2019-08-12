@@ -1,3 +1,4 @@
+import { Keyboard } from '@ionic-native/keyboard';
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { IonicPage, NavController, NavParams , MenuController, ModalController,Events, ToastController, LoadingController} from 'ionic-angular';
@@ -33,6 +34,7 @@ export class LoginPage {
   word             =/[^0-9]+/g;
   public type      = 'password';
   public showPass  = false;
+  hiddeLogo: Boolean = true;
 
   data = {
      id_serv     :Number,
@@ -103,7 +105,10 @@ export class LoginPage {
             private usuario         : UsuarioService,
             public loadingCtrl      : LoadingController,
             public  util            : UtilService,
-            formBuilder             : FormBuilder) {
+            private keyboard       : Keyboard,
+            formBuilder             : FormBuilder,
+            ) {
+
             //instanica do model login
             this.model = new Login();
             //instancia do formulario builder para validar os campos
@@ -139,6 +144,16 @@ export class LoginPage {
     });
     console.log(this.lang);
     this.trogle_idiome();
+
+    this.keyboard.onKeyboardShow().subscribe(() => {
+        this.hiddeLogo = false;
+        console.log('teclado apareceu');
+    });
+    this.keyboard.onKeyboardHide().subscribe(() => {
+        this.hiddeLogo = true;
+        console.log('teclado apareceu');
+    });
+
   }
   ionViewDidEnter() {
     //disabilita menu lateral

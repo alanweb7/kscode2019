@@ -6,12 +6,15 @@
 
         <ion-title>
               {{page_login}}
-            </ion-title>
+        </ion-title>
 
     </ion-navbar>
 </ion-header>
-<ion-content padding class="pg-login">
-    <ion-icon name="icone-logo"></ion-icon>
+<ion-content padding class="pg-login" >
+  <div class="content_logo" *ngIf="hiddeLogo">
+    <!-- <ion-icon name="icone-logo"></ion-icon> -->
+  </div>
+
       <div><p *ngIf="erro" class="error"> {{message}}</p></div>
     <form class="" [formGroup]="loginForm">
         <ion-list class="index-formularios">

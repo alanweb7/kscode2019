@@ -271,4 +271,50 @@ ion-content.pg-login.content.content {
         width: 100% !important;
         text-align: center;
       }
+      .header_user{
+        width: 80px;
+        height: 80px;
+        border-radius: 40px;
+        background-color: #001e5b;
+        // position: relative;
+        // top: 40px;
+        margin-left: auto;
+        margin-right: auto;
+        z-index: 99999;
+      }
+      .header_user{
+        background-position: center top;
+        background-size: cover;
+      }
+      div.logo_container{
+        width: 100%;
+        text-align: center;
+      }
+      div.title_header_detail{
+        width: 100%;
+        text-align: center;
+      }
+      ion-header {
+        min-height: 80px;
+        background: linear-gradient(135deg, #052049 0%, black 100%) !important;
+      }
+      .video_controller{
+        justify-content: space-around;
+        display: flex;
+        justify-content: space-around;
+        // margin-top: -18px;
+        background-color: #FFF;
+        padding-top: 4px;
+        }
+        button.controller-button {
+          /* font-size: 40px !important; */
+          /* size: 30px; */
+          width: 0px !important;
+          height: 10px;
+          padding: 15px;
+        }
+
+      // .header_landing{
+      //   height: 75px;
+      // }
 }

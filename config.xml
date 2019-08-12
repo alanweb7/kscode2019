@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="br.com.kscode.app360" version="19.0.29" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>KSCODE</name>
-    <description>An awesome Ionic/Cordova app.</description>
+<widget id="br.com.kscode360.kscode" version="19.0.29" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Connet - KSC</name>
+    <description>Tudo se conecta aqui.</description>
     <author email="contato@kscode.com.br" href="http://spottec.com.br/">SPOTTEC</author>
     <content src="index.html" />
     <access origin="*" />
@@ -79,7 +79,8 @@
         <splash height="480" src="resources/ios/splash/Default~iphone.png" width="320" />
         <splash height="2732" src="resources/ios/splash/Default@2x~universal~anyany.png" width="2732" />
         <edit-config file="*-Info.plist" mode="merge" target="NSCameraUsageDescription">
-            <string>This allows you to use the camera to upload photos and videos to your channel so you can customize your app space more enjoyably and your friends enjoy your channel better</string>
+            <string>This allows the photos and videos you want to upload to your channel to also be stored on your device and always on
+close to you.</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSMicrophoneUsageDescription">
             <string>Isso permite o uso do microfone para que você possa gravar áudios para o seu canal e  consiga que e seus amigos apreciem melhor o que você tem a dizer.</string>
@@ -107,7 +108,8 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <plugin name="cordova-plugin-telerik-imagepicker" spec="^2.2.2">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This allows the photos and videos you want to upload to your channel not to be stored on your device as well, or to be successful or close to you." />
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This allows the photos and videos you want to upload to your channel to also be stored on your device and always on
+close to you." />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />

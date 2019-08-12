@@ -65,6 +65,11 @@ export class DetalheCodePage {
   option2           : String;
   label1            : String;
   label2            : String;
+  currentSlide: number = 0;
+  totalSlides: number;
+  disableNext: boolean = false;
+  disablePrev: boolean = true;
+  infoLegendSlides:string;
 
   @ViewChild('slider') slides: Slides;
   token         : String;
@@ -102,6 +107,7 @@ export class DetalheCodePage {
   initModeUser: any;
   audiolinkUrl: string;
   audioContent: boolean;
+  public logo_header:string;
 
   constructor(
               public navCtrl         : NavController,
@@ -138,10 +144,6 @@ export class DetalheCodePage {
                 toolbar: false,
                 readonly: true,
               }
-
-
-
-
 
             }
 
@@ -230,10 +232,10 @@ export class DetalheCodePage {
         this.msg_erro               = this.translate.instant("default.msg_erro");
         this.selecione              = this.translate.instant("videos.selecione");
         this.btn_cancelar           = this.translate.instant("default.btn_cancelar");
-        this.btn_continuar          =this.translate.instant("default.btn_continuar");
-        this.code_existe            =this.translate.instant("home.code_existe");
-        this.btn_ircode             =this.translate.instant("default.btn_ircode");
-        this.btn_fechar             =this.translate.instant("default.btn_fechar");
+        this.btn_continuar          = this.translate.instant("default.btn_continuar");
+        this.code_existe            = this.translate.instant("home.code_existe");
+        this.btn_ircode             = this.translate.instant("default.btn_ircode");
+        this.btn_fechar             = this.translate.instant("default.btn_fechar");
         this.msg_code               = this.translate.instant("default.msg_code");
         this.msg_link               = this.translate.instant("default.msg_link");
         this.sim                    = this.translate.instant("default.sim");
@@ -248,6 +250,7 @@ export class DetalheCodePage {
           .then((res: any) =>{
                     let result: any = res;
                     if( result.status === 200){
+
                       this.myIdOnesignal();
                       this.util.loading.dismissAll();
                     if( this.isLiberado == true &&  result.data[0]['t_conteudo'] == "1"  && result.data[0]['isprivate'] == true){
@@ -342,6 +345,10 @@ export class DetalheCodePage {
                             this.galeria.push(gal);
 
                           }
+
+                          this.logo_header = this.galeria[0].img_link;
+                          console.log('Imagens da header: ', this.logo_header);
+
                      }
                      //popula documento
                      if(result.data[0]['documento'].length > 0){
@@ -372,6 +379,11 @@ export class DetalheCodePage {
 
                               }
                     }
+
+                    console.log('Galaeria de videos: ', this.album_vimeo);
+                    this.totalSlides = this.album_vimeo.length;
+                    this.infoLegendSlides = '1/'+this.totalSlides;
+                    this.currentSlide = 0;
                      //popula audio
                      if(result.data[0]['audio_colection'].length > 0){
                           this.audioContent = true;
@@ -698,6 +710,34 @@ this.oneSignal.sendTags(Tagcode);
   this.video_post_status = status;
 
  }
+
+ controlSlide(action){
+
+  if(action === 'up'){
+      this.currentSlide++;
+    }else{
+      this.currentSlide--;
+    }
+
+    let indice = this.currentSlide + 1;
+
+    if((this.currentSlide + 1) === this.totalSlides ){
+      this.disableNext = true;
+    }else{
+      this.disableNext = false;
+    }
+
+    if(this.currentSlide  === 0){
+      this.disablePrev = true;
+      indice = 1;
+    }else{
+      this.disablePrev = false;
+    }
+
+    this.infoLegendSlides = indice +'/'+this.totalSlides;
+    this.video_link = this.album_vimeo[this.currentSlide].video_link;
+ }
+
   slideNext(){
     this.slides.slideNext();
 
@@ -718,6 +758,7 @@ this.oneSignal.sendTags(Tagcode);
       console.log(data);
     });
   }
+
 
 
 }

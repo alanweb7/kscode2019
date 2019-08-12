@@ -61,8 +61,6 @@ ion-app.md {
     background: linear-gradient(135deg, rgba(5, 32, 73, 1) 0%, rgb(0, 0, 0) 100%) !important;
 }
 
-
-
 .topo-user {
     button[menuClose] {
         position: absolute;
@@ -140,9 +138,8 @@ ion-icon {
         height: 1.5em;
     }
     &[class*="icone-logo"] {
-        mask-image: url(assets/imgs/0YCNfH79RwanY6W3GTye_Logo_white.png);
+        mask-image: url(assets/imgs/logo_color.svg);
     }
-
 
     &[class*="video-"] {
       mask-size: contain;
@@ -167,7 +164,8 @@ ion-icon {
     text-align: center;
     display: flex;
     justify-content: center;
-    margin-right: 10%;
+    // margin-right: 10%;
+    margin-left: 5px;
 }
 .alert-info {
     color: #0c5460;
@@ -620,7 +618,7 @@ ion-icon {
 }
 
 ion-loading {
-    background: url(../assets/imgs/kscode_black_no_bckg.png);
+    background: url(../assets/imgs/logo_color.svg);
     background-size: cover;
     ion-backdrop {
         background-color: #fff;
@@ -640,7 +638,7 @@ ion-loading {
             height: 100px;
             -webkit-animation: sk-bounce2 1.0s infinite ease-in-out;
             animation: sk-bounce2 1.0s infinite ease-in-out;
-            mask-image: url(../assets/imgs/kscode_black_no_bckg.png);
+            mask-image: url(../assets/imgs/logo_color.svg);
             mask-size: contain;
             mask-position: 50% 50%;
             width: 100px;
@@ -679,7 +677,7 @@ ion-loading.loadingInterna {
     height: 100vh;
     position: fixed;
     padding: 10px;
-    background: url(../assets/imgs/kscode_black_no_bckg.png);
+    background: url(../assets/imgs/logo_color.svg);
     background-size: cover;
     z-index: 999;
     top: 0;
@@ -688,7 +686,7 @@ ion-loading.loadingInterna {
     justify-content: center;
     flex-wrap: wrap;
     ion-icon[class*="icone-logo"] {
-        position: absolute;
+        // position: absolute;
         background: rgb(5, 32, 73);
         background: -moz-linear-gradient(-45deg, rgba(5, 32, 73, 1) 0%, rgba(0, 191, 250, 1) 100%);
         background: -webkit-linear-gradient(-45deg, rgba(5, 32, 73, 1) 0%, rgba(0, 191, 250, 1) 100%);
@@ -696,8 +694,8 @@ ion-loading.loadingInterna {
         filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#001cf5', endColorstr='#00bffa', GradientType=1);
         width: 100px;
         height: 100px;
-        left: 50%;
-        margin-left: -50px;
+        // left: 50%;
+        // margin-left: -50px;
         -webkit-animation: sk-bounce2 1.0s infinite ease-in-out;
         animation: sk-bounce2 1.0s infinite ease-in-out;
     }

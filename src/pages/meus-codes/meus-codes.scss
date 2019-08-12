@@ -3,7 +3,7 @@ page-meus-codes {
         background-size: 15px;
         background-color: transparent;
     }
-  
+
     .fab[mini] {
         margin: 7px 0px 0px 10px;
         width: 45px;
@@ -18,11 +18,11 @@ page-meus-codes {
     }
     .button {
         background: transparent;
-   
+
     }
     .box-list{
         ion-badge {
-       
+
             background: rgb(5, 32, 73) !important;
             background: -moz-linear-gradient(-45deg, rgba(5, 32, 73,1) 0%, rgb(0, 0, 0) 100%) !important;
             background: -webkit-linear-gradient(-45deg, rgba(5, 32, 73 ,1) 0%, rgb(0, 0, 0) 100%) !important;
@@ -35,8 +35,8 @@ page-meus-codes {
                 padding:7px 5px 5px 5px;
                 border-radius: 40px !important;
         }
-      
-    
+
+
 }
   .botoes{
     p{
@@ -48,24 +48,31 @@ page-meus-codes {
 
     }
   }
-   
+
     .fab {
         background: rgb(5, 32, 73) !important;
         background: -moz-linear-gradient(-45deg, rgba(5, 32, 73,1) 0%, rgb(0, 0, 0) 100%) !important;
         background: -webkit-linear-gradient(-45deg, rgba(5, 32, 73 ,1) 0%, rgb(0, 0, 0) 100%) !important;
         background: linear-gradient(135deg, rgba(5, 32, 73, 1) 0%, rgb(0, 0, 0) 100%) !important;
-    }      
+    }
     p{
         text-transform: uppercase;
         &.not-code{
             text-align: center;
             padding: 10px;
         }
-    }        
+    }
     .card-content img {
         border-radius: 3px;
         height: 60px;
        // margin-top: 0px;
+    }
+    .thumbs_list_code{
+      width: 80px;
+      height: 80px;
+      background-position: center top;
+      background-size: cover;
+      border-radius: 7px;
     }
     @media (min-width: 0px) {
         .fab[mini] {
@@ -80,7 +87,7 @@ page-meus-codes {
             }
         }
     }
- 
+
     @media (min-width: 420px) {
         .fab[mini] {
             width: 33px;
@@ -94,7 +101,7 @@ page-meus-codes {
             }
         }
     }
- 
+
     @media (min-width: 720px) {
         .fab[mini] {
             width: 30px;

@@ -6,13 +6,13 @@
           <ion-buttons end>
             <button ion-button icon-only (click)="showAlert()">
                 <ion-icon ios="ios-information-circle" md="md-information-circle"></ion-icon>
-             
+
             </button>
-             
+
               </ion-buttons>
       <ion-title>{{page}}</ion-title>
     </ion-navbar>
-  
+
   </ion-header>
   <ion-content>
    <div  style="margin-bottom: 20%;">
@@ -21,7 +21,7 @@
              <ion-card >
                   <ion-grid>
                       <ion-row class="box-list">
-                          <ion-col col-10> 
+                          <ion-col col-10>
                               <p>  {{code.code}}{{code.descricao}}</p>
                           </ion-col>
                           <ion-col col-2>
@@ -29,12 +29,12 @@
                           </ion-col>
                       </ion-row>
                   </ion-grid>
-                 
+
                  <ion-card-content>
                   <ion-grid>
                       <ion-row class="botoes">
                         <ion-col col-3>
-                           <img src="{{code.img_link}}">
+                          <div class="thumbs_list_code" [ngStyle]="{'background-image': 'url('+ code.img_link +')'}"></div>
                         </ion-col>
                         <ion-col col-9>
                            <div>
@@ -42,21 +42,20 @@
                            <!--    <button ion-fab mini (click)="showEnquete(code.id)"> <ion-icon name="clipboard"> </ion-icon></button>  -->
                               <button ion-fab mini (click)="ShowMenu(code.id)">    <ion-icon name="create">    </ion-icon></button>
                               <button ion-fab mini (click)="pushPage(code.code)">  <ion-icon name="eye">       </ion-icon></button>
-                              
+
                             </div>
-                         
+
                          </ion-col >
-                         
+
                       </ion-row>
                   </ion-grid>
                 </ion-card-content>
-             </ion-card> 
+             </ion-card>
           </ion-list>
-   <!--   </ng-template>  -->      
+   <!--   </ng-template>  -->
   </div>
   <ion-fab  right bottom>
           <button ion-fab color="primary" (click)="validaPacote()"><ion-icon name="add"></ion-icon></button>
-      
+
   </ion-fab>
   </ion-content>
-  
