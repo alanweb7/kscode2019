@@ -1,13 +1,13 @@
 
 page-home {
-   
+
     .fundo{
         background: #000;
         height: 100%;
         width: 100%;
         ion-card{
            margin-top: 10%;
-          
+
            background: #000;
            ion-card-title{
                color: #fff;
@@ -20,18 +20,18 @@ page-home {
                display:block;width:40%;height:auto;margin-left:auto;margin-right:auto;
             }
         }
-       
+
         button#button-white{
            background: #fff;
-           color: black;   
-           margin-top: 5%;  
+           color: black;
+           margin-top: 5%;
        }
-      
+
        .social-share{
            text-align: center;
            margin-top: 5%;
        }
-       
+
     }
     .text-input {
         text-align: center;
@@ -58,7 +58,7 @@ page-home {
         .toolbar {
             height: 55px;
             min-height: 55px;
-           
+
             .toolbar-background{
                 background: #000;
             }
@@ -79,5 +79,7 @@ page-home {
         }
       }
     }
+    input.text-input.text-input-ios {
+      font-size: larger;
+    }
    }
-   

@@ -18,8 +18,6 @@
         </ion-navbar>
 
       </ion-header>
-
-
       <ion-content class="fundo">
 
           <div>
@@ -38,14 +36,14 @@
                               <ion-col col-12>
                                   <ion-item id="home-input1" ng-model="movie.name" class="search_code">
                                       <ion-label></ion-label>
-                                      <ion-input type="text" placeholder="CONNECT AQUI"  [(ngModel)]="codeNumber" formControlName="codeNumber" name="code"></ion-input>
+                                      <ion-input type="text" class="input_search" placeholder="CONNECT AQUI"  [(ngModel)]="codeNumber" formControlName="codeNumber" name="code"></ion-input>
                                   </ion-item>
                               </ion-col>
                               <ion-col col-12 class="info-servico">
                                   <button id="home-button1" ion-button color="positive" block icon-left (click)="pushPage()" [disabled]="signupform.invalid" >
                                       <ion-icon name="navigate"></ion-icon>
                                       {{button}}
-                                    </button>
+                                  </button>
                               </ion-col>
                           </ion-row>
                       </ion-grid>
