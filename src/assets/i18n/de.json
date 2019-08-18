@@ -3,7 +3,7 @@
 		"heading" 		: "hier verbindet sich alles",
 		"button" 	    : "Zugang",
 		"pesquisa"      : "Forschung",
-		"adquira"       : "hol deine code",
+		"adquira"       : "DOMAIN KAUFEN",
 		"code_existe"   : "KSCODE existiert nicht!"
 
 	}
@@ -122,7 +122,7 @@
 		"msg":"Sie haben die Anzahl der im Paket verfügbaren Uploads von Bildern erreicht",
 		"arq_selecione":"Wählen Sie vor dem Senden ein Bild aus"
    },
-   
+
    "cupom":{
 	"title":"Mit KSCODE gewinnen",
 	"texto":"Geben Sie ein Unternehmen als Partner ein und gewinnen Sie.",
@@ -149,7 +149,7 @@
 		"page":"Bonus",
 		"texto_1":"Geben Sie Ihre Bankkontodaten ein, um die Werte zu erhalten.",
 		"texto_2":"Das eingegebene Konto muss auf Ihren Namen lauten."
-		
+
 
    },
    "default":{

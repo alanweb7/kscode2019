@@ -3,7 +3,7 @@
 		"heading" 		: "tout se connecte ici",
 		"button" 	    : "accès",
 		"pesquisa"      : "recherche",
-		"adquira"       : "obtenir votre code",
+		"adquira"       : "ACHETER UN DOMAINE",
 		"code_existe"   : "KSCODE n'existe pas!"
 
 	}
@@ -39,7 +39,7 @@
 
 	}
 	,
-	
+
 	"criar_code":{
 		"texto" : "Choisissez votre code",
 		"campo" :  "Choisissez votre code",
@@ -153,8 +153,8 @@
 			"page":"Bonus",
 			"texto_1":"Entrez vos coordonnées bancaires pour recevoir les valeurs.",
 			"texto_2":"Le compte que vous entrez doit être à votre nom."
-			
-	
+
+
 		 },
    "default":{
 	"page_doc":"Des documents",
@@ -175,8 +175,8 @@
 	"btn_continuar":"Continuer",
 	"btn_ircode":"Aller à CODE",
 	"btn_fechar" :"Proche",
-	
-	
+
+
 	"btn_excluir" : "exclure",
 	"excluir_msg" :"supprimé avec succès",
 	"msg_erro"    :"une erreur inattendue s'est produite",
@@ -198,5 +198,5 @@
 	"msg_link":"Voulez-vous visiter ce lien?"
 
 }
-	
+
 }

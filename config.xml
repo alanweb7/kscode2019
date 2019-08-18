@@ -112,8 +112,7 @@ close to you.</string>
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-camera" spec="^4.0.3" />
     <plugin name="cordova-plugin-telerik-imagepicker" spec="^2.2.2">
-        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This allows the photos and videos you want to upload to your channel to also be stored on your device and always on
-close to you." />
+        <variable name="PHOTO_LIBRARY_USAGE_DESCRIPTION" value="This allows the photos and videos you want to upload to your channel to also be stored on your device and always on&#xA;close to you." />
     </plugin>
     <plugin name="cordova-plugin-file" spec="^6.0.1" />
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />

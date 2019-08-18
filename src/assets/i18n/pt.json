@@ -3,7 +3,7 @@
 		"heading" 		: "Tudo se conecta aqui!",
 		"button" 	    : "Acessar",
 		"pesquisa"      : "PESQUISA",
-		"adquira"       : "ADQUIRA SEU CODE",
+		"adquira"       : "ADQUIRA UM DOMÍNIO",
 		"code_existe"   : "KSCODE não existe!"
 
 	}
@@ -37,7 +37,7 @@
 		"page" : "Meus Codes",
 		"campo" :"Pesquisar Code",
 		"code_privado":"Este code é privado"
-   }  
+   }
    ,
    "criar_code":{
 	   "texto" : "Escolha seu Code",
@@ -115,7 +115,7 @@
 		"erro_envio":"Não foi possível concluir o envio !",
 		"selecione_video":"Selecione um vídeos antes de enviar",
 		"selecione":"Selecione"
-	
+
    }
    ,
    "image":{
@@ -151,7 +151,7 @@
 		"page":"Bônus",
 		"texto_1":"Informe os dados da sua conta bancária para poder receber os valores.",
 		"texto_2":"A conta informada deve estar obrigatoriamente no seu nome."
-		
+
 
    },
    "default":{
@@ -174,7 +174,7 @@
 	   "btn_ircode":"Ir para CODE",
 	   "btn_fechar":"Fechar",
 	   "btn_excluir":"Excluir",
-	  
+
 		"excluir_msg" :"Eliminado com sucesso!",
 		"msg_erro"   :"Ocorreu um erro inesperado",
 		"visite_code" : "Visite meu CODE",

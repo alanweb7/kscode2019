@@ -3,7 +3,7 @@
 		"heading" 		: "todo se conecta aquí",
 		"button" 	    : "acceso",
 		"pesquisa"      : "búsqueda",
-		"adquira"       : "adquiere su code ",
+		"adquira"       : "COMPRAR UN DOMINIO",
 		"code_existe"   : "KSCODE does not exist!"
 
 	},
@@ -148,10 +148,10 @@
 		"page":"prima",
 		"texto_1":"Informe los datos de su cuenta bancaria para poder recibir los valores.",
 		"texto_2":"La cuenta informada debe estar obligatoriamente en su nombre."
-		
+
 
    },
-   
+
    "default":{
 	"page_doc":"Documentos",
 	"page_fav":"HISTORIA DE Codes",
@@ -190,7 +190,7 @@
 	"pesquisa":"Su búsqueda no ha devuelto resultados.",
 	"msg_code":"¿Desea visitar este código?",
 	"msg_link":"¿Desea visitar este enlace?"
-    
+
 }
 
 }

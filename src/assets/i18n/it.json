@@ -3,7 +3,7 @@
 		"heading" 		: "tutto si collega qui",
 		"button" 	    : "Accesso",
 		"pesquisa"      : "RICERCA",
-		"adquira"       : "PRENDI IL TUO CODE",
+		"adquira"       : "ACQUISTA UN DOMINIO",
 		"code_existe"   : "KSCODE non esiste!"
 
 	},
@@ -36,7 +36,7 @@
 		"page" : "I miei codes",
 		"campo" :"Code di ricerca",
 		"code_privado":"Questo codice è privato"
-   }  
+   }
    ,
    "criar_code":{
 	   "texto" : "Scegli il tuo code",
@@ -150,7 +150,7 @@
 		"page":"indennità",
 		"texto_1":"Inserisci i dettagli del tuo conto bancario per ricevere i valori.",
 		"texto_2":"L'account che inserisci deve essere nel tuo nome."
-		
+
 
    },
    "default":{
@@ -172,8 +172,8 @@
 	"btn_continuar":"Continuare",
 	"btn_ircode":"Vai al  CODE",
 	"btn_fechar" :"Vicino",
-	
-	
+
+
 	"btn_excluir" : "cancellare",
 	"excluir_msg" :"eliminato con successo",
 	"msg_erro"   :"si è verificato un errore imprevisto",

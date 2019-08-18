@@ -329,7 +329,7 @@ private _initialiseTranslation() : void
               .subscribe(
                     (result: any) =>{
                       this.util.loading.dismissAll();
-                      console.log("result",result);
+                      console.log("result em menu-code.ts: ",result);
                       if(result.status == 200){
                             //popula todas a variaveis
                             this.titulo               = result.data[0]['titulo'];
@@ -337,6 +337,7 @@ private _initialiseTranslation() : void
                             this.code                 = result.data[0]['code'];
                             this.modelC.name          = this.code;
                             this.link                 = result.data[0]['link'];
+                            this.slug                 = result.data[0]['slug'];
 
                             if(result.data[0]['t_conteudo'] == "2"){
                               this.model.isLink = "true";
@@ -470,6 +471,8 @@ private _initialiseTranslation() : void
   }
   // compartilhar social share
 shareSheetShare() {
+  this.card = this.imagens[0].img_link;
+  console.log('link do card: ',this.card,this.slug);
   this.socialSharing.share(this.visite_code+"->", "Share subject", this.card, "https://kscode.com.br/card?code="+this.slug).then(() => {
     console.log("shareSheetShare: Success");
   }).catch(() => {

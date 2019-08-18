@@ -3,7 +3,7 @@
 		"heading" 		: "everything connects here",
 		"button" 	    : "Access",
 		"pesquisa"      : "search",
-		"adquira"       : "get your code",
+		"adquira"       : "PURCHASE A DOMAIN",
 		"code_existe"   :"KSCODE does not exist!"
 
 	},
@@ -29,21 +29,18 @@
 	   "texto_1":"Enter your email and then go to",
 	   "texto_2":"follow the steps sent to your email to create a new password."
 
-   }
-   ,
+   },
    "meus_codes":{
 		 "page" : "My codes",
 		 "campo" :"Search code",
 		 "code_privado":"This code is private"
-   }
-   ,
+   },
    "criar_code":{
 	   "texto" : "Choose your code",
 	   "campo" :  "Enter your code",
 	   "btn_cancelar" :"Cancel",
 	   "btn_salvar"   : "To save"
-   }
-   ,
+   },
    "menu_code":{
 	  "page"  :"Menu",
 	  "texto" :"choose your code",
@@ -55,29 +52,25 @@
 	  "menu_3" : "Video",
 	  "menu_4" : "Contacts",
 	  "button" : "Publish"
-   }
-   ,
+   },
    "titulo" :{
 		"titulo": "Title",
 		"descricao"	:"Insert description",
 		"senha"     : "Password",
 		"ativa_senha" : "To activate password?"
 
-   }
-   ,
+   },
    "push":{
 		"texto":"Send a notification",
 		"campo_1":"Title",
 		"campo_2":"Message",
 		"btn_enviar":"Submit",
 		"btn_cancelar":"Cancel"
-   }
-   ,
+   },
    "link":{
 	 "campo":"insert link",
 	 "ativar_lik":"insert link"
-   }
-   ,
+   },
    "minha_conta":{
 	"nome":"Name",
 	"sobrenome":"Lastname",
@@ -97,8 +90,7 @@
 		"contato":"Contact",
 		"email":"Enter email address",
 		"campo_link":"Paste the link"
-   }
-   ,
+   },
    "videos":{
 		"link":"external video link",
 		"galeria":"gallery",
@@ -114,8 +106,7 @@
 		"erro_envio":"Could not complete the upload!",
 		"selecione_video":"Select a video before sending",
 		"selecione":"Select"
-   }
-   ,
+   },
    "image":{
 		"camera":"camera",
 		"galeria":"gallery",
@@ -123,7 +114,7 @@
 		"msg":"You have reached the amount of uploads of images available in the package",
 		"arq_selecione":"Select an image before sending"
    },
-   
+
    "cupom":{
 	"title":"Win with KSCODE",
 	"texto":"Enter a company to be a partner and win.",
@@ -150,7 +141,7 @@
 		"page":"Bonus",
 		"texto_1":"Enter your bank account details to receive the values.",
 		"texto_2":"The account you enter must be in your name."
-		
+
 
    },
    "default":{
@@ -172,7 +163,7 @@
 	"btn_continuar":"Continue",
 	"btn_ircode":"Go to CODE",
 	"btn_fechar" : "Close",
-	
+
 	"btn_excluir" : "Delete",
 	"excluir_msg" :"successfully deleted",
 	"msg_erro"   :"an unexpected error occurred",
@@ -192,7 +183,7 @@
 	"pesquisa":"Your search returned no results.",
 	"msg_code":"Do you want to visit this code ?",
 	"msg_link":"Do you want to visit this link?"
-	
+
 }
 
 
