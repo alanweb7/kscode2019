@@ -228,8 +228,8 @@ private takePicture(sourceType: number): void {
   if(this.platform.is('ios')){
 
     const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.DATA_URL,
+      quality: 50,
+      destinationType: this.camera.DestinationType.NATIVE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
@@ -238,7 +238,7 @@ private takePicture(sourceType: number): void {
      // imageData is either a base64 encoded string or a file URI
      // If it's base64 (DATA_URL):
      let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image.jpeg'});
+     this.images.push({id: "",files:base64Image,img_link:imageData,file_name: imageData});
     }, (err) => {
      // Handle error
     });
