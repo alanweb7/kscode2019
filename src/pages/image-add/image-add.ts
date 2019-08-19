@@ -261,10 +261,19 @@ getPictures(sourceType: number){
       if(results[i] != "K" && results[i] != "O"){
           //converter base64
           this.util.converterBase64(results[i]).then((base64:any) => {
-            base64.replace('', '+');
+            // base64.replace('', '+');
             console.log(base64);
             this.images.push({id: "",files:base64,img_link:results[i],file_name: results[i]});
           });
+      }else{
+
+                  //converter base64
+                  this.util.converterBase64(results[i]).then((base64:any) => {
+                    // base64.replace('', '+');
+                    console.log(base64);
+                    this.images.push({id: "",files:base64,img_link:results[i],file_name: results[i]});
+                  });
+
       }
 
     }
