@@ -229,27 +229,27 @@ takePicture(){
 
   const options: CameraOptions = {
     quality: 100,
-    destinationType: this.camera.DestinationType.DATA_URL,
+    destinationType: this.camera.DestinationType.FILE_URI,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE
   }
 
-  this.camera.getPicture(options).then((imageData) => {
-   // imageData is either a base64 encoded string or a file URI
-   // If it's base64 (DATA_URL):
-   let base64Image = 'data:image/jpeg;base64,' + imageData;
+  // this.camera.getPicture(options).then((imageData) => {
+  //  // imageData is either a base64 encoded string or a file URI
+  //  // If it's base64 (DATA_URL):
+  //  let base64Image = 'data:image/jpeg;base64,' + imageData;
 
 
-    // base64.replace('', '+');
-    // console.log(base64);
-   this.images.push({id: "",files:base64Image,img_link:'my_foto',file_name: 'my_foto'});
+  //   // base64.replace('', '+');
+  //   // console.log(base64);
+  //  this.images.push({id: "",files:base64Image,img_link:'my_foto',file_name: 'my_foto'});
 
 
-  //  this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image'});
+  // //  this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image'});
 
-  }, (err) => {
-   // Handle error
-  });
+  // }, (err) => {
+  //  // Handle error
+  // });
 
   // let cameraOptions    : CameraOptions = {
   //   correctOrientation: true,
@@ -259,16 +259,20 @@ takePicture(){
   //   mediaType: this.camera.MediaType.PICTURE
 
   // };
-  // this.camera.getPicture(cameraOptions)
-  //   .then((fileUri: string) => {
-  //             //converter base64
-  //            this.util.converterBase64(fileUri).then((base64:any) => {
-  //             // base64.replace('', '+');
-  //             console.log(base64);
-  //             this.images.push({id: "",files:base64,img_link:fileUri,file_name: fileUri});
-  //            });
+  this.camera.getPicture(options)
+    .then(async (fileUri) => {
+              //converter base64
+             let ImageBase64 = await this.util.converterBase64(fileUri).then((base64:any) => {
+              // base64.replace('', '+');
+              console.log(base64);
 
-  //   }).catch((err: Error) => console.log('Camera error: ', err));
+              return base64;
+
+             });
+
+             await this.images.push({id: "",files:ImageBase64,img_link:fileUri,file_name: fileUri});
+
+    }).catch((err: Error) => console.log('Camera error: ', err));
 
   }
 
