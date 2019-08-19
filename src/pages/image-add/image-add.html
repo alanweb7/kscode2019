@@ -16,7 +16,7 @@
     <ion-list  reorder="true" (ionItemReorder)="reorderItem($event)">
         <ion-item *ngFor="let image of images">
               <ion-thumbnail >
-                <img [src]="image.img_link"(click)="viewPhoto(image.img_link)">
+                <img [src]="image.img_link" (click)="viewPhoto(image.img_link)">
               </ion-thumbnail >
                <button ion-fab mini  item-end (click)="onFromImageLink(image.id)"  *ngIf="image.id">
                 <ion-icon name="ios-link"></ion-icon>

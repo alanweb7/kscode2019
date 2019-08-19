@@ -19,6 +19,9 @@ import { normalizeURL } from 'ionic-angular';
 export class ImageAddPage {
   images        : any[];
   imagesbase64  : String;
+  imageToBase64: any;
+  base64ImageLink:any;
+
   caminho       : any[];
   token         : any;
   id_code       : any;
@@ -224,7 +227,7 @@ onActionSheet(): void {
     }).present();
 
 }
-private takePicture(sourceType: number): void {
+async takePicture(sourceType: number){
 
   if(this.platform.is('ios')){
 
@@ -235,20 +238,19 @@ private takePicture(sourceType: number): void {
       mediaType: this.camera.MediaType.PICTURE
     }
 
-
-
-
-
-    this.camera.getPicture(options).then((imageData) => {
+   this.imageToBase64 =  await this.camera.getPicture(options).then((imageData) => {
       let base64Image = null;
+      let base64ImageLink = null;
      // imageData is either a base64 encoded string or a file URI
      // If it's base64 (DATA_URL):
-     base64Image = normalizeURL(imageData);
+     this.base64ImageLink = normalizeURL(imageData);
     //  base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.images.push({id: "",files:base64Image,img_link:base64Image,file_name: base64Image});
     }, (err) => {
      // Handle error
     });
+
+    await this.images.push({id: "",files:this.imageToBase64,img_link:this.base64ImageLink,file_name: this.base64ImageLink});
+    await alert('base64 criada');
 
 
   }else{
