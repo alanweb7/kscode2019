@@ -249,8 +249,15 @@ async takePicture(sourceType: number){
      // Handle error
     });
 
-    await this.images.push({id: "",files:this.imageToBase64,img_link:this.base64ImageLink,file_name: this.base64ImageLink});
-    await alert('base64 criada');
+
+              //converter base64
+             await this.util.converterBase64(this.base64ImageLink).then((base64:any) => {
+                // base64.replace('', '+');
+                console.log(base64);
+                this.images.push({id: "",files:this.imageToBase64,img_link:this.base64ImageLink,file_name: this.base64ImageLink});
+              });
+
+    await alert('base64 criada link: '+ this.base64ImageLink);
 
 
   }else{
