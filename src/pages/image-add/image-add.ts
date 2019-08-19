@@ -229,7 +229,7 @@ private takePicture(sourceType: number): void {
 
     const options: CameraOptions = {
       quality: 50,
-      destinationType: this.camera.DestinationType.NATIVE_URI,
+      destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
