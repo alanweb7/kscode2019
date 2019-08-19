@@ -204,6 +204,7 @@ onActionSheet(): void {
           handler: () => {
 
               this.getPictures(this.camera.PictureSourceType.PHOTOLIBRARY);
+
           }
         },
         {

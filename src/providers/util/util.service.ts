@@ -34,8 +34,10 @@ export class UtilService {
     return  extension; // .jpg
   }
   converterBase64(file): Promise<String>{
-     return <Promise<String>> this.base64.encodeFile(file).then(base64File => base64File.replace('data:image/*;charset=utf-8;base64,',''))
-     .catch((error: Error) => console.log(`Error updating ${name} movie!`, error));
+
+    let base64Image = this.base64.encodeFile(file).then(base64File => base64File)
+    .catch((error: Error) => console.log(`Error updating ${name} movie!`, error));
+     return <Promise<String>> base64Image;
   }
 
   showLoading(msg){
