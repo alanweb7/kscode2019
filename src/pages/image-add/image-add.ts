@@ -229,7 +229,7 @@ takePicture(){
 
   const options: CameraOptions = {
     quality: 100,
-    destinationType: this.camera.DestinationType.FILE_URI,
+    destinationType: this.camera.DestinationType.DATA_URL,
     encodingType: this.camera.EncodingType.JPEG,
     mediaType: this.camera.MediaType.PICTURE
   }
@@ -237,13 +237,13 @@ takePicture(){
   this.camera.getPicture(options).then((imageData) => {
    // imageData is either a base64 encoded string or a file URI
    // If it's base64 (DATA_URL):
-  //  let base64Image = 'data:image/jpeg;base64,' + imageData;
+   let base64Image = 'data:image/jpeg;base64,' + imageData;
 
-  this.util.converterBase64(imageData).then(async (base64:any) => {
+
     // base64.replace('', '+');
     // console.log(base64);
-   await this.images.push({id: "",files:base64,img_link:imageData,file_name: imageData});
-   });
+   this.images.push({id: "",files:base64Image,img_link:'my_foto',file_name: 'my_foto'});
+
 
   //  this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image'});
 
