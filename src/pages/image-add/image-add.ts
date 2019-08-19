@@ -6,6 +6,7 @@ import { PhotoViewer } from '@ionic-native/photo-viewer';
 import { CodeProvider } from '../../providers/code/code';
 import { NetworkProvider } from '../../providers/network/network';
 import { UtilService } from '../../providers/util/util.service';
+import { normalizeURL } from 'ionic-angular';
 @IonicPage({
   priority : 'off',
   segment  : 'ImageAdd/:imagens/:code/:token/:qtd/:pacote',
@@ -229,16 +230,22 @@ private takePicture(sourceType: number): void {
 
     const options: CameraOptions = {
       quality: 50,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      destinationType: this.platform.is('ios') ? this.camera.DestinationType.FILE_URI : this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE
     }
 
+
+
+
+
     this.camera.getPicture(options).then((imageData) => {
+      let base64Image = null;
      // imageData is either a base64 encoded string or a file URI
      // If it's base64 (DATA_URL):
-     let base64Image = 'data:image/jpeg;base64,' + imageData;
-     this.images.push({id: "",files:base64Image,img_link:imageData,file_name: imageData});
+     base64Image = normalizeURL(imageData);
+    //  base64Image = 'data:image/jpeg;base64,' + imageData;
+     this.images.push({id: "",files:base64Image,img_link:base64Image,file_name: base64Image});
     }, (err) => {
      // Handle error
     });
