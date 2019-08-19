@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ToastController, LoadingController, reorderArray, ViewController, ModalController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ToastController, LoadingController, reorderArray, ViewController, ModalController, Platform } from 'ionic-angular';
 import { Camera, CameraOptions} from "@ionic-native/camera";
 import { ImagePicker } from '@ionic-native/image-picker';
 import { PhotoViewer } from '@ionic-native/photo-viewer';
@@ -47,7 +47,10 @@ export class ImageAddPage {
   pacote;
   arq_selecione: string;
   lang: String;
-  constructor(public navCtrl         : NavController,
+  constructor(
+
+              public platform: Platform,
+              public navCtrl         : NavController,
               public modalCtrl       : ModalController,
               public navParams       : NavParams,
               public alertCtrl       : AlertController,
@@ -210,7 +213,7 @@ onActionSheet(): void {
         {
           text: this.camera_btn,
           handler: () => {
-            this.takePicture();
+            this.takePicture(this.camera.PictureSourceType.CAMERA);
           }
         },
         {
@@ -219,61 +222,50 @@ onActionSheet(): void {
       ]
     }).present();
 
-
-
-
-
-
 }
-takePicture(){
+private takePicture(sourceType: number): void {
 
-  const options: CameraOptions = {
-    quality: 100,
-    destinationType: this.camera.DestinationType.FILE_URI,
-    encodingType: this.camera.EncodingType.JPEG,
-    mediaType: this.camera.MediaType.PICTURE
-  }
+  if(this.platform.is('ios')){
 
-  // this.camera.getPicture(options).then((imageData) => {
-  //  // imageData is either a base64 encoded string or a file URI
-  //  // If it's base64 (DATA_URL):
-  //  let base64Image = 'data:image/jpeg;base64,' + imageData;
+    const options: CameraOptions = {
+      quality: 100,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+     // imageData is either a base64 encoded string or a file URI
+     // If it's base64 (DATA_URL):
+     let base64Image = 'data:image/jpeg;base64,' + imageData;
+     this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image.jpeg'});
+    }, (err) => {
+     // Handle error
+    });
 
 
-  //   // base64.replace('', '+');
-  //   // console.log(base64);
-  //  this.images.push({id: "",files:base64Image,img_link:'my_foto',file_name: 'my_foto'});
+  }else{
 
+      let cameraOptions    : CameraOptions = {
+        correctOrientation: true,
+        quality: 100,
+        saveToPhotoAlbum: false,
+        sourceType: sourceType,
+        mediaType: this.camera.MediaType.PICTURE
 
-  // //  this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image'});
+      };
+      this.camera.getPicture(cameraOptions)
+        .then((fileUri: string) => {
+                  //converter base64
+                this.util.converterBase64(fileUri).then((base64:any) => {
+                  base64.replace('', '+');
+                  console.log(base64);
+                  this.images.push({id: "",files:base64,img_link:fileUri,file_name: fileUri});
+                });
 
-  // }, (err) => {
-  //  // Handle error
-  // });
+          }).catch((err: Error) => console.log('Camera error: ', err));
 
-  // let cameraOptions    : CameraOptions = {
-  //   correctOrientation: true,
-  //   quality: 100,
-  //   saveToPhotoAlbum: false,
-  //   sourceType: sourceType,
-  //   mediaType: this.camera.MediaType.PICTURE
-
-  // };
-  this.camera.getPicture(options)
-    .then(async (fileUri) => {
-              //converter base64
-             let ImageBase64 = await this.util.converterBase64(fileUri).then((base64:any) => {
-              // base64.replace('', '+');
-              console.log(base64);
-
-              return base64;
-
-             });
-
-             await this.images.push({id: "",files:ImageBase64,img_link:fileUri,file_name: fileUri});
-
-    }).catch((err: Error) => console.log('Camera error: ', err));
-
+    }///final do else platform
   }
 
 
@@ -290,7 +282,7 @@ getPictures(sourceType: number){
       if(results[i] != "K" && results[i] != "O"){
           //converter base64
           this.util.converterBase64(results[i]).then((base64:any) => {
-            // base64.replace('', '+');
+            base64.replace('', '+');
             console.log(base64);
             this.images.push({id: "",files:base64,img_link:results[i],file_name: results[i]});
           });
