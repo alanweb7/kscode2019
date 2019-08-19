@@ -210,7 +210,7 @@ onActionSheet(): void {
         {
           text: this.camera_btn,
           handler: () => {
-            this.takePicture(this.camera.PictureSourceType.CAMERA);
+            this.takePicture();
           }
         },
         {
@@ -225,7 +225,7 @@ onActionSheet(): void {
 
 
 }
-private takePicture(sourceType: number): void {
+takePicture(){
 
   const options: CameraOptions = {
     quality: 100,
@@ -239,10 +239,10 @@ private takePicture(sourceType: number): void {
    // If it's base64 (DATA_URL):
   //  let base64Image = 'data:image/jpeg;base64,' + imageData;
 
-  this.util.converterBase64(imageData).then((base64:any) => {
+  this.util.converterBase64(imageData).then(async (base64:any) => {
     // base64.replace('', '+');
     // console.log(base64);
-    this.images.push({id: "",files:base64,img_link:imageData,file_name: imageData});
+   await this.images.push({id: "",files:base64,img_link:imageData,file_name: imageData});
    });
 
   //  this.images.push({id: "",files:base64Image,img_link:'my_image',file_name: 'my_image'});
