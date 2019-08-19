@@ -249,7 +249,6 @@ async takePicture(sourceType: number){
      // Handle error
     });
 
-
               //converter base64
              await this.util.converterBase64(this.base64ImageLink).then((base64:any) => {
                 // base64.replace('', '+');
@@ -257,8 +256,7 @@ async takePicture(sourceType: number){
                 this.images.push({id: "",files:base64,img_link:this.base64ImageLink,file_name: this.base64ImageLink});
               });
 
-    await alert('base64 criada link: '+ this.base64ImageLink);
-
+    // await alert('base64 criada link: '+ this.base64ImageLink);
 
   }else{
 
