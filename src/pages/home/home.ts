@@ -191,63 +191,68 @@ trans={
      // this._initialiseTranslation();
 
         //CHAMDA DO BANCO DE DADOS
-                  this.usuario.getAll()
-                      .then((movies:any) => {
-                        console.log(movies);
-                        if(movies.length == 1){
-                             this.data.name       = movies[0].name;
-                              this.data.sobrenome = movies[0].sobrenome;
-                              this.data.email     = movies[0].email;
-                              this.data.token     = movies[0].token;
-                              this.token          = movies[0].token;
-                              this.data.logado    = movies[0].logado;
-                              this.data.id_serv   = movies[0].id_serv;
-                              this.data.photo     = movies[0].photo;
-                              this.data.usuario   = movies[0].usuario;
-                              this.data.lang      = movies[0].cpf;
-                              this.language       = movies[0].cpf;
-                              this.id_serv        = movies[0].id_serv;
-                              this.data.cnpj      = movies[0].cnpj;
-                              this.data.tp_pessoa = movies[0].tp_pessoa;
+        this.platform.ready().then(()=>{
 
-                              if(this.language ==  "" || this.language == undefined || this.language == null){
-                                    this.language = "pt";
-                              }
-                              this.update_cupom();
-                              this.trogle_idiome_onesignal();
-                            //  this.events.publish('trans',this.language);
-                              this.events.publish('dados',this.data);
+                this.usuario.getAll()
+                .then((movies:any) => {
+                  console.log(movies);
+                  if(movies.length == 1){
+                      this.data.name       = movies[0].name;
+                        this.data.sobrenome = movies[0].sobrenome;
+                        this.data.email     = movies[0].email;
+                        this.data.token     = movies[0].token;
+                        this.token          = movies[0].token;
+                        this.data.logado    = movies[0].logado;
+                        this.data.id_serv   = movies[0].id_serv;
+                        this.data.photo     = movies[0].photo;
+                        this.data.usuario   = movies[0].usuario;
+                        this.data.lang      = movies[0].cpf;
+                        this.language       = movies[0].cpf;
+                        this.id_serv        = movies[0].id_serv;
+                        this.data.cnpj      = movies[0].cnpj;
+                        this.data.tp_pessoa = movies[0].tp_pessoa;
 
-                         }else{
-                          this.language= "pt";
-                          console.log("minha lang",this.language);
+                        if(this.language ==  "" || this.language == undefined || this.language == null){
+                              this.language = "pt";
+                        }
+                        this.update_cupom();
+                        this.trogle_idiome_onesignal();
+                      //  this.events.publish('trans',this.language);
+                        this.events.publish('dados',this.data);
 
-                           console.log("entrei no else");
+                  }else{
+                    this.language = "pt";
+                    console.log("minha lang",this.language);
 
-                            /* this.usuario.update_lang(this.language,this.id_serv)
-                           .then((data: any) => {
-                                 console.log(data);
+                    console.log("entrei no else");
 
-                           });  */
-                             this.isPT  =  true;
-                             this.trogle_idiome_onesignal();
-                         }
-                        // this.language= "pt";
-                        // this.isPT  =  true;
-                         this.pushGeoinfo();
-                         this.trogle_idiome(this.language);
-                         this._translateLanguage();
-                         this.oneSignalApp();
+                      /* this.usuario.update_lang(this.language,this.id_serv)
+                    .then((data: any) => {
+                          console.log(data);
 
-          }).catch((error)=>{
-                alert("sqlite Erro "+error);
-                this.language= "pt";
-                this.isPT  =  true;
-                this.pushGeoinfo();
-                this.trogle_idiome(this.language);
-                this._translateLanguage();
-                this.oneSignalApp();
-          });
+                    });  */
+                      this.isPT  =  true;
+                      this.trogle_idiome_onesignal();
+                  }
+                  // this.language= "pt";
+                  // this.isPT  =  true;
+                  this.pushGeoinfo();
+                  this.trogle_idiome(this.language);
+                  this._translateLanguage();
+                  this.oneSignalApp();
+
+                  }).catch((error)=>{
+                      alert("sqlite Erro "+error);
+                      this.language= "pt";
+                      this.isPT  =  true;
+                      this.pushGeoinfo();
+                      this.trogle_idiome(this.language);
+                      this._translateLanguage();
+                      this.oneSignalApp();
+                  });
+
+
+        });///final platform ready
 
 
       this.keyboard.onKeyboardShow().subscribe(() => {
