@@ -119,35 +119,54 @@ export class DocumentoCodePage {
   open_file(){
     if(this.platform.is('ios')){
 
+
       this.chooser.getFile('application/pdf')
-      .then((file)=>{
+      .then(file => {
 
-        alert('uri'+JSON.stringify(file.uri));
-        let base64 = file.dataURI;
-        let name = file.name;
-        let docLink = file.uri;
-        console.log(file ? file : 'canceled');
-        // console.log(base64);
-        this.filePath.resolveNativePath(file.uri).then((file:any)=>{
-          console.log(file);
-          this.caminho.push({files:base64,file_name:file});
-          this.docs.push({id: "",doc_link:docLink,file_name:name});
-        })
+        let fileName = file.name;
+        let fileUri = file.uri;
+        let fileDataURI = file.dataURI;
+        let fileData = file.data;
+        let fileType = file.mediaType;
+        console.log('Name: ', fileName);
+        console.log('Uri: ', fileUri);
+        console.log('DataURI: ', fileDataURI);
+        console.log('File Data: ', fileData);
+        console.log('Type: ', fileType);
 
+          // let base64 = file.dataURI.replace('data:application/pdf;base64,','');
+          console.log(file ? file : 'canceled');
+          // console.log(base64);
+          this.filePath.resolveNativePath(file.uri).then((filex:any)=>{
+            // console.log(file);
+            this.caminho.push({files:fileDataURI,file_name:fileName});
+            this.docs.push({id: "",doc_link:filex,file_name:fileName});
+          })
+        }).catch((error: any) => console.error(error));
 
-      })
-      .catch((error: any) => console.error(error));
 
     }else{
     this.chooser.getFile('application/pdf')
       .then(file => {
-          let base64 = file.dataURI.replace('data:application/pdf;base64,','');
+
+        let fileName = file.name;
+        let fileUri = file.uri;
+        let fileDataURI = file.dataURI;
+        let fileData = file.data;
+        let fileType = file.mediaType;
+        console.log('Name: ', fileName);
+        console.log('Uri: ', fileUri);
+        console.log('DataURI: ', fileDataURI);
+        console.log('File Data: ', fileData);
+        console.log('Type: ', fileType);
+
+          // let base64 = file.dataURI.replace('data:application/pdf;base64,','');
           console.log(file ? file : 'canceled');
-          console.log(base64);
-          this.filePath.resolveNativePath(file.uri).then((file:any)=>{
-            console.log(file);
-            this.caminho.push({files:base64,file_name:file});
-            this.docs.push({id: "",doc_link:file,file_name:file});
+          // console.log(base64);
+          this.filePath.resolveNativePath(file.uri).then((filex:any)=>{
+            // console.log(file);
+            this.caminho.push({files:fileDataURI,file_name:fileName});
+            this.docs.push({id: "",doc_link:filex,file_name:fileName});
           })
         }).catch((error: any) => console.error(error));
 
