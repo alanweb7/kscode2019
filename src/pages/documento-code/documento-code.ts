@@ -137,11 +137,11 @@ export class DocumentoCodePage {
           // let base64 = file.dataURI.replace('data:application/pdf;base64,','');
           console.log(file ? file : 'canceled');
           // console.log(base64);
-          this.filePath.resolveNativePath(file.uri).then((filex:any)=>{
+          // this.filePath.resolveNativePath(file.uri).then((filex:any)=>{
             // console.log(file);
             this.caminho.push({files:fileDataURI,file_name:fileName});
-            this.docs.push({id: "",doc_link:filex,file_name:fileName});
-          })
+            this.docs.push({id: "",doc_link:fileUri,file_name:fileName});
+        //   })
         }).catch((error: any) => console.error(error));
 
 
