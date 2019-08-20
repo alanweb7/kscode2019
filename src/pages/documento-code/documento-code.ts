@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams,AlertController, ToastController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, ToastController, Platform } from 'ionic-angular';
 //Import Native
 import { Camera, CameraOptions } from "@ionic-native/camera";
 import { BrowserTab } from '@ionic-native/browser-tab';
@@ -53,7 +53,8 @@ export class DocumentoCodePage {
                public util           : UtilService,
                private alertCtrl     : AlertController,
                private filePath: FilePath,
-               private chooser: Chooser
+               private chooser: Chooser,
+               public platform: Platform
 
               ) {
   }
@@ -116,19 +117,42 @@ export class DocumentoCodePage {
 
   }
   open_file(){
-    this.chooser.getFile('application/pdf')
-.then(file => {
-  let base64 = file.dataURI.replace('data:application/pdf;base64,','');
-  console.log(file ? file : 'canceled');
-  console.log(base64);
-  this.filePath.resolveNativePath(file.uri).then((file:any)=>{
-    console.log(file);
-    this.caminho.push({files:base64,file_name:file});
-    this.docs.push({id: "",doc_link:file,file_name:file});
-  })
+    if(this.platform.is('ios')){
 
-})
-.catch((error: any) => console.error(error));
+      this.chooser.getFile('application/pdf')
+      .then((file)=>{
+
+        alert('uri'+JSON.stringify(file.uri));
+        let base64 = file.dataURI;
+        let name = file.name;
+        let docLink = file.uri;
+        console.log(file ? file : 'canceled');
+        // console.log(base64);
+        this.filePath.resolveNativePath(file.uri).then((file:any)=>{
+          console.log(file);
+          this.caminho.push({files:base64,file_name:file});
+          this.docs.push({id: "",doc_link:docLink,file_name:name});
+        })
+
+
+      })
+      .catch((error: any) => console.error(error));
+
+    }else{
+    this.chooser.getFile('application/pdf')
+      .then(file => {
+          let base64 = file.dataURI.replace('data:application/pdf;base64,','');
+          console.log(file ? file : 'canceled');
+          console.log(base64);
+          this.filePath.resolveNativePath(file.uri).then((file:any)=>{
+            console.log(file);
+            this.caminho.push({files:base64,file_name:file});
+            this.docs.push({id: "",doc_link:file,file_name:file});
+          })
+        }).catch((error: any) => console.error(error));
+
+    }
+
 
 
   }

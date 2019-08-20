@@ -8,11 +8,11 @@
        </button>
       </ion-buttons>
     </ion-navbar>
-  
+
   </ion-header>
 
 <ion-content>
-    <ion-searchbar 
+    <ion-searchbar
    [(ngModel)]="searchTerm"
     [formControl]="searchControl"
     (keyup)="onSearchInput()"
@@ -25,13 +25,13 @@
    <ion-list class="list-cidade" *ngFor="let item of codes | slice:0:9">
     <ion-item (click)="pushPage(item.code)">
         <ion-col col-3>
-            <img src="{{item.card}}">
+            <div class="thumbs_search" [ngStyle]="{'background-image': 'url('+ item.card +')'}"></div>
          </ion-col>
          <ion-col col-9>
-            {{ item.code }}-{{item.titulo}}
+            {{ item.code }} - {{item.titulo}}
             <p>{{item.descricao}}</p>
          </ion-col>
-    </ion-item> 
-     
+    </ion-item>
+
   </ion-list>
 </ion-content>
