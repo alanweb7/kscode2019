@@ -1,3 +1,4 @@
+import { Crop } from '@ionic-native/crop';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, AlertController, ActionSheetController, ToastController, LoadingController, reorderArray, ViewController, ModalController, Platform } from 'ionic-angular';
 import { Camera, CameraOptions} from "@ionic-native/camera";
@@ -68,6 +69,7 @@ export class ImageAddPage {
               public viewCtrl        : ViewController,
               public loadingCtrl     : LoadingController,
               public util            : UtilService,
+              private crop: Crop,
 
 
             ) {
@@ -210,10 +212,22 @@ onActionSheet(): void {
           text: this.galeria,
           handler: () => {
 
-              this.getPictures(this.camera.PictureSourceType.PHOTOLIBRARY);
+            this.getPhoto(0);
+
+              // this.getPictures(this.camera.PictureSourceType.PHOTOLIBRARY);
 
           }
         },
+        // {
+        //   text: 'Galeria 2',
+        //   handler: () => {
+
+        //     // this.getPhoto(0);
+
+        //       this.getPictures(this.camera.PictureSourceType.PHOTOLIBRARY);
+
+        //   }
+        // },
         {
           text: this.camera_btn,
           handler: () => {
@@ -235,7 +249,10 @@ async takePicture(sourceType: number){
       quality: 50,
       destinationType: this.platform.is('ios') ? this.camera.DestinationType.FILE_URI : this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      mediaType: this.camera.MediaType.PICTURE,
+      allowEdit: true,
+      targetWidth: 300,
+      targetHeight:300
     }
 
    this.imageToBase64 =  await this.camera.getPicture(options).then((imageData) => {
@@ -262,19 +279,22 @@ async takePicture(sourceType: number){
 
       let cameraOptions    : CameraOptions = {
         correctOrientation: true,
-        quality: 100,
+        quality: 50,
         saveToPhotoAlbum: false,
         sourceType: sourceType,
-        mediaType: this.camera.MediaType.PICTURE
+        mediaType: this.camera.MediaType.PICTURE,
+        allowEdit: true,
+        targetWidth: 300,
+        targetHeight:300
 
       };
       this.camera.getPicture(cameraOptions)
         .then((fileUri: string) => {
                   //converter base64
                 this.util.converterBase64(fileUri).then((base64:any) => {
-                  base64.replace('', '+');
+                  // base64.replace('', '+');
                   console.log(base64);
-                  this.images.push({id: "",files:base64,img_link:fileUri,file_name: fileUri});
+                  this.images.push({id: "",files:base64,img_link:base64,file_name: fileUri});
                 });
 
           }).catch((err: Error) => console.log('Camera error: ', err));
@@ -282,13 +302,41 @@ async takePicture(sourceType: number){
     }///final do else platform
   }
 
+  async getPhoto(sourceType:number) {
+    const options: CameraOptions = {
+      quality: 100,
+      targetHeight: 300,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      sourceType: sourceType,
+      saveToPhotoAlbum: false,
+      allowEdit: true
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+
+      this.images.push({id: "",files:base64Image,img_link:base64Image,file_name:'178498123.jpg'});
+
+      // now you can do whatever you want with the base64Image, I chose to update the db
+      // this.authenticationService.utilizador.avatar = base64Image;
+      // this.utilizadorService.update(this.authenticationService.utilizador);
+
+    }, (err) => {
+      // Handle error
+    });
+
+    // await this.modalController.dismiss();
+  }
 
 getPictures(sourceType: number){
   let qtd = this.package_imagens;
   let options = {
     maximumImagesCount: 5,
     quality: 100,
-    sourceType: sourceType
+    sourceType: sourceType,
   }
   this.imagePicker.getPictures(options).then( results =>{
     for(let i=0; i < results.length;i++){
@@ -296,9 +344,11 @@ getPictures(sourceType: number){
       if(results[i] != "K" && results[i] != "O"){
           //converter base64
           this.util.converterBase64(results[i]).then((base64:any) => {
-            base64.replace('', '+');
+            console.log('camera image64: ', base64);
+            // base64.replace('', '+');
+            // let base64Image = 'data:image/jpeg;base64,' + base64;
             console.log(base64);
-            this.images.push({id: "",files:base64,img_link:results[i],file_name: results[i]});
+            this.images.push({id: "",files:base64,img_link:base64,file_name: results[i]});
           });
       }
 
@@ -307,6 +357,7 @@ getPictures(sourceType: number){
 
 
 }
+
 closeModal() {
   this.navCtrl.pop();
  // this.navCtrl.push('ImageCodePage',{imagens:this.images,token:this.token,code:this.id_code,qtd:this.qtd,pacote:this.pacote});

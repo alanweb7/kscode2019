@@ -68,7 +68,10 @@
                       </button>
                     </div>
               </ion-col>
-              <ion-col col-12 class="info-servico" style="padding-left: 10px; padding-right: 10px">
+              <ion-col col-12 *ngIf="!mostra" style="padding-top: 10px; padding-right: 10px">
+                  <div style="width: 40px"></div>
+              </ion-col>
+              <ion-col col-12 class="info-servico" style="position:relative;margin-top:15px;padding-left: 10px; padding-right: 10px">
                   <h4>{{titulo}}</h4>
               </ion-col>
               <ion-col col-12 *ngIf="audioContent">

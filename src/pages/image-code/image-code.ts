@@ -27,6 +27,7 @@ export class ImageCodePage {
   control_reverse :Boolean;
   package_name: String;
   package_imagens: Number;
+  part:number;
   //tradução
   lang;
   page: any;
@@ -49,6 +50,7 @@ export class ImageCodePage {
   msg_image: any;
   selecione;
   arq_selecione: any;
+  card:string;
 
   constructor(
     public navCtrl         : NavController,
@@ -84,10 +86,12 @@ export class ImageCodePage {
     this.package_name      = this.navParams.get('package_name');
     this.package_imagens   = this.navParams.get('package_imagens');
     this.lang              = this.navParams.get('lang');
+    this.part              = this.navParams.get('part');
     console.log("lang",this.lang);
     this.getImagenServe();
     this.control_reverse   = true;
-    this._translateLanguage()
+    this._translateLanguage();
+
   }
   //fazer o start do slide
  ionViewDidEnter() {
@@ -184,6 +188,7 @@ export class ImageCodePage {
                 console.log("result",result);
                 if(result.status == 200){
                   this.images              = result.data[0]['galeria'];
+                  this.card  = result.data[0].card;
                   this.getImagenServe();
 
 

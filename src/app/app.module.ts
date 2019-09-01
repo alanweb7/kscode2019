@@ -1,3 +1,4 @@
+import { Chooser } from '@ionic-native/chooser';
 import { CallNumber } from '@ionic-native/call-number';
 import { ModalDetailPage } from './../pages/modal-detail/modal-detail';
 import { Camera } from '@ionic-native/camera';
@@ -42,6 +43,10 @@ import { FTP } from '@ionic-native/ftp';
 import { Media } from '@ionic-native/media';
 import { NativeAudio } from '@ionic-native/native-audio';
 
+import { Crop } from '@ionic-native/crop';
+
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -74,6 +79,8 @@ import { NativeAudio } from '@ionic-native/native-audio';
 
   ],
   providers: [
+    Chooser,
+    Crop,
     CallNumber,
     NativeAudio,
     Media,

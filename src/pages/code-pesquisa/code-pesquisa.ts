@@ -19,10 +19,10 @@ import { GeolocationProvider } from '../../providers/geolocation/geolocation';
   templateUrl: 'code-pesquisa.html',
 })
 export class CodePesquisaPage {
-  codes:any;
+  codes: any;
   results: Object;
   campo;
-  isLoading:String;
+  isLoading: String;
   //searchTerm       : string = '';
   searchTerm$ = new Subject<string>();
   ////teste
@@ -36,91 +36,92 @@ export class CodePesquisaPage {
   texto: any;
   endLat: any;
   endLong: any;
-  constructor( 
-                private geoProv       : GeolocationProvider,
-                public navCtrl        : NavController,
-                public toast          : ToastController,   
-                public modalCtrl      : ModalController, 
-                public navParams      : NavParams,  
-                private codeProvider  : CodeProvider
-          ) {
-     this.searchControl = new FormControl();
-  
+  constructor(
+    private geoProv: GeolocationProvider,
+    public navCtrl: NavController,
+    public toast: ToastController,
+    public modalCtrl: ModalController,
+    public navParams: NavParams,
+    private codeProvider: CodeProvider
+  ) {
+    this.searchControl = new FormControl();
+
   }
 
   ionViewDidLoad() {
     this.isLoading = "";
-    this.language         = this.navParams.get('lang');
-    this.token            = this.navParams.get('token');
-    this.campo            = this.navParams.get('campo');
-    this.page             = this.navParams.get('page_pesquisa');
-    this.texto            = this.navParams.get('texto');
+    this.language = this.navParams.get('lang');
+    this.token = this.navParams.get('token');
+    this.campo = this.navParams.get('campo');
+    this.page = this.navParams.get('page_pesquisa');
+    this.texto = this.navParams.get('texto');
     this.pushGeoinfo();
     this.searchControl.valueChanges.debounceTime(300).subscribe(search => {
-       console.log(search);
-        this.searching = false;
-        this.setFilteredItems();
+      console.log(search);
+      this.searching = false;
+      this.setFilteredItems();
 
     });
   }
-  onSearchInput(){
+  onSearchInput() {
     this.searching = true;
-}
-setFilteredItems() {
-
-  this.codes=[];
-  this.isLoading="true";
-  this.searching = true;
-  if(!this.searchTerm){
-    this.codes=[];
-    this.isLoading="";
-    this.searching = false;
-    this.onCancel();
- }else{
-
-   this.codeProvider.searchEntries(this.searchTerm)
-   .subscribe((results: any )=> {
-    this.searching = false;
-     this.codes = results;
-     if(this.codes <= 0){
-      this.toast.create({ message:this.texto, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'alerta'  }).present();
-                
-     }
-     this.isLoading="";
-   });
- } 
- 
-
-}
- closeModal() {
-  this.navCtrl.pop();
-}
-  onCancel(){
-  
-    this.isLoading="";
-    this.searching = false;
-    return this.codes =[];
-  
   }
-  pushPage(code){
+  setFilteredItems() {
 
-        this.navCtrl.push('DetalheCodePage', {liberado :false,origem:4,token:this.token,lang:this.language,
-          code: code,
-          latitude: this.endLat, longitude: this.endLong,
-          telephone: ""
-        
+    this.codes = [];
+    this.isLoading = "true";
+    this.searching = true;
+    if (!this.searchTerm) {
+      this.codes = [];
+      this.isLoading = "";
+      this.searching = false;
+      this.onCancel();
+    } else {
+
+      this.codeProvider.searchEntries(this.searchTerm)
+        .subscribe((results: any) => {
+          this.searching = false;
+          this.codes = results;
+          if (this.codes <= 0) {
+            this.toast.create({ message: this.texto, position: 'botton', duration: 3000, closeButtonText: 'Ok!', cssClass: 'alerta' }).present();
+
+          }
+          this.isLoading = "";
         });
+    }
+
+
   }
-      
-  pushGeoinfo(){
-   
-    this.geoProv.getGeolocation().then((resp:String[])=>{
-  
+  closeModal() {
+    this.navCtrl.pop();
+  }
+  onCancel() {
+
+    this.isLoading = "";
+    this.searching = false;
+    return this.codes = [];
+
+  }
+  pushPage(code) {
+
+    this.navCtrl.push('DetalheCodePage', {
+      liberado: false, origem: 4, token: this.token, lang: this.language,
+      code: code,
+      latitude: this.endLat, longitude: this.endLong,
+      telephone: ""
+
+    });
+  }
+
+  pushGeoinfo() {
+
+    this.geoProv.getGeolocation().then((resp: String[]) => {
+
       this.endLat = resp["latitude"];
       this.endLong = resp["longitude"];
-      
-     });
- 
-  }  
-  
+
+    });
+
+  }
+
 }

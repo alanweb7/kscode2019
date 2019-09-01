@@ -80,12 +80,20 @@ export class HistoricoPage {
   }
   pushPage(codeNumber){
 
-    console.log('historico sem gps');
-      this.navCtrl.push('DetalheCodePage', {liberado:false,origem:3,lang:this.lang,token:this.token,
-        code: codeNumber,
-        latitude: this.endLat, longitude: this.endLong ,
-        telephone: ""
-      });
+      console.log('historico sem gps');
+      let redirectData = {liberado:false,origem:3,lang:this.lang,token:this.token,
+          code: codeNumber,
+          latitude: this.endLat, longitude: this.endLong ,
+          telephone: ""
+      };
+
+      this.navCtrl.push('RedirectPage', {data:redirectData});
+
+      // this.navCtrl.push('DetalheCodePage', {liberado:false,origem:3,lang:this.lang,token:this.token,
+      //   code: codeNumber,
+      //   latitude: this.endLat, longitude: this.endLong ,
+      //   telephone: ""
+      // });
 
 
   }

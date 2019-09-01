@@ -292,7 +292,8 @@ export class VideCodeFirebasePage {
     this.videoGallery = true;
     const options: CameraOptions = {
       mediaType: this.camera.MediaType.VIDEO,
-      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY
+      sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
+
     }
 
     this.camera.getPicture(options)

@@ -1,6 +1,7 @@
+import { Code } from './../menu-code/menu-code';
 import { ModalDetailPage } from './../modal-detail/modal-detail';
 import { Component } from '@angular/core';
-import { IonicPage, Navbar ,NavController, NavParams,LoadingController, Slides, ToastController, ViewController, ModalController, AlertController } from 'ionic-angular';
+import { IonicPage, Navbar, NavController, NavParams, LoadingController, Slides, ToastController, ViewController, ModalController, AlertController, Platform } from 'ionic-angular';
 import { CodeProvider } from './../../providers/code/code';
 import { ViewChild } from '@angular/core';
 import { OneSignal } from '@ionic-native/onesignal';
@@ -35,6 +36,7 @@ export class DetalheCodePage {
   editorInit:any;
   galeria           : any[];
   album_vimeo       : any[];
+  videoColection       : any[];
   audio_colection   : any[];
   titulo            : String;
   descricao         : String;
@@ -50,6 +52,7 @@ export class DetalheCodePage {
   page              : String;
   info              : any;
   TagRegCode        : any;
+  persistentData        : any;
   trustedVideoUrl   : SafeResourceUrl;
   video_found       : any = false;
   calling_code      : String;
@@ -107,6 +110,7 @@ export class DetalheCodePage {
   initModeUser: any;
   audiolinkUrl: string;
   audioContent: boolean;
+  alertModal: any;
   public logo_header:string;
 
   constructor(
@@ -130,11 +134,15 @@ export class DetalheCodePage {
                private nativeStorage : Storage,
                private callNumber    : CallNumber,
                private translate 	   : TranslateService,
+               private platform: Platform,
 
 
 
 
             ) {
+
+              this.setLanguage();
+              this.getInitialconfig();
               this.audioContent = true;
               this.audiolinkUrl = 'http://soundbible.com/grab.php?id=2196&type=mp3';
               this.initModeUser = {
@@ -145,74 +153,32 @@ export class DetalheCodePage {
                 readonly: true,
               }
 
+                this.platform.backButton.subscribe(async () => {
+
+                    let view = this.navCtrl.getActive();
+                    console.log('Let view:::: ', view);
+                    // Checks if can go back before show up the alert
+                    if(view.name === 'DetalheCodePage') {
+
+                        this.util.loading.dismissAll();
+                        console.log('Dismissed alert');
+                        this.alertModal.dismiss();
+                        console.log('botão voltar');
+
+                    }else{
+                      this.navCtrl.setRoot('HomePage');
+                    }
+
+                });
+
             }
 
   ionViewDidLoad() {
-    this.album_vimeo   = [];
-    this.galeria       = [];
-    this.documento     = [];
-    this.facebook      = [];
-    this.instagram     = [];
-    this.whatsapp      = [];
-    this.fone          = [];
-    this.email         = [];
-    this.linkedin      = [];
-    this.site          = [];
-    this.whats         = [];
-    this.page          = this.navParams.get('code');
-    this.telephone     = this.navParams.get('telephone');
-    this.latitude      = this.navParams.get('latitude');
-    this.longitude     = this.navParams.get('longitude');
-    this.isLiberado    = this.navParams.get('liberado');
-    this.origem        = this.navParams.get('origem');
-    this.token         = this.navParams.get('token');
-    this.lang          = this.navParams.get('lang');
+    this.navBar.backButtonClick = (e:UIEvent)=>{
+      this.navCtrl.setRoot('HomePage');
 
-    this.mostra        = false;
-    this.historico.getAll()
-    .then((movies:any) => {}
-    );
-    if(this.lang == undefined || this.lang == "" || this.lang == null){
-         //CHAMDA DO BANCO DE DADOS
-            this.usuario.getAll()
-            .then((movies:any) => {
-              console.log(movies);
-              if(movies.length == 1){
-                    this.lang       = movies[0].cpf;
-
-                    if(this.lang ==  "" || this.lang == undefined || this.lang == null){
-                          this.lang = "pt";
-                    }
-                    this._translateLanguage();
-              }
-              else{
-                this.lang= "pt";
-                this._translateLanguage();
-              }
-              }).catch((error)=>{
-
-                this.lang= "pt";
-                this._translateLanguage();
-
-          });
-    }else{
-      this._translateLanguage();
-    }
-
-    this.util.showLoading(this.load_aguarde);
-
-         if(this.page != "" && this.page != undefined && this.page != "[object%20Object]"){
-          this.getCode();
-         }else{
-            this.util.loading.dismissAll();
-            this.viewCtrl.dismiss();
-         }
-
-
-     //quando clicla em voltar
-      this.navBar.backButtonClick = (e:UIEvent)=>{
-        this.viewCtrl.dismiss();
      }
+
   }
   //iniciacao da tradução
   private _translateLanguage() : void
@@ -244,41 +210,184 @@ export class DetalheCodePage {
 
      }, 250);
   }
-  getCode(){
+  async presentAlertPrompt(message) {
+    // this.alertModal = true;
+    if (!message){
+      message = '<strong>Área restrita:</strong> Digite a senha.';
+    }
+
+    const myModal = await this.alertCtrl.create({
+      subTitle: message,
+      inputs: [
+        {
+          name: 'password',
+          type: 'text',
+          placeholder: 'Digite uma senha'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            let infoData = {
+              'action': 'cancel',
+            };
+            this.validatePass(infoData);
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Validar Senha',
+          handler: (data) => {
+            let infoData = {
+              'action': 'validate',
+              'data':data
+            };
+            this.validatePass(infoData);
+            console.log('Confirm Ok', infoData);
+          }
+        }
+      ],
+      enableBackdropDismiss:false
+    });
+
+    this.alertModal = myModal;
+
+    await myModal.present();
+  }
+
+    validatePass(info:any){
+      // this.util.showLoading('Aguarde...');
+      console.log(info);
+
+      let action = info.action;
+
+      switch (action) {
+        case 'validate':
+          this.util.showLoading('Aguarde...');
+          let password = info.data.password;
+          let codeID:any = this.code_id;
+
+          console.log('codeID na funcao do validate Pass: ', codeID);
+
+            this.codeProvider.getCodePassword(password,codeID,'pt')
+            .subscribe(
+               (result: any) =>{
+                 console.log('Dados retornados da senha: ', result);
+
+                 if(result.status == 200){
+
+
+                  this.continueLoad(this.persistentData);
+
+
+                 }else{
+
+                  let message = 'Erro de senha. Tente novamente...';
+                  this.presentAlertPrompt(message);
+
+                 }
+
+                 });
+
+          break;
+        case 'cancel':
+
+            this.navCtrl.setRoot('HomePage',{data:'cancel'});
+            this.util.loading.dismissAll();
+
+          break;
+
+        default:
+          break;
+      }
+
+    }
+
+
+  async getCode(){
 
           this.codeProvider.getAll(this.page,this.telephone,this.latitude,this.longitude)
-          .then((res: any) =>{
+          .then(async ( res: any) =>{
+            this.util.loading.dismissAll();
+            console.log('Data total no getCode: ', res);
+
+            this.persistentData = res;
+
+            this.code_id          = res.data[0].id;
+            this.code_id          = res.data[0].id;
+
+           if(res.data[0]['isprivate'] == true){
+              this.presentAlertPrompt(null);
+            }else{
+
+
+              this.continueLoad(res);
+
+            }
+
+          }).catch((res)=>{
+            this.util.loading.dismissAll();
+            console.log('Entrou no cath do detail code: ',res);
+
+          }),(error) => {
+            console.log('Entrou no error detail code 382:: ',error);
+
+            this.toast.create({ message: this.msg_erro, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
+            this.util.loading.dismissAll();
+            this.navCtrl.setRoot('HomePage');
+
+          };
+
+    }
+
+
+          async continueLoad(res){
+
+            this.page = null;
+
                     let result: any = res;
                     if( result.status === 200){
+                      this.util.loading.dismissAll();
+                      console.log('result total: ', result);
 
                       this.myIdOnesignal();
-                      this.util.loading.dismissAll();
-                    if( this.isLiberado == true &&  result.data[0]['t_conteudo'] == "1"  && result.data[0]['isprivate'] == true){
-                    }
+                    // if( this.isLiberado == true &&  result.data[0].t_conteudo == "1"  && result.data[0]['isprivate'] == true){
+                    // }
                      //code senha é um link
-                     else if( this.isLiberado == true &&  result.data[0]['t_conteudo'] == "2"){
-                        this.openWithInAppBrowser(result.data[0]['link']);
-                        this.viewCtrl.dismiss();
+                     if( result.data[0].t_conteudo == "2"){
+                    //  else if( result.data[0].t_conteudo == "2"){
+                    //  else if( this.isLiberado == true &&  result.data[0].t_conteudo == "2"){
+                    //  await this.util.loading.dismissAll();
+                     await this.openWithInAppBrowser(result.data[0].link);
+
+                     await this.navCtrl.setRoot('HomePage', {modalIsOpen:true});
+
+                       return;
+
+                        // this.viewCtrl.dismiss();
 
                       }
                       //conde com senha
-                      else if(this.isLiberado == false && result.data[0]['isprivate'] == true && result.data[0]['t_conteudo'] == "1"){
-                              this.navCtrl.setRoot('CodeSenhaPage',{lang:this.lang,origem:1,id_code:result.data[0]['id'],link:null,code: this.page,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
-                            });
-                      }
+                      // else if(this.isLiberado == false && result.data[0]['isprivate'] == true && result.data[0].t_conteudo == "1"){
+                      //         this.navCtrl.setRoot('CodeSenhaPage',{lang:this.lang,origem:1,id_code:result.data[0].id,link:null,code: this.page,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
+                      //       });
+                      // }
                       // code com senha e é um link
-                      else if(this.isLiberado == false && result.data[0]['isprivate'] == true && result.data[0]['t_conteudo'] == "2"){
-                        this.navCtrl.setRoot('CodeSenhaPage',{lang:this.lang,id_code:result.data[0]['id'],link:result.data[0]['link'],code: this.page,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
-                        });
-                      }
+                      // else if(this.isLiberado == false && result.data[0]['isprivate'] == true && result.data[0].t_conteudo == "2"){
+                      //   this.navCtrl.setRoot('CodeSenhaPage',{lang:this.lang,id_code:result.data[0].id,link:result.data[0].link,code: this.page,latitude:this.latitude,longitude:this.longitude,telephone:this.telephone
+                      //   });
+                      // }
                       // code é um link
-                      else if(this.isLiberado == false &&  result.data[0]['t_conteudo'] == "2" && result.data[0]['isprivate'] == false){
-                        this.openWithInAppBrowser(result.data[0]['link']);
-                        this.viewCtrl.dismiss();
+                      // else if(this.isLiberado == false &&  result.data[0].t_conteudo == "2" && result.data[0]['isprivate'] == false){
+                      //   this.openWithInAppBrowser(result.data[0].link);
+                      //   this.util.loading.dismissAll();
+                      //   // this.viewCtrl.dismiss();
 
-                      }
+                      // }
                      if(result.data[0]['galeria'].length > 0){
-                      this.createORupdateHistorico(result.data[0]['id'],result.data[0]['code'],result.data[0]['titulo'],result.data[0]['galeria'][0]['img_link'],result.data[0]['card']);
+                      this.createORupdateHistorico(result.data[0].id,result.data[0].code,result.data[0].titulo,result.data[0]['galeria'][0].img_link,result.data[0].card);
 
                     }
                      //testa se meu retorno da API é vazio
@@ -291,7 +400,7 @@ export class DetalheCodePage {
                      this.isprivate        = result.data[0]['isprivate'];
                      this.TagRegCode       = result.data[0]['code'];
                      this.ask_id           = result.data[0]['ask_code']['ask_id'];
-                     this.code_id          = result.data[0]['id'];
+                     this.code_id          = result.data[0].id;
                      this.ask_info         = result.data[0]['ask_code']['ask_info'];
                      this.option1          = result.data[0]['ask_code']['ask_results']['option1'];
                      this.option2          = result.data[0]['ask_code']['ask_results']['option2'];
@@ -361,6 +470,8 @@ export class DetalheCodePage {
 
                      //popula video
                      if(result.data[0]['album_vimeo'].length > 0){
+                       console.log('video colection: ', result.data[0]['album_vimeo']);
+                       this.videoColection = result.data[0]['album_vimeo'];
                           for (var i = 0; i < result.data[0]['album_vimeo'].length; i++) {
                               let vid =  result.data[0]['album_vimeo'][i];
                               let img = vid.video_pictures.replace('?r=pad','');
@@ -396,15 +507,7 @@ export class DetalheCodePage {
                  }
 
 
-                }).catch((res)=>{
 
-                }),(error) => {
-
-                  this.toast.create({ message: this.msg_erro, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'error'  }).present();
-                  this.util.loading.dismissAll();
-                  this.navCtrl.setRoot('HomePage');
-
-                };
 
 
   }
@@ -573,13 +676,13 @@ export class DetalheCodePage {
     let msgAction;
     switch(data.action){
       case '1':
-          msgAction = 'Deseja acessar este link '+ data.link +'?';
+          msgAction = 'Deseja acessar este endereço?';
       break;
       case '2':
-          msgAction = 'Você deseja enviar anviar mensagem para '+ data.link +'?';
+          msgAction = 'Você deseja enviar mensagem (whatsapp)?';
       break;
       case '3':
-          msgAction = 'Você deseja fazer ligação para '+ data.link +'?';
+          msgAction = 'Você deseja fazer ligação para este anúncio?';
       break;
 
     }
@@ -608,6 +711,7 @@ export class DetalheCodePage {
 
   redirectLinkImage(data){
     console.log('Dados recebidos na função redirectLinkImage::: ',data);
+    console.log('Codigo do pais na função redirectLinkImage::: ',this.calling_code);
     let getAction = data.action;
       /** 1 = link, 2 = whatsapp, 3 = telefone */
       switch (getAction ){
@@ -617,7 +721,12 @@ export class DetalheCodePage {
         break;
         case '2':
             console.log('Case 2 em redirectLinkImage');
-            let direction  = 'http://api.whatsapp.com/send?1=pt_BR&phone=' + data.link;
+            let CodeCountri:any = '55';
+            if(this.calling_code != ''){
+              CodeCountri = this.calling_code.replace('+', '');
+            }
+            let direction  = 'http://api.whatsapp.com/send?1=pt_BR&phone='+ CodeCountri + data.link;
+            console.log('direction função redirectLinkImage::: ',direction );
             this.openWithInAppBrowser(direction);
         break;
         case '3':
@@ -757,6 +866,73 @@ this.oneSignal.sendTags(Tagcode);
     profileModal.onDidDismiss(data => {
       console.log(data);
     });
+  }
+
+  setLanguage(){
+      this.platform.ready().then(()=>{
+                if(this.lang == undefined || this.lang == "" || this.lang == null){
+                    //CHAMDA DO BANCO DE DADOS
+                      this.usuario.getAll()
+                      .then((movies:any) => {
+                        console.log(movies);
+                        if(movies.length == 1){
+                              this.lang       = movies[0].cpf;
+
+                              if(this.lang ==  "" || this.lang == undefined || this.lang == null){
+                                    this.lang = "pt";
+                              }
+                              this._translateLanguage();
+                        }
+                        else{
+                          this.lang= "pt";
+                          this._translateLanguage();
+                        }
+                        }).catch((error)=>{
+
+                          this.lang= "pt";
+                          this._translateLanguage();
+                    });
+                  }else{
+                    this._translateLanguage();
+                  }
+        });
+  }
+  getInitialconfig(){
+
+    this.album_vimeo   = [];
+    this.galeria       = [];
+    this.documento     = [];
+    this.facebook      = [];
+    this.instagram     = [];
+    this.whatsapp      = [];
+    this.fone          = [];
+    this.email         = [];
+    this.linkedin      = [];
+    this.site          = [];
+    this.whats         = [];
+    this.page          = this.navParams.get('code');
+    this.telephone     = this.navParams.get('telephone');
+    this.latitude      = this.navParams.get('latitude');
+    this.longitude     = this.navParams.get('longitude');
+    this.isLiberado    = this.navParams.get('liberado');
+    this.origem        = this.navParams.get('origem');
+    this.token         = this.navParams.get('token');
+    this.lang          = this.navParams.get('lang');
+
+    this.mostra        = false;
+    this.historico.getAll().then((movies:any) => {});
+
+
+
+         if(this.page != "" && this.page != undefined && this.page != "[object%20Object]"){
+          this.getCode();
+         }
+        //  else{
+        //     this.util.loading.dismissAll();
+        //     this.viewCtrl.dismiss();
+        //  }
+
+
   }
 
 

@@ -26,6 +26,7 @@ import { UtilService } from '../../providers/util/util.service';
   templateUrl: 'home.html',
 })
 export class HomePage {
+  public modalIsOpen:boolean;
   public signupform: FormGroup;
   codeNumber         : any;
   endLat             : any;
@@ -159,6 +160,11 @@ trans={
     //   title: ['', Validators.required],
     //   codeNumber: [''],
     // });
+    this.modalIsOpen = this.navParams.get('modalIsOpen');
+    if(this.modalIsOpen == true){
+      this.util.loading.dismissAll();
+
+    }
     let error = this.navParams.get('error');
     console.log('erro recebido na HOME:: ', error);
     if( error && error.status == -3){
@@ -187,6 +193,7 @@ trans={
 
     }
     ionViewDidLoad(){
+      console.log('enter ionViewDidLoad homePage:', this.navParams.get('config'));
 
      // this._initialiseTranslation();
 
@@ -337,11 +344,13 @@ trans={
     let latitude = this.endLat;
         let longitude = this.endLong;
         console.log('home codes com gps');
-        this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
-            code: this.codeNumber,
-            latitude: latitude, longitude: longitude,
-            telephone: this.global.myGlobalVar
-        });
+        let sendData = {liberado :false,origem:1,token:this.token,lang:this.language,
+          code: this.codeNumber,
+          latitude: latitude, longitude: longitude,
+          telephone: this.global.myGlobalVar
+      };
+        this.navCtrl.push('RedirectPage', {data:sendData});
+        // this.navCtrl.push('DetalheCodePage', {data:sendData});
 
 
     // this.util.showLoading('Aguarde...');
@@ -376,10 +385,13 @@ pushGeoinfo(){
   });
 }
 pushPageCode(){
-  this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,  code: 'KSCODE',
+
+  let sendData = {liberado :false,origem:1,token:this.token,lang:this.language,  code: 'KSCODE',
   latitude: this.endLat, longitude: this.endLong,
   telephone: this.global.myGlobalVar
-  });
+  };
+  this.navCtrl.push('RedirectPage', {data:sendData});
+
 }
 
 pushPagePesquisa(){
@@ -588,13 +600,17 @@ private _initialiseTranslation() : void
 redirectPush(notificationCode){
   console.log(notificationCode);
 
-  this.navCtrl.push('DetalheCodePage', {liberado :false,origem:1,token:this.token,lang:this.language,
+
+  let sendData = {liberado :false,origem:1,token:this.token,lang:this.language,
     code: notificationCode,
     latitude: this.endLat, longitude: this.endLong,
     telephone: this.global.myGlobalVar
 
-  });
-  console.log('notifcaca codes com gps');
+  };
+  this.navCtrl.push('RedirectPage', {data:sendData});
+
+  // this.navCtrl.push('DetalheCodePage', sendData);
+  console.log('notifcacao codes com gps');
 
  }
 

@@ -225,11 +225,19 @@ getAllCode(token){
 }
 pushPage(codeNumber){
 
-  this.navCtrl.push('DetalheCodePage', {liberado:false,origem:2,lang:this.lang,token:this.token,
-    code: codeNumber,
-    latitude: this.endLat, longitude: this.endLong ,
-    telephone: ""
-  });
+  let redirectData = {liberado:false,origem:2,lang:this.lang,token:this.token,
+      code: codeNumber,
+      latitude: this.endLat, longitude: this.endLong ,
+      telephone: ""
+    };
+
+this.navCtrl.push('RedirectPage', {data:redirectData});
+
+  // this.navCtrl.push('DetalheCodePage', {liberado:false,origem:2,lang:this.lang,token:this.token,
+  //   code: codeNumber,
+  //   latitude: this.endLat, longitude: this.endLong ,
+  //   telephone: ""
+  // });
 
 }
 validaPacote(){

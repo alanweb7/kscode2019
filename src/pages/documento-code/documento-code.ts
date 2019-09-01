@@ -121,16 +121,44 @@ export class DocumentoCodePage {
       this.chooser.getFile('application/pdf')
       .then(file => {
 
+        let error = false;
         let fileName = file.name;
         let fileUri = file.uri;
         let fileDataURI = file.dataURI;
         let fileData = file.data;
         let fileType = file.mediaType;
+
+        console.log('Tipo de arquivo selecionado: ', fileType);
+
+        if(fileType != 'application/pdf'){
+
+          error = true;
+
+          const message = this.alertCtrl.create({
+            title:'Arquivo Inválido',
+            subTitle: 'O Arquivo selecionado não é permitido<p><strong>Somente PDF é permitido</strong></p>',
+              buttons: [{
+                   text: 'Ok',
+                   handler: () => {
+                     // user has clicked the alert button
+                     // begin the alert's dismiss transition
+                     message.dismiss();
+                     this.open_file();
+                     return false;
+                   }
+                 }]
+          });
+
+          message.present();
+
+        }
         // console.log('Name: ', fileName);
         // console.log('Uri: ', fileUri);
         // console.log('DataURI: ', fileDataURI);
         // console.log('File Data: ', fileData);
         // console.log('Type: ', fileType);
+
+        if(!error){
 
           let base64 = file.dataURI.replace('data:application/pdf;base64,','');
           console.log(file ? file : 'canceled');
@@ -139,6 +167,10 @@ export class DocumentoCodePage {
             // console.log(file);
             this.caminho.push({files:base64,file_name:fileName});
             this.docs.push({id: "",doc_link:fileUri,file_name:fileName});
+
+        }
+
+
         //   })
         }).catch((error: any) => console.error(error));
 

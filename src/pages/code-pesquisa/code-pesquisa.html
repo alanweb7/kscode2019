@@ -1,37 +1,34 @@
 <ion-header>
 
-    <ion-navbar color="primary">
-      <ion-title>{{page}}</ion-title>
-      <ion-buttons end>
-          <button ion-button icon-only (click)="closeModal()">
+  <ion-navbar color="primary">
+    <ion-title>{{page}}</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="closeModal()">
         <ion-icon name="close"></ion-icon>
-       </button>
-      </ion-buttons>
-    </ion-navbar>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
 
-  </ion-header>
+</ion-header>
 
 <ion-content>
-    <ion-searchbar
-   [(ngModel)]="searchTerm"
-    [formControl]="searchControl"
-    (keyup)="onSearchInput()"
-    placeholder="{{campo}}"
-  ></ion-searchbar>
+  <ion-searchbar [(ngModel)]="searchTerm" [formControl]="searchControl" (keyup)="onSearchInput()"
+    placeholder="{{campo}}"></ion-searchbar>
 
-<div *ngIf="searching" class="spinner-container">
+  <div *ngIf="searching" class="spinner-container">
     <ion-spinner name="bubbles"></ion-spinner>
   </div>
-   <ion-list class="list-cidade" *ngFor="let item of codes | slice:0:9">
-    <ion-item (click)="pushPage(item.code)">
-        <ion-col col-3>
-            <div class="thumbs_search" [ngStyle]="{'background-image': 'url('+ item.card +')'}"></div>
-         </ion-col>
-         <ion-col col-9>
-            {{ item.code }} - {{item.titulo}}
-            <p>{{item.descricao}}</p>
-         </ion-col>
+  <ion-list class="list-cidade" *ngFor="let item of codes | slice:0:9">
+    <ion-item>
+      <div class="header_thumbs">
+        <div [ngStyle]="{'background-image': 'url('+ item.card +')'}"
+          class="thumbs-list item item-thumbnail-left custom-thumbnail">
+        </div>
+        <div class="field_text" style="max-width: 97%">
+          <p><strong>{{ item.code | slice:0:15}}</strong> - {{item.titulo | slice:0:15}}</p>
+          <p style="white-space: normal;">{{item.descricao | slice:0:40}}</p>
+        </div>
+      </div>
     </ion-item>
-
   </ion-list>
 </ion-content>

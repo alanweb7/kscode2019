@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Events,Nav, Platform, ModalController, NavController } from 'ionic-angular';
+import { Events, Nav, Platform, ModalController, NavController, App, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SqliteHelperService } from '../providers/sqlite-helper/sqlite-helper.service';
@@ -84,7 +84,9 @@ export class MyApp {
               public modalCtrl       : ModalController,
               private usuarioDB        : UsuarioService,
               public sqliteHelperService: SqliteHelperService,
+              public app: App,
               deeplinks              : Deeplinks,
+              public alertCtrl: AlertController,
             //  public navCtrl: NavController,
 
               ) {
@@ -219,9 +221,51 @@ export class MyApp {
          alert("sou android");
        } */
     });
-    this.sobrenome= "";
-    this.photo = "";
-    this.email = "";
+
+    this.platform.registerBackButtonAction(()=>
+    {
+
+            // Catches the active view
+            let nav = this.app.getActiveNavs()[0];
+            let activeView = nav.getActive();
+            // Checks if can go back before show up the alert
+            if(activeView.name === 'HomePage') {
+                if (nav.canGoBack()){
+                    nav.pop();
+                }
+                else {
+                  const alert = this.alertCtrl.create({
+                      title: 'Sair do Connect?',
+                      message: 'Você tem certeza?',
+                      buttons: [{
+                          text: 'Cancelar',
+                          role: 'cancel',
+                          handler: () => {
+                            this.nav.setRoot('HomePage');
+                            console.log('** Saída do App Cancelada! **');
+                          }
+                      },{
+                          text: 'Fechar o App',
+                          handler: () => {
+                            // this.logout();
+                            this.platform.exitApp();
+                          }
+                      }]
+                  });
+                  alert.present();
+              }
+
+              }else{
+                this.nav.setRoot('HomePage');
+              }
+
+    });
+
+
+
+      this.sobrenome= "";
+      this.photo = "";
+      this.email = "";
 
 
   }
@@ -231,12 +275,16 @@ export class MyApp {
 // redirect push enter
 redirectPush(notificationCode){
 
-   this.nav.push('DetalheCodePage', {liberado :false,
-        code: notificationCode,
-        latitude: "", longitude: "",
-        telephone: ""
 
-  });
+  let sendData = {liberado :false,
+    code: notificationCode,
+    latitude: "", longitude: "",
+    telephone: ""
+
+};
+  this.nav.push('RedirectPage', {data:sendData});
+
+  //  this.nav.push('DetalheCodePage', sendData);
  }
   openPage(page) {
     if(page == 2){
@@ -261,6 +309,10 @@ redirectPush(notificationCode){
     }
     else if(page == 6){
       this.nav.push("CupomPage",{token:this.token,page_pesquisa:this.page_pesquisa, load_aguarde: this.load_aguarde,
+        msg_servidor:this.msg_servidor,cupom:this.cnpj});
+    }
+    else if(page == 77){
+      this.nav.push("ModeloPage",{token:this.token,page_pesquisa:this.page_pesquisa, load_aguarde: this.load_aguarde,
         msg_servidor:this.msg_servidor,cupom:this.cnpj});
     }
 

@@ -18,7 +18,7 @@ import { EditorModule } from '@tinymce/tinymce-angular';
   templateUrl: 'menu-code.html',
 })
 export class MenuCodePage {
-  @ViewChild('mySlider') slider: Slides;
+
   @ViewChild('myInput') myInput: ElementRef;
   token            : any;
   code             : any;
@@ -32,6 +32,7 @@ export class MenuCodePage {
   titulo           : any;
   id_code          : any;
   qtd_img          : Number;
+  segment          : Number = 2;
   package_videos       : Number;
   package_name           : String;
   word             = /[^0-9]+/g;
@@ -177,7 +178,6 @@ export class MenuCodePage {
   public loginForm     : any;
   messageEmail         = "";
   selectedSegment      : string;
-  slides               : any;
   page;
   btn_publicar;
   btn_cancelar;
@@ -244,7 +244,6 @@ export class MenuCodePage {
    //fazer o start do slide
    private ionViewDidEnter() {
     this.getShowCode();
-    this.slider.slideTo(1);
 
    }
    private _translateLanguage() : void
@@ -305,22 +304,6 @@ private _initialiseTranslation() : void
     this.myInput.nativeElement.style.height = this.myInput.nativeElement.scrollHeight + 'px';
    }
    //trocar o slide de acordo com o segment
-   onSegmentChanged(segmentButton) {
-    const selectedIndex = segmentButton.value;
-    this.slider.slideTo(selectedIndex);
-   }
-  //trocar a o segment de acordo com o slide
-  onSlideChanged(slider) {
-    const currentSlide = slider.getActiveIndex();
-    if(currentSlide == 0){
-      this.selectedSegment = '0';
-    }else if(currentSlide == 1){
-        this.selectedSegment = '1';
-    }else if(currentSlide == 2){
-      this.selectedSegment = '2';
-    }
-
-  }
 
   getShowCode(){
 
@@ -339,14 +322,14 @@ private _initialiseTranslation() : void
                             this.link                 = result.data[0]['link'];
                             this.slug                 = result.data[0]['slug'];
 
-                            if(result.data[0]['t_conteudo'] == "2"){
-                              this.model.isLink = "true";
-                               this.meu_link ="2";
+                            if(result.data[0].t_conteudo == 2){
+                              console.log('SIM, é um link');
+                               this.meu_link = true;
                             }else{
-                              this.model.isLink = "false";
-                              this.meu_link ="1";
+                              console.log('NÃO é um link');
+                              this.meu_link = false;
                             }
-                            this.model.link           = this.link;
+
                             this.descricao            = result.data[0]['descricao'];
                             this.modelG.descricao     = this.descricao;
                             this.contato.pais         = result.data[0]['pais'];
@@ -359,7 +342,8 @@ private _initialiseTranslation() : void
                             this.docs                 = result.data[0]['documento'];
                             this.imagens              = result.data[0]['galeria'];
                             this.modelG.isprivate     = result.data[0]['isprivate'];
-                            this.modelG.password      = result.data[0]['password'];
+                            this.modelG.password      = result.data[0].password;
+                            this.password             = result.data[0].password;
                             this.t_conteudo           = result.data[0]['t_conteudo'];
                             this.card                 = result.data[0]['card'];
                             this.slug                 = result.data[0]['slug'];
@@ -406,8 +390,8 @@ private _initialiseTranslation() : void
     this.navCtrl.push('ContatoCodePage', {contato:this.contato,token:this.token,code_id:this.id_code,lang:this.lang });
   }
 
-  ShowCam(){
-    this.navCtrl.push('ImageCodePage',{imagens:this.imagens,token:this.token,code:this.id_code,package_imagens:this.package_imagens,package_name:this.package_name,lang:this.lang});
+  ShowCam(part:number){
+    this.navCtrl.push('ImageCodePage',{part:part,imagens:this.imagens,token:this.token,code:this.id_code,package_imagens:this.package_imagens,package_name:this.package_name,lang:this.lang});
 
   }
   ShowDoc(){
@@ -428,11 +412,14 @@ private _initialiseTranslation() : void
   }
   // "Edição do code,titulo,descrição,link,t_conteudo",
   editCode(){
+    console.log('Dados do model enviados: ', this.model);
+
 
       this.util.showLoading(this.load_aguarde);
       this.codeProvider.code_Edit(this.token,this.id_code,this.modelC.name,this.modelG.titulo,this.modelG.descricao,this.model.link,this.meu_link,this.modelG.password,this.modelG.isprivate)
       .subscribe(
             (result: any) =>{
+              console.log('Retorno do Servidor: ', result)
               this.util.loading.dismissAll();
               if(result.status == 200){
                 this.toast.create({ message: result.message, position: 'botton', duration: 3000 ,closeButtonText: 'Ok!',cssClass: 'sucesso'  }).present();
@@ -451,19 +438,27 @@ private _initialiseTranslation() : void
 
 
   }
-  change_segmento(item) {
+    changeSegment(item) {
 
-    this.model.isLink =item;
-    if(this.model.isLink){
+          this.segment = item;
 
-       this.meu_link ="2";
-    }else{
-
-      this.meu_link ="1";
     }
 
+    change_segmento(){
 
-  }
+      // if(this.meu_link == true){
+      //   this.meu_link = false;
+      // }
+      // if(this.meu_link == false){
+      //   this.meu_link = true;
+      // }
+      let link:any = this.model;
+      this.meu_link = link.islink;
+      // this.loginForm.islink = this.meu_link;
+
+      console.log('Status do conteúdo (link): ',this.meu_link);
+
+    }
   change_senha(item) {
 
     this.modelG.isprivate =item;

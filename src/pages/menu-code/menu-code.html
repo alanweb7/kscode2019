@@ -39,148 +39,142 @@
      </div>
       <!-- AQUI COMEÇA O SEGMENTE DA HOME-->
       <div>
-          <ion-segment [(ngModel)]="selectedSegment" (ionChange)="onSegmentChanged($event)">
-              <ion-segment-button value="0">
+          <div class="bar_segments">
+              <button ion-button round outline clas="btn_segments" (click)="changeSegment(1)">
                    {{seg_1}}
-              </ion-segment-button>
-              <ion-segment-button value="1">
+              </button>
+              <button ion-button round outline clas="btn_segments" (click)="changeSegment(2)">
                  {{seg_2}}
-              </ion-segment-button>
-              <ion-segment-button value="2">
+              </button>
+              <button ion-button round outline clas="btn_segments" (click)="changeSegment(3)">
                  {{seg_3}}
-              </ion-segment-button>
+              </button>
+          </div>
+          <div class="bar_segments">
+            <div style="width: 25%; text-align: center;"><ion-icon name="checkmark-circle-outline" *ngIf="segment == 1"></ion-icon></div>
+            <div style="width: 50%; text-align: center;"><ion-icon name="checkmark-circle-outline" *ngIf="segment == 2"></ion-icon></div>
+            <div style="width: 25%; text-align: center;"><ion-icon name="checkmark-circle-outline" *ngIf="segment == 3"></ion-icon></div>
+          </div>
 
-          </ion-segment>
       </div>
-      <div [ngSwitch]="selectedSegment" style="margin-bottom: 15%;">
-          <ion-slides #mySlider  (ionSlideDidChange)="onSlideChanged($event)" class="segment-slide">
-            <ion-slide>
-                          <form class="col s12" [formGroup]="cadastroForm" name="cadastroForm">
-                                  <ion-list class="index-formularios">
-                                      <ion-item>
-                                          <ion-label>
-                                              <ion-icon name="pricetag"></ion-icon>
-                                          </ion-label>
-                                          <ion-input name="titulo" type="text" placeholder="{{titulo_lang}}" [(ngModel)]="modelG.titulo" formControlName="titulo"  class="validate" value="{{titulo}}"></ion-input>
-                                      </ion-item>
+      <div style="margin-bottom: 15%;"> <!-- slide inicial-->
+              <div class="segment-slide">
+                <div *ngIf="segment == 1">
+                              <form class="col s12" [formGroup]="cadastroForm" name="cadastroForm">
+                                      <ion-list class="index-formularios">
+                                          <ion-item>
+                                              <ion-label>
+                                                  <ion-icon name="pricetag"></ion-icon>
+                                              </ion-label>
+                                              <ion-input name="titulo" type="text" placeholder="{{titulo_lang}}" [(ngModel)]="modelG.titulo" formControlName="titulo"  class="validate" value="{{titulo}}"></ion-input>
+                                          </ion-item>
 
-                                      <ion-item>
-                                          <p>Descrição</p>
-                                          <editor [init]="initEditor3" [(ngModel)]="modelG.descricao" name="descricao"  formControlName="descricao" [initialValue]="descricao" ></editor>
+                                          <ion-item>
+                                              <p>Descrição</p>
+                                              <editor [init]="initEditor3" [(ngModel)]="modelG.descricao" name="descricao"  formControlName="descricao" [initialValue]="descricao" ></editor>
 
-                                      </ion-item>
-                                      <ion-item>
-                                        <ion-label>
-                                            <ion-icon name="key"></ion-icon>
-                                        </ion-label>
-                                        <ion-input name="password" type="text" placeholder="{{senha}}" [(ngModel)]="modelG.password" formControlName="password"  class="validate" value="{{password}}"></ion-input>
-                                    </ion-item>
+                                          </ion-item>
+                                          <ion-item>
+                                            <ion-label>
+                                                <ion-icon name="key"></ion-icon>
+                                            </ion-label>
+                                            <ion-input name="password" type="text" placeholder="{{senha}}" [(ngModel)]="modelG.password" formControlName="password"  class="validate" value="{{password}}"></ion-input>
+                                        </ion-item>
 
-                                      <ion-item>
-                                        <ion-label>{{ativa_senha}}</ion-label>
-                                        <ion-toggle [(ngModel)]="model.isprivate" formControlName="isprivate" (ionChange)="change_senha(model.isprivate)" checked="{{modelG.isprivate}}"></ion-toggle>
+                                          <ion-item>
+                                            <ion-label>{{ativa_senha}}</ion-label>
+                                            <ion-toggle [(ngModel)]="model.isprivate" formControlName="isprivate" (ionChange)="change_senha(model.isprivate)" checked="{{modelG.isprivate}}"></ion-toggle>
 
-                                      </ion-item>
+                                          </ion-item>
 
-                                  </ion-list>
+                                      </ion-list>
 
-                          </form>
-          </ion-slide>
-          <ion-slide>
-     <div class="panel-buttons">
-
-              <button ion-button (click)="ShowCam()" block class="round-button" >
-                <div class="icon-button">
-                  <ion-icon slot="start" name="camera"></ion-icon>
-                </div>
-                {{menu_1}}
-              </button>
-              <button ion-button (click)="ShowDoc()" block class="round-button" >
-                <div class="icon-button">
-                  <ion-icon slot="start" name="clipboard"></ion-icon>
-                </div>
-                {{menu_2}}
-              </button>
-              <button ion-button (click)="ShowContato()" block class="round-button" >
-                <div class="icon-button">
-                  <ion-icon slot="start" name="contact"></ion-icon>
-                </div>
-                {{menu_4}}
-              </button>
-              <div class="flex-div-button">
-                  <button ion-button (click)="ShowVideo('video')" block class="round-button button-bar" >
-                      <div class="icon-button">
-                        <ion-icon slot="start" name="videocam"></ion-icon>
-                      </div>
-                      {{menu_3}}
-                  </button>
-                  <button ion-button (click)="ShowVideo('audio')" block class="round-button button-bar" >
-                      <div class="icon-button">
-                        <ion-icon slot="start" name="mic"></ion-icon>
-                      </div>
-                      Áudio
-                  </button>
-
+                              </form>
               </div>
+              <div *ngIf="segment == 2">
+              <div class="panel-buttons">
+                        <button ion-button (click)="ShowCam()" block class="round-button" >
+                          <div class="icon-button">
+                            <ion-icon slot="start" name="camera"></ion-icon>
+                          </div>
+                          {{menu_1}}
+                        </button>
+                        <button ion-button (click)="ShowDoc()" block class="round-button" >
+                          <div class="icon-button">
+                            <ion-icon slot="start" name="clipboard"></ion-icon>
+                          </div>
+                          {{menu_2}}
+                        </button>
+                        <button ion-button (click)="ShowContato()" block class="round-button" >
+                          <div class="icon-button">
+                            <ion-icon slot="start" name="contact"></ion-icon>
+                          </div>
+                          {{menu_4}}
+                        </button>
+                        <div class="flex-div-button">
+                            <button ion-button (click)="ShowVideo('video')" block class="round-button button-bar" >
+                                <div class="icon-button">
+                                  <ion-icon slot="start" name="videocam"></ion-icon>
+                                </div>
+                                {{menu_3}}
+                            </button>
+                            <button ion-button (click)="ShowVideo('audio')" block class="round-button button-bar" >
+                                <div class="icon-button">
+                                  <ion-icon slot="start" name="mic"></ion-icon>
+                                </div>
+                                Áudio
+                            </button>
 
+                        </div>
+              </div> <!-- Painel buttons -->
 
+                  <!--ion-grid>
+                        <ion-row>
+                            <ion-col>
+                              <div class="box-menu" (click)="ShowCam()"><div class="icon"> <ion-icon name="camera"></ion-icon>
+                                <h3>{{menu_1}}</h3></div></div>
+                            </ion-col>
+                            <ion-col>
+                              <div class="box-menu" (click)="ShowDoc()"><div class="icon"> <ion-icon name="clipboard"></ion-icon>
+                                <h3>{{menu_2}}</h3></div></div>
+                            </ion-col>
 
-     </div>
+                          </ion-row>
+                          <ion-row>
 
+                                  <ion-col>
 
-              <!--ion-grid>
-                     <ion-row>
-                        <ion-col>
-                          <div class="box-menu" (click)="ShowCam()"><div class="icon"> <ion-icon name="camera"></ion-icon>
-                            <h3>{{menu_1}}</h3></div></div>
-                        </ion-col>
-                        <ion-col>
-                           <div class="box-menu" (click)="ShowDoc()"><div class="icon"> <ion-icon name="clipboard"></ion-icon>
-                            <h3>{{menu_2}}</h3></div></div>
-                        </ion-col>
+                                    <div class="box-menu" (click)="ShowVideo()"><div class="icon"> <ion-icon name="videocam"></ion-icon>
+                                      <h3>{{menu_3}}</h3></div></div>
+                                  </ion-col>
+                                  <ion-col>
+                                          <div class="box-menu" (click)="ShowContato()"><div class="icon"> <ion-icon name="contact"></ion-icon>
+                                            <h3>{{menu_4}}</h3></div></div>
+                                  </ion-col>
 
-                      </ion-row>
-                      <ion-row>
+                          </ion-row>
 
-                              <ion-col>
-
-                                <div class="box-menu" (click)="ShowVideo()"><div class="icon"> <ion-icon name="videocam"></ion-icon>
-                                  <h3>{{menu_3}}</h3></div></div>
-                              </ion-col>
-                              <ion-col>
-                                      <div class="box-menu" (click)="ShowContato()"><div class="icon"> <ion-icon name="contact"></ion-icon>
-                                        <h3>{{menu_4}}</h3></div></div>
-                              </ion-col>
-
-                      </ion-row>
-
-              </ion-grid -->
-          </ion-slide>
-          <ion-slide>
+                  </ion-grid -->
+              </div>
+              <div *ngIf="segment == 3">
                   <form class="" [formGroup]="loginForm">
                       <ion-list class="index-formularios">
                           <ion-item>
-                              <ion-label>
-                                  <ion-icon name="link"></ion-icon>
-                              </ion-label>
-                              <ion-input name="nome" type="text" [(ngModel)]="model.link"  formControlName="link" placeholder="{{campo}}" value="{{link}}"></ion-input>
+                            <ion-label>
+                                <ion-icon name="link"></ion-icon>
+                            </ion-label>
+                            <ion-input name="nome" type="text" [(ngModel)]="model.link"  formControlName="link" placeholder="{{campo}}" value="{{link}}"></ion-input>
                           </ion-item>
                           <div><p *ngIf="errorEmail" class="error"> {{messageEmail}}</p></div>
                           <ion-item>
                             <ion-label>{{ativar_lik}}</ion-label>
-                            <ion-toggle [(ngModel)]="model.islink" formControlName="islink" (ionChange)="change_segmento(model.islink)" checked="{{model.isLink}}"></ion-toggle>
-
+                            <ion-toggle [(ngModel)]="model.islink" formControlName="islink" (ionChange)="change_segmento(meu_link)" checked="{{meu_link}}"></ion-toggle>
                           </ion-item>
-
                       </ion-list>
                   </form>
-          </ion-slide>
-
-
-
-      </ion-slides>
-
-      </div>
+              </div>
+      </div> <!-- fechamento dos sliders -->
+      </div> <!-- final dos segmentos -->
   </ion-content>
   <!-- CONTENT -->
   <ion-footer>
