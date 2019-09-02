@@ -89,8 +89,6 @@ export class CodePesquisaPage {
           this.isLoading = "";
         });
     }
-
-
   }
   closeModal() {
     this.navCtrl.pop();
@@ -102,15 +100,21 @@ export class CodePesquisaPage {
     return this.codes = [];
 
   }
-  pushPage(code) {
+  pushPage(code){
 
-    this.navCtrl.push('DetalheCodePage', {
-      liberado: false, origem: 4, token: this.token, lang: this.language,
+    let sendData = {
+      liberado: false,
+      origem: 4,
+      token: this.token,
+      lang: this.language,
       code: code,
-      latitude: this.endLat, longitude: this.endLong,
+      latitude: this.endLat,
+      longitude: this.endLong,
       telephone: ""
+    };
 
-    });
+    this.navCtrl.push('RedirectPage', {data:sendData});
+    // this.navCtrl.push('DetalheCodePage', {});
   }
 
   pushGeoinfo() {

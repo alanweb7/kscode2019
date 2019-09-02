@@ -307,6 +307,7 @@ export class DetalheCodePage {
 
 
   async getCode(){
+    this.util.showLoading('Aguarde..');
 
           this.codeProvider.getAll(this.page,this.telephone,this.latitude,this.longitude)
           .then(async ( res: any) =>{
