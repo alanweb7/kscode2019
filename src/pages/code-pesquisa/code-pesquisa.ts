@@ -92,7 +92,9 @@ export class CodePesquisaPage {
   }
   closeModal() {
     this.navCtrl.pop();
+    this.navCtrl.setRoot('HomePage');
   }
+
   onCancel() {
 
     this.isLoading = "";

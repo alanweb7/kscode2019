@@ -390,14 +390,19 @@ pushPageCode(){
   latitude: this.endLat, longitude: this.endLong,
   telephone: this.global.myGlobalVar
   };
+
   this.navCtrl.push('RedirectPage', {data:sendData});
 
 }
 
 pushPagePesquisa(){
 
-  let myModal =this.modalCtrl.create('CodePesquisaPage',{texto:this.texto,campo:this.campo,page_pesquisa:this.page_consulta,msg_servidor:this.msg_servidor,load_aguarde:this.load_aguarde,token:this.token,lang:this.language});
-  myModal.present();
+  // let sendData = {texto:this.texto,campo:this.campo,page_pesquisa:this.page_consulta,msg_servidor:this.msg_servidor,load_aguarde:this.load_aguarde,token:this.token,lang:this.language};
+  // this.navCtrl.push('RedirectPage', {data:sendData});
+  this.navCtrl.push('CodePesquisaPage',{texto:this.texto,campo:this.campo,page_pesquisa:this.page_consulta,msg_servidor:this.msg_servidor,load_aguarde:this.load_aguarde,token:this.token,lang:this.language});
+
+  // let myModal =this.modalCtrl.create('CodePesquisaPage',{texto:this.texto,campo:this.campo,page_pesquisa:this.page_consulta,msg_servidor:this.msg_servidor,load_aguarde:this.load_aguarde,token:this.token,lang:this.language});
+  // myModal.present();
 }
 showCheckbox() {
 

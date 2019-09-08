@@ -153,23 +153,23 @@ export class DetalheCodePage {
                 readonly: true,
               }
 
-                this.platform.backButton.subscribe(async () => {
+                // this.platform.backButton.subscribe(async () => {
 
-                    let view = this.navCtrl.getActive();
-                    console.log('Let view:::: ', view);
-                    // Checks if can go back before show up the alert
-                    if(view.name === 'DetalheCodePage') {
+                //     let view = this.navCtrl.getActive();
+                //     console.log('Let view:::: ', view);
+                //     // Checks if can go back before show up the alert
+                //     if(view.name === 'DetalheCodePage') {
 
-                        this.util.loading.dismissAll();
-                        console.log('Dismissed alert');
-                        this.alertModal.dismiss();
-                        console.log('botão voltar');
+                //         this.util.loading.dismissAll();
+                //         console.log('Dismissed alert');
+                //         this.alertModal.dismiss();
+                //         console.log('botão voltar');
 
-                    }else{
-                      this.navCtrl.setRoot('HomePage');
-                    }
+                //     }else{
+                //       this.navCtrl.setRoot('HomePage');
+                //     }
 
-                });
+                // });
 
             }
 

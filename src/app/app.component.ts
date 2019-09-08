@@ -229,39 +229,37 @@ export class MyApp {
             let nav = this.app.getActiveNavs()[0];
             let activeView = nav.getActive();
             // Checks if can go back before show up the alert
-            // if(activeView.name === 'HomePage') {
-            //     if (nav.canGoBack()){
-            //         nav.pop();
-            //     }
-            //     else {
-            //       const alert = this.alertCtrl.create({
-            //           title: 'Sair do Connect?',
-            //           message: 'Você tem certeza?',
-            //           buttons: [{
-            //               text: 'Cancelar',
-            //               role: 'cancel',
-            //               handler: () => {
-            //                 this.nav.setRoot('HomePage');
-            //                 console.log('** Saída do App Cancelada! **');
-            //               }
-            //           },{
-            //               text: 'Fechar o App',
-            //               handler: () => {
-            //                 // this.logout();
-            //                 this.platform.exitApp();
-            //               }
-            //           }]
-            //       });
-            //       alert.present();
-            //   }
+            if(activeView.name === 'HomePage') {
+                if (nav.canGoBack()){
+                    nav.pop();
+                }
+                else {
+                  const alert = this.alertCtrl.create({
+                      title: 'Sair do Connect?',
+                      message: 'Você tem certeza?',
+                      buttons: [{
+                          text: 'Cancelar',
+                          role: 'cancel',
+                          handler: () => {
+                            this.nav.setRoot('HomePage');
+                            console.log('** Saída do App Cancelada! **');
+                          }
+                      },{
+                          text: 'Fechar o App',
+                          handler: () => {
+                            // this.logout();
+                            this.platform.exitApp();
+                          }
+                      }]
+                  });
+                  alert.present();
+              }
 
-            //   }else{
-            //     this.nav.setRoot('HomePage');
-            //   }
+              }else{
+                this.nav.setRoot('HomePage');
+              }
 
     });
-
-
 
       this.sobrenome= "";
       this.photo = "";
